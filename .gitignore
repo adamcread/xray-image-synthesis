@@ -1,0 +1,4 @@
+.venv/
+dataset/
+cocoapi/
+compositionGAN/checkpoints/

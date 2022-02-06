@@ -1,0 +1,91 @@
+#!/bin/bash -f
+
+# ========================================================
+# Compositional GAN
+# Script for training the model with unpaired street views & cars
+# By Samaneh Azadi
+# ========================================================
+
+
+mode=train
+name="train_xray"
+datalist="../dataset/unpaired/training_paths.txt"
+datalist_test="../dataset/unpaired/test_paths.txt"
+
+exp_name="unpaired_compGAN" # suffix for naming
+dataset_mode='comp_decomp_unaligned' # dataset type to choose model type
+
+batch_size=10 # size of each training batch
+loadSizeY=256 # size to scale images to
+fineSizeY=256 # size image is
+
+G1_comp=1 # completion on object 1	
+G2_comp=0 # completion on object 2
+STN_model='deep'
+lambda_mask=50
+lr=0.00002 # initial learning rate
+niter=100
+niter_decay=100
+
+niterSTN=100 # epochs to train STN
+niterCompletion=100 # epochs to train inpainting
+which_epoch=0
+which_epoch_completion=0 
+which_epoch_STN=0
+display_port=8775
+display_freq=550
+print_freq=30
+update_html_freq=550
+save_epoch_freq=50
+CUDA_ID=2
+
+# if checkpoint directory doesn't exist make one
+if [ ! -d "./checkpoints/${name}" ]; then
+	mkdir "./checkpoints/${name}"
+fi
+
+# if log already exists delete it
+LOG="./checkpoints/${name}/output.txt"
+if [ -f $LOG ]; then
+    rm $LOG
+fi
+
+# make log
+exec &> >(tee -a "$LOG")
+
+CUDA_LAUNCH_BLOCKING=${CUDA_ID} CUDA_VISIBLE_DEVICES=${CUDA_ID} \
+	python3 -u train_composition.py \
+	--datalist ${datalist} \
+	--datalist_test ${datalist_test} \
+	--decomp \
+	--name ${name} \
+	--dataset_mode ${dataset_mode} \
+	--xray=true \
+	--no_lsgan \
+	--conditional \
+	--img_completion \
+	--no_flip \
+	--pool_size 0 \
+	--niterCompletion ${niterCompletion} \
+	--which_epoch_completion ${which_epoch_completion} \
+	--fineSizeY ${fineSizeY} \
+	--loadSizeY ${loadSizeY} \
+	--G1_completion ${G1_comp} \
+	--G2_completion ${G2_comp} \
+	--lambda_mask ${lambda_mask} \
+	--lr ${lr} \
+	--batchSize ${batch_size} \
+	--niterSTN ${niterSTN} \
+	--STN_model ${STN_model} \
+	--which_epoch_STN ${which_epoch_STN} \
+	--niter ${niter} \
+	--niter_decay ${niter_decay} \
+	--which_epoch ${which_epoch} \
+	--epoch_count ${which_epoch} \
+	--update_html_freq ${update_html_freq} \
+	--display_freq ${display_freq} \
+	--print_freq ${print_freq} \
+	--display_port ${display_port} \
+	--save_epoch_freq ${save_epoch_freq} \
+
+ 
