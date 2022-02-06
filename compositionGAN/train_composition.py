@@ -10,6 +10,7 @@ from options.train_options import TrainOptions
 from data.data_loader import CreateDataLoader
 from models.models import create_model
 from util.visualizer import Visualizer
+import torch
 
 opt = TrainOptions().parse()
 opt.phase = 'train'
@@ -20,9 +21,8 @@ dataset_size = len(data_loader)
 
 # num of training images
 print('#training images = %d' % dataset_size)
-
-opt.gpu_ids = []
 opt.display_id = 0
+opt.device = torch.device(f'cuda:{opt.gpu_ids}' if torch.cuda.is_available() else "cpu")
 model = create_model(opt)
 visualizer = Visualizer(opt)
 
@@ -109,12 +109,7 @@ if opt.dataset_mode=='comp_decomp_unaligned' and opt.niterCompletion:
             model.save(epoch, compl_pretrain=True)
 
 
-data_loader = CreateDataLoader(opt)
-dataset = data_loader.load_data()
-dataset_size = len(data_loader)
-
 opt.isPretrain = False
-visualizer = Visualizer(opt)
 total_steps = 0
 print('start training end to end')
 for epoch in range(opt.epoch_count, opt.niter + opt.niter_decay + 1):

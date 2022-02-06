@@ -27,11 +27,12 @@ lambda_mask=50
 lr=0.00002
 niter=100
 niter_decay=100
-niterSTN=100
-niterCompletion=100
+niterSTN=1
+niterCompletion=1
 which_epoch=0
 which_epoch_completion=0
 which_epoch_STN=0
+display_id=0
 
 display_port=8775
 display_freq=550

@@ -125,55 +125,49 @@ def get_scheduler(optimizer, opt):
 
 
 
-def define_G(input_nc, output_nc, ngf, which_model_netG, norm='batch', use_dropout=False, init_type='normal', gpu_ids=[], noise=False, n_classes=3, y_x=1):
+def define_G(input_nc, output_nc, ngf, which_model_netG, norm='batch', use_dropout=False, init_type='normal', 
+                device=None, noise=False, n_classes=3, y_x=1):
     netG = None
-    # use_gpu = len(gpu_ids) > 0
-    use_gpu = False
     norm_layer = get_norm_layer(norm_type=norm)
 
-    if use_gpu:
-        assert(torch.cuda.is_available())
-
     if which_model_netG == 'resnetUp_9blocks':
-        netG = ResnetGeneratorconv(input_nc, output_nc, ngf, norm_layer=norm_layer, use_dropout=use_dropout, n_blocks=9, gpu_ids=gpu_ids, noise=noise)
+        netG = ResnetGeneratorconv(input_nc, output_nc, ngf, norm_layer=norm_layer, use_dropout=use_dropout, n_blocks=9, device=device, noise=noise)
     elif which_model_netG == 'resnetUp_6blocks':
-        netG = ResnetGeneratorconv(input_nc, output_nc, ngf, norm_layer=norm_layer, use_dropout=use_dropout, n_blocks=6, gpu_ids=gpu_ids, noise=noise, y_x=y_x)
+        netG = ResnetGeneratorconv(input_nc, output_nc, ngf, norm_layer=norm_layer, use_dropout=use_dropout, n_blocks=6, device=device, noise=noise, y_x=y_x)
     elif which_model_netG == 'resnetUp_9blocks_masked':
-        netG = ResnetGeneratorMaskedconv(input_nc, output_nc, ngf, norm_layer=norm_layer, use_dropout=use_dropout, n_blocks=9, gpu_ids=gpu_ids, n_classes=n_classes)
+        netG = ResnetGeneratorMaskedconv(input_nc, output_nc, ngf, norm_layer=norm_layer, use_dropout=use_dropout, n_blocks=9, device=device, n_classes=n_classes)
     elif which_model_netG == 'resnetUp_6blocks_masked':
-        netG = ResnetGeneratorMaskedconv(input_nc, output_nc, ngf, norm_layer=norm_layer, use_dropout=use_dropout, n_blocks=6, gpu_ids=gpu_ids, n_classes=n_classes)
+        netG = ResnetGeneratorMaskedconv(input_nc, output_nc, ngf, norm_layer=norm_layer, use_dropout=use_dropout, n_blocks=6, device=device, n_classes=n_classes)
     else:
         raise NotImplementedError('Generator model name [%s] is not recognized' %which_model_netG)
-    if len(gpu_ids) > 0:
-        netG.cuda(gpu_ids[0])
+    
+    netG.to(device)
     init_weights(netG, init_type=init_type)
     return netG
 
 
 def define_D(input_nc, ndf, which_model_netD,
-             n_layers_D=3, norm='batch', use_sigmoid=False, init_type='normal', gpu_ids=[],y_x=1):
+             n_layers_D=3, norm='batch', use_sigmoid=False, init_type='normal', 
+             device=None, y_x=1):
     netD = None
-    use_gpu = len(gpu_ids) > 0
     norm_layer = get_norm_layer(norm_type=norm)
 
-    if use_gpu:
-        assert(torch.cuda.is_available())
     if which_model_netD == 'basic':
-        netD = NLayerDiscriminator(input_nc, ndf, n_layers=3, norm_layer=norm_layer, use_sigmoid=use_sigmoid, gpu_ids=gpu_ids)
+        netD = NLayerDiscriminator(input_nc, ndf, n_layers=3, norm_layer=norm_layer, use_sigmoid=use_sigmoid, device=device)
     elif which_model_netD == 'n_layers':
-        netD = NLayerDiscriminator(input_nc, ndf, n_layers_D, norm_layer=norm_layer, use_sigmoid=use_sigmoid, gpu_ids=gpu_ids,y_x=y_x)
+        netD = NLayerDiscriminator(input_nc, ndf, n_layers_D, norm_layer=norm_layer, use_sigmoid=use_sigmoid, device=device,y_x=y_x)
     else:
         raise NotImplementedError('Discriminator model name [%s] is not recognized' %
                                   which_model_netD)
-    if use_gpu:
-        netD.cuda(gpu_ids[0])
+
+    netD.to(device)
     init_weights(netD, init_type=init_type)
     return netD
 
 
-def define_STN(input_nc, res=64, gpu_ids=[],y_x=1, STN_model=''):
+def define_STN(input_nc, res=64, device=None, y_x=1, STN_model=''):
     stn = None
-    use_gpu = len(gpu_ids) > 0
+
     if res == 64:
         n_blocks=0
     elif res==128:
@@ -183,37 +177,32 @@ def define_STN(input_nc, res=64, gpu_ids=[],y_x=1, STN_model=''):
     else:
         raise NotImplementedError("STN not defined for this image resolution:%s"%res)
     if STN_model =='deep':
-        stn = DeepSpatialTransformer(input_nc, n_blocks, gpu_ids,y_x)
+        stn = DeepSpatialTransformer(input_nc, n_blocks, device, y_x)
     else:
-        stn = SpatialTransformer(input_nc, n_blocks, gpu_ids,y_x)
-    if use_gpu:
-        assert(torch.cuda.is_available())
-        stn.cuda(gpu_ids[0])
-    # no weight initialization!!
+        stn = SpatialTransformer(input_nc, n_blocks, device, y_x)
+    
+    stn.to(device)
 
     return stn
 
 
-def define_AFN(model, input_nc=3, view_dim=19, flow_mask=0, res=128, init_type='normal', use_dropout=False, gpu_ids=[]):
+def define_AFN(model, input_nc=3, view_dim=19, flow_mask=0, res=128, init_type='normal', use_dropout=False, device=None):
     # Encoder-Decoder network for the "view synthesis by appreance flow" paper:
     netAFN = None
     if model=='fc':
-        netAFN = DOAFNModel(view_dim=view_dim, flow_mask=flow_mask,res=res, disjoint_last_bottle='bottle', gpu_ids=gpu_ids)
+        netAFN = DOAFNModel(view_dim=view_dim, flow_mask=flow_mask,res=res, disjoint_last_bottle='bottle', device=device)
     elif model=='fullyConv':
-        netAFN = AFNconvModel(view_dim=view_dim, flow_mask=flow_mask,disjoint_last_bottle='bottle', gpu_ids=gpu_ids)
+        netAFN = AFNconvModel(view_dim=view_dim, flow_mask=flow_mask,disjoint_last_bottle='bottle', device=device)
     elif model=='DOAFN':
-        netAFN = DOAFNModel(view_dim=view_dim, flow_mask=flow_mask, res=res, use_dropout=use_dropout, gpu_ids=gpu_ids)
+        netAFN = DOAFNModel(view_dim=view_dim, flow_mask=flow_mask, res=res, use_dropout=use_dropout, device=device)
     elif model=='DOAFNCompose':
-        netAFN = DOAFNComposeModel(input_nc, res=res, use_dropout=use_dropout, gpu_ids=gpu_ids)
+        netAFN = DOAFNComposeModel(input_nc, res=res, use_dropout=use_dropout, device=device)
     else:
         raise NotImplementedError("model not recognized:%s"%model)
 
-    use_gpu = len(gpu_ids) > 0
-    if use_gpu:
-        assert(torch.cuda.is_available())
-        netAFN.cuda(gpu_ids[0])
+    
+    netAFN.to(device)
     init_weights(netAFN, init_type=init_type)
-
 
     return netAFN
 
@@ -245,7 +234,6 @@ class GANLoss(nn.Module):
         self.real_label_var = None
         self.fake_label_var = None
         self.Tensor = tensor
-        self.device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
         if use_lsgan:
             self.loss = nn.MSELoss()
@@ -275,12 +263,12 @@ class GANLoss(nn.Module):
         return self.loss(input, target_tensor)
 
 class fc_layer(nn.Module):
-    def __init__(self, input_nc, output_nc, gpu_ids=[]):
+    def __init__(self, input_nc, output_nc, device):
         super(fc_layer, self).__init__()
         self.input_nc = input_nc
         self.output_nc = output_nc
-        self.gpu_ids = gpu_ids
-        self.device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+        self.device = device
+        self.use_cuda = torch.cuda.is_available()
 
 
         
@@ -291,8 +279,8 @@ class fc_layer(nn.Module):
         # self.model = nn.Sequential(*model)
 
     def forward(self, input):
-        if self.gpu_ids and isinstance(input.data, torch.cuda.FloatTensor):
-            return nn.parallel.data_parallel(self.model, input, self.gpu_ids)
+        if self.use_cuda:
+            return nn.parallel.data_parallel(self.model, input, [self.device])
         else:
             return self.model(input)
 
@@ -303,15 +291,15 @@ class fc_layer(nn.Module):
 # https://github.com/jcjohnson/fast-neural-style/
 
 class ResnetGeneratorconv(nn.Module):
-    def __init__(self, input_nc, output_nc, ngf=64, norm_layer=nn.BatchNorm2d, use_dropout=False, n_blocks=6, gpu_ids=[], padding_type='reflect', noise=False, y_x=1):
+    def __init__(self, input_nc, output_nc, ngf=64, norm_layer=nn.BatchNorm2d, use_dropout=False, n_blocks=6, device=None, padding_type='reflect', noise=False, y_x=1):
         assert(n_blocks >= 0)
         super(ResnetGeneratorconv, self).__init__()
         self.input_nc = input_nc
         self.output_nc = output_nc
         self.ngf = ngf
-        self.gpu_ids = gpu_ids
         self.noise = noise
-        self.device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+        self.device = device
+        self.use_cuda = torch.cuda.is_available()
 
         if type(norm_layer) == functools.partial:
             use_bias = norm_layer.func == nn.InstanceNorm2d
@@ -377,12 +365,11 @@ class ResnetGeneratorconv(nn.Module):
         self.model2 = nn.Sequential(*model2)
 
     def forward(self, input, z=[]):
-        if self.gpu_ids and isinstance(input.data, torch.cuda.FloatTensor):
-            x1 = nn.parallel.data_parallel(self.model1, input, self.gpu_ids)
+        if self.use_cuda:
+            x1 = nn.parallel.data_parallel(self.model1, input, [self.device])
             if self.noise:
                 x1 = torch.cat([x1,z], 1)
-            return nn.parallel.data_parallel(self.model2, x1, self.gpu_ids)
-
+            return nn.parallel.data_parallel(self.model2, x1, [self.device])
         else:
             x1 = self.model1(input)
             if self.noise:
@@ -391,14 +378,14 @@ class ResnetGeneratorconv(nn.Module):
 
 
 class ResnetGeneratorMaskedconv(nn.Module):
-    def __init__(self, input_nc, output_nc, ngf=64, norm_layer=nn.BatchNorm2d, use_dropout=False, n_blocks=6, gpu_ids=[], padding_type='reflect', n_classes=3):
+    def __init__(self, input_nc, output_nc, ngf=64, norm_layer=nn.BatchNorm2d, use_dropout=False, n_blocks=6, device=None, padding_type='reflect', n_classes=3):
         assert(n_blocks >= 0)
         super(ResnetGeneratorMaskedconv, self).__init__()
         self.input_nc = input_nc
         self.output_nc = output_nc
         self.ngf = ngf
-        self.gpu_ids = gpu_ids
-        self.device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+        self.device = device
+        self.use_cuda = torch.cuda.is_available()
 
         if type(norm_layer) == functools.partial:
             use_bias = norm_layer.func == nn.InstanceNorm2d
@@ -463,17 +450,17 @@ class ResnetGeneratorMaskedconv(nn.Module):
         self.decoder_m = nn.Sequential(*decoder_m)
 
     def forward(self, input):
-        if self.gpu_ids and isinstance(input.data, torch.cuda.FloatTensor):
-            x1 = nn.parallel.data_parallel(self.encoder, input, self.gpu_ids)
-            output = nn.parallel.data_parallel(self.decoder, x1, self.gpu_ids)
-            mask = nn.parallel.data_parallel(self.decoder_m, x1, self.gpu_ids)
+        if self.use_cuda:
+            x1 = nn.parallel.data_parallel(self.encoder, input, [self.device])
+            output = nn.parallel.data_parallel(self.decoder, x1, [self.device])
+            mask = nn.parallel.data_parallel(self.decoder_m, x1, [self.device])
             return output, mask
-
         else:
             x1 = self.encoder(input)
             output = self.decoder(x1)
             mask = self.decoder_m(x1)
             return output,mask
+
 
 # Define a resnet block
 class ResnetBlock(nn.Module):
@@ -523,10 +510,10 @@ class ResnetBlock(nn.Module):
 # From https://github.com/junyanz/pytorch-CycleGAN-and-pix2pix
 # Defines the PatchGAN discriminator with the specified arguments.
 class NLayerDiscriminator(nn.Module):
-    def __init__(self, input_nc, ndf=64, n_layers=3, norm_layer=nn.BatchNorm2d, use_sigmoid=False, gpu_ids=[],y_x=1):
+    def __init__(self, input_nc, ndf=64, n_layers=3, norm_layer=nn.BatchNorm2d, use_sigmoid=False, device=None, y_x=1):
         super(NLayerDiscriminator, self).__init__()
-        self.gpu_ids = gpu_ids
-        self.device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+        self.device = device
+        self.use_cuda = torch.cuda.is_available()
 
         if type(norm_layer) == functools.partial:
             use_bias = norm_layer.func == nn.InstanceNorm2d
@@ -576,19 +563,19 @@ class NLayerDiscriminator(nn.Module):
         self.model = nn.Sequential(*sequence)
 
     def forward(self, input):
-        if len(self.gpu_ids) and isinstance(input.data, torch.cuda.FloatTensor):
-            return nn.parallel.data_parallel(self.model, input, self.gpu_ids)
+        if self.use_cuda:
+            return nn.parallel.data_parallel(self.model, input, [self.device])
         else:
             return self.model(input)
-
+       
 
 
 #Relative Spatial Transformer Network
 class SpatialTransformer(nn.Module):
-    def __init__(self, input_nc, n_blocks=0, gpu_ids=[],y_x=1):
+    def __init__(self, input_nc, n_blocks=0, device=None, y_x=1):
         super(SpatialTransformer, self).__init__()
-        self.gpu_ids = gpu_ids
-        self.device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+        self.device = device
+        self.use_cuda = torch.cuda.is_available()
 
         self.input_nc = input_nc
         self.n_blocks = n_blocks
@@ -630,26 +617,20 @@ class SpatialTransformer(nn.Module):
     def forward(self, input, no_translatoin=False):
         h = input.size(2)
         w = input.size(3)
-        if len(self.gpu_ids) and isinstance(input.data, torch.cuda.FloatTensor):
-            # mask = torch.Tensor(input.size()).fill_(1).cuda(self.gpu_ids[0], async=True)
-            mask = torch.Tensor(input.size()).fill_(1).cuda(self.gpu_ids[0])
-            ONES = mask.clone()
-            mask.index_fill_(2, LongTensor([0, h-1]).cuda(self.gpu_ids[0]), 0)
-            mask.index_fill_(3, LongTensor([0, w-1]).cuda(self.gpu_ids[0]), 0)
-        else:
-            mask = torch.Tensor(input.size()).fill_(1).to(self.device)
 
-            ONES = mask.clone()
-            mask.index_fill_(2, LongTensor([0, h-1]).to(self.device), 0)
-            mask.index_fill_(3, LongTensor([0, w-1]).to(self.device), 0)
+        mask = torch.Tensor(input.size()).fill_(1).to(self.device)
+
+        ONES = mask.clone()
+        mask.index_fill_(2, LongTensor([0, h-1]).to(self.device), 0)
+        mask.index_fill_(3, LongTensor([0, w-1]).to(self.device), 0)
             
         mask = Variable(mask)
 
         # misc.imsave('/home/sazadi/projects/objectComposition-Pytorch/mask.png', mask.data.cpu().numpy().transpose(1,2,0))
         input = torch.mul(input,mask) + (Variable(ONES) - mask)
 
-        if len(self.gpu_ids)  and isinstance(input.data, torch.cuda.FloatTensor):
-            xs = nn.parallel.data_parallel(self.localization, input, self.gpu_ids)
+        if self.use_cuda:
+            xs = nn.parallel.data_parallel(self.localization, input, [self.device])
         else:
             xs = self.localization(input)
 
@@ -659,22 +640,23 @@ class SpatialTransformer(nn.Module):
         inp1 = Variable(LongTensor(range(0,int(input.size(1)/2))))
         inp2 = Variable(LongTensor(range(int(input.size(1)/2),input.size(1))))
 
-        if len(self.gpu_ids)  and isinstance(input.data, torch.cuda.FloatTensor):        
-            theta = nn.parallel.data_parallel(self.fc_loc, xs, self.gpu_ids)
-            ind1 = ind1.cuda()
-            ind2 = ind2.cuda()
-            inp1 = inp1.cuda()
-            inp2 = inp2.cuda()
-
+        if self.use_cuda:
+            theta = nn.parallel.data_parallel(self.fc_loc, xs, [self.device])
         else:
             theta = self.fc_loc(xs)
+
+        ind1 = ind1.to(self.device)
+        ind2 = ind2.to(self.device)
+        inp1 = inp1.to(self.device)
+        inp2 = inp2.to(self.device)
+
         theta = theta.view(-1, 4, 3)
 
 
         theta_1 = index_select(theta,1, ind1)
         theta_2 = index_select(theta,1, ind2)
         if no_translatoin:
-            translation_mat = Variable(torch.ones((2,3)).cuda(),requires_grad=False)
+            translation_mat = Variable(torch.ones((2,3)).to(self.device),requires_grad=False)
             translation_mat[:,2] = 0
             theta_1_linear = torch.mul(theta_1, translation_mat)
             theta_2_linear = torch.mul(theta_2, translation_mat)
@@ -682,16 +664,16 @@ class SpatialTransformer(nn.Module):
 
         input_1 = index_select(input, 1, inp1)
         input_2 = index_select(input, 1, inp2)
-        grid_1 = F.affine_grid(theta_1, input_1.size())
-        grid_2 = F.affine_grid(theta_2, input_2.size())
+        grid_1 = F.affine_grid(theta_1, input_1.size(), align_corners=True)
+        grid_2 = F.affine_grid(theta_2, input_2.size(), align_corners=True)
 
-        x1 = F.grid_sample(input_1, grid_1, padding_mode="border")
-        x2 = F.grid_sample(input_2, grid_2, padding_mode="border")
+        x1 = F.grid_sample(input_1, grid_1, padding_mode="border", align_corners=True)
+        x2 = F.grid_sample(input_2, grid_2, padding_mode="border", align_corners=True)
         if no_translatoin:
-            grid_1 = F.affine_grid(theta_1_linear, input_1.size())
-            grid_2 = F.affine_grid(theta_2_linear, input_2.size())
-            x1_linear = F.grid_sample(input_1, grid_1, padding_mode="border")
-            x2_linear = F.grid_sample(input_2, grid_2, padding_mode="border")
+            grid_1 = F.affine_grid(theta_1_linear, input_1.size(), align_corners=True)
+            grid_2 = F.affine_grid(theta_2_linear, input_2.size(), align_corners=True)
+            x1_linear = F.grid_sample(input_1, grid_1, padding_mode="border", align_corners=True)
+            x2_linear = F.grid_sample(input_2, grid_2, padding_mode="border", align_corners=True)
             return x1,x2, x1_linear, x2_linear
         else:
             return x1,x2
@@ -699,11 +681,10 @@ class SpatialTransformer(nn.Module):
 
 # Deeper Relative Spatial Transformer Network
 class DeepSpatialTransformer(nn.Module):
-    def __init__(self, input_nc, n_blocks=0, gpu_ids=[],y_x=1):
+    def __init__(self, input_nc, n_blocks=0, device=None, y_x=1):
         super(DeepSpatialTransformer, self).__init__()
-        self.gpu_ids = gpu_ids
-        self.device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-
+        self.device = device
+        self.use_cuda = torch.cuda.is_available()
         self.input_nc = input_nc
         self.n_blocks = n_blocks
         # Spatial transformer localization-network
@@ -746,25 +727,20 @@ class DeepSpatialTransformer(nn.Module):
     def forward(self, input, no_translatoin=False):
         h = input.size(2)
         w = input.size(3)
-        if len(self.gpu_ids) and isinstance(input.data, torch.cuda.FloatTensor):
-            mask = torch.Tensor(input.size()).fill_(1).cuda(self.gpu_ids[0])
-        else:
-            mask = torch.Tensor(input.size()).fill_(1).to(self.device)
+
+        mask = torch.Tensor(input.size()).fill_(1).to(self.device)
         ONES = mask.clone()
 
-        if len(self.gpu_ids) > 0:
-            mask.index_fill_(2, LongTensor([0, h-1]).cuda(self.gpu_ids[0]), 0)
-            mask.index_fill_(3, LongTensor([0, w-1]).cuda(self.gpu_ids[0]), 0)
-        else:
-            mask.index_fill_(2, LongTensor([0, h-1]).to(self.device), 0)
-            mask.index_fill_(3, LongTensor([0, w-1]).to(self.device), 0)
+    
+        mask.index_fill_(2, LongTensor([0, h-1]).to(self.device), 0)
+        mask.index_fill_(3, LongTensor([0, w-1]).to(self.device), 0)
         mask = Variable(mask)
 
         # misc.imsave('/home/sazadi/projects/objectComposition-Pytorch/mask.png', mask.data.cpu().numpy().transpose(1,2,0))
         input = torch.mul(input,mask) + (Variable(ONES) - mask)
 
-        if len(self.gpu_ids)  and isinstance(input.data, torch.cuda.FloatTensor):
-            xs = nn.parallel.data_parallel(self.localization, input, self.gpu_ids)
+        if self.use_cuda:
+            xs = nn.parallel.data_parallel(self.localization, input, [self.device])
         else:
             xs = self.localization(input)
 
@@ -774,22 +750,23 @@ class DeepSpatialTransformer(nn.Module):
         inp1 = Variable(LongTensor(range(0,int(input.size(1)/2))))
         inp2 = Variable(LongTensor(range(int(input.size(1)/2),input.size(1))))
 
-        if len(self.gpu_ids) and isinstance(input.data, torch.cuda.FloatTensor):        
-            theta = nn.parallel.data_parallel(self.fc_loc, xs, self.gpu_ids)
-            ind1 = ind1.cuda()
-            ind2 = ind2.cuda()
-            inp1 = inp1.cuda()
-            inp2 = inp2.cuda()
-
+        if self.use_cuda:
+            theta = nn.parallel.data_parallel(self.fc_loc, xs, [self.device])
         else:
             theta = self.fc_loc(xs)
+
+        ind1 = ind1.to(self.device)
+        ind2 = ind2.to(self.device)
+        inp1 = inp1.to(self.device)
+        inp2 = inp2.to(self.device)
+
         theta = theta.view(-1, 4, 3)
 
 
         theta_1 = index_select(theta,1, ind1)
         theta_2 = index_select(theta,1, ind2)
         if no_translatoin:
-            translation_mat = Variable(torch.ones((2,3)).cuda(),requires_grad=False)
+            translation_mat = Variable(torch.ones((2,3)).to(),requires_grad=False)
             translation_mat[:,2] = 0
             theta_1_linear = torch.mul(theta_1, translation_mat)
             theta_2_linear = torch.mul(theta_2, translation_mat)
@@ -797,26 +774,26 @@ class DeepSpatialTransformer(nn.Module):
 
         input_1 = index_select(input, 1, inp1)
         input_2 = index_select(input, 1, inp2)
-        grid_1 = F.affine_grid(theta_1, input_1.size())
-        grid_2 = F.affine_grid(theta_2, input_2.size())
+        grid_1 = F.affine_grid(theta_1, input_1.size(), align_corners=True)
+        grid_2 = F.affine_grid(theta_2, input_2.size(), align_corners=True)
 
-        x1 = F.grid_sample(input_1, grid_1, padding_mode="border")
-        x2 = F.grid_sample(input_2, grid_2, padding_mode="border")
+        x1 = F.grid_sample(input_1, grid_1, padding_mode="border", align_corners=True)
+        x2 = F.grid_sample(input_2, grid_2, padding_mode="border", align_corners=True)
         if no_translatoin:
-            grid_1 = F.affine_grid(theta_1_linear, input_1.size())
-            grid_2 = F.affine_grid(theta_2_linear, input_2.size())
-            x1_linear = F.grid_sample(input_1, grid_1, padding_mode="border")
-            x2_linear = F.grid_sample(input_2, grid_2, padding_mode="border")
+            grid_1 = F.affine_grid(theta_1_linear, input_1.size(), align_corners=True)
+            grid_2 = F.affine_grid(theta_2_linear, input_2.size(), align_corners=True)
+            x1_linear = F.grid_sample(input_1, grid_1, padding_mode="border", align_corners=True)
+            x2_linear = F.grid_sample(input_2, grid_2, padding_mode="border", align_corners=True)
             return x1,x2, x1_linear, x2_linear
         return x1,x2
 
 
 #modified reimplementation of the view synthesis by appearance flow paper: encoder network
 class AFNconvModel(nn.Module):
-    def __init__(self, view_dim=19, flow_mask=0, norm_layer=nn.BatchNorm2d, padding_type='zero', use_dropout=False, use_bias=False, n_blocks=3,disjoint_last_bottle='bottle', gpu_ids=[]):
+    def __init__(self, view_dim=19, flow_mask=0, norm_layer=nn.BatchNorm2d, padding_type='zero', use_dropout=False, use_bias=False, n_blocks=3,disjoint_last_bottle='bottle', device=None):
         super(AFNconvModel, self).__init__()
-        self.gpu_ids = gpu_ids
-        self.device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+        self.device = device
+        self.use_cuda = torch.cuda.is_available()
 
         #flow or mask prediction network
         self.flow_mask = flow_mask
@@ -907,18 +884,17 @@ class AFNconvModel(nn.Module):
 
     def forward(self, img, view):
         # view = view.view([view.size(0), view.size(1)*view.size(2)]).type(torch.FloatTensor)
-        if len(self.gpu_ids) and isinstance(img.data, torch.cuda.FloatTensor):
-            img = nn.parallel.data_parallel(self.encoder_conv_inp, img, self.gpu_ids)
-            view = view.unsqueeze(2).repeat(1, 1, 4, 4).type(torch.cuda.FloatTensor)
+        if self.use_cuda:
+            img = nn.parallel.data_parallel(self.encoder_conv_inp, img, [self.device])
+            view = view.unsqueeze(2).repeat(1, 1, 4, 4).type(torch.FloatTensor)
             # normalize img features
             # img = F.normalize(img, p=2, dim=1)
             input = torch.cat((img, view), dim=1)
-            pred = nn.parallel.data_parallel(self.decoder_up, input, self.gpu_ids)
-            flow = nn.parallel.data_parallel(self.flow_out, pred, self.gpu_ids)
+            pred = nn.parallel.data_parallel(self.decoder_up, input, [self.device])
+            flow = nn.parallel.data_parallel(self.flow_out, pred, [self.device])
             if self.disjoint_last_bottle == 'bottle':
-                pred = nn.parallel.data_parallel(self.decoder_up_mask, input, self.gpu_ids)
-            mask = nn.parallel.data_parallel(self.mask_out, pred, self.gpu_ids)
-
+                pred = nn.parallel.data_parallel(self.decoder_up_mask, input, [self.device])
+            mask = nn.parallel.data_parallel(self.mask_out, pred, [self.device])
         else:
             img = self.encoder_inp(img)
             # img = F.normalize(img, p=2, dim=1)
@@ -936,11 +912,10 @@ class AFNconvModel(nn.Module):
 # reimplementation of the dofan model in torch
 #https://github.com/silverbottlep/tvsn/blob/49820d819a3d3588e7c4ff3c3c9c4698a5593c53/tvsn/code/models/DOAFN_SYM_256.lua
 class DOAFNModel(nn.Module):
-    def __init__(self, view_dim=19, flow_mask=0, res=128, norm_layer=nn.BatchNorm2d, padding_type='zero', use_dropout=False, use_bias=False, n_blocks=3, disjoint_last_bottle='last', gpu_ids=[]):
+    def __init__(self, view_dim=19, flow_mask=0, res=128, norm_layer=nn.BatchNorm2d, padding_type='zero', use_dropout=False, use_bias=False, n_blocks=3, disjoint_last_bottle='last', device=None):
         super(DOAFNModel, self).__init__()
-        self.gpu_ids = gpu_ids
-        self.device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-
+        self.device = device
+        self.use_cuda = torch.cuda.is_available()
         #flow or mask prediction network
         self.flow_mask = flow_mask
         self.disjoint_last_bottle =disjoint_last_bottle
@@ -1110,37 +1085,37 @@ class DOAFNModel(nn.Module):
 
         
         encoder_output = torch.cat([img, view],1)
-        if len(self.gpu_ids) and isinstance(img.data, torch.cuda.FloatTensor):
-            decoder_inp = nn.parallel.data_parallel(self.decoder_fc, encoder_output, self.gpu_ids)
+
+        if self.use_cuda:
+            decoder_inp = nn.parallel.data_parallel(self.decoder_fc, encoder_output, [self.device])
         else:
             decoder_inp = self.decoder_fc(encoder_output)
-
+       
         decoder_inp = decoder_inp.view([decoder_inp.size(0), 512, 4, 4])
 
-        if len(self.gpu_ids) and isinstance(img.data, torch.cuda.FloatTensor):
-            pred = nn.parallel.data_parallel(self.decoder_up, decoder_inp, self.gpu_ids)
-            flow = nn.parallel.data_parallel(self.flow_out, pred, self.gpu_ids)
+        if self.use_cuda:
+            pred = nn.parallel.data_parallel(self.decoder_up, decoder_inp, [self.device])
+            flow = nn.parallel.data_parallel(self.flow_out, pred, [self.device])
             if self.disjoint_last_bottle=='bottle':
-                pred = nn.parallel.data_parallel(self.decoder_up_mask, decoder_inp, self.gpu_ids)
-            mask = nn.parallel.data_parallel(self.mask_out, pred, self.gpu_ids)
+                pred = nn.parallel.data_parallel(self.decoder_up_mask, decoder_inp, [self.device])
+            mask = nn.parallel.data_parallel(self.mask_out, pred, [self.device])
         else:
             pred = self.decoder_up(decoder_inp)
             flow = self.flow_out(pred)
-            if disjoint_last_bottle=='bottle':
+            if self.disjoint_last_bottle=='bottle':
                 pred = self.decoder_up_mask(decoder_inp)
             mask = self.mask_out(pred)
         return flow, mask
 
 
 
-
 # reimplementation of the dofan model in torch
 #https://github.com/silverbottlep/tvsn/blob/49820d819a3d3588e7c4ff3c3c9c4698a5593c53/tvsn/code/models/DOAFN_SYM_256.lua
 class DOAFNComposeModel(nn.Module):
-    def __init__(self, input_nc, res=128, norm_layer=nn.BatchNorm2d, padding_type='zero', use_dropout=False, use_bias=False, n_blocks=3, gpu_ids=[]):
+    def __init__(self, input_nc, res=128, norm_layer=nn.BatchNorm2d, padding_type='zero', use_dropout=False, use_bias=False, n_blocks=3, device=None):
         super(DOAFNComposeModel, self).__init__()
-        self.gpu_ids = gpu_ids
-        self.device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+        self.device = device
+        self.use_cuda = torch.cuda.is_available()
 
         self.input_nc = input_nc
 
@@ -1237,12 +1212,10 @@ class DOAFNComposeModel(nn.Module):
         self.decoder_f = nn.Sequential(*sequence_dec_f)
 
     def forward(self, input):
-        if len(self.gpu_ids) and isinstance(input.data, torch.cuda.FloatTensor):
-            emb = nn.parallel.data_parallel(self.encoder, input, self.gpu_ids)
-            flow = nn.parallel.data_parallel(self.decoder_f, emb, self.gpu_ids)
-
-            mask = nn.parallel.data_parallel(self.decoder_m, emb, self.gpu_ids)
-
+        if self.use_cuda:
+            emb = nn.parallel.data_parallel(self.encoder, input, [self.device])
+            flow = nn.parallel.data_parallel(self.decoder_f, emb, [self.device])
+            mask = nn.parallel.data_parallel(self.decoder_m, emb, [self.device])
         else:
             emb = self.encoder(input)
             flow = self.decoder_f(emb)

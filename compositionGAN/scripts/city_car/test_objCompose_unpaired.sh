@@ -36,7 +36,6 @@ display_freq=1
 print_freq=20
 update_html_freq=5
 n_latest=10000
-CUDA_ID=1
 
 
 if [ ! -d "./checkpoints/${name}" ]; then

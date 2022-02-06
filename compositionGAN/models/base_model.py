@@ -9,9 +9,10 @@ class BaseModel():
 
     def initialize(self, opt):
         self.opt = opt
-        self.gpu_ids = opt.gpu_ids
+        self.device = opt.device
+        self.use_cuda = torch.cuda.is_available()
         self.isTrain = opt.isTrain
-        self.Tensor = torch.cuda.FloatTensor if self.gpu_ids else torch.Tensor
+        self.Tensor = torch.cuda.FloatTensor if self.use_cuda else torch.Tensor
         self.save_dir = os.path.join(opt.checkpoints_dir, opt.name)
         self.model_names = []
         self.epoch_labels = []
@@ -47,8 +48,7 @@ class BaseModel():
         save_filename = '%s_net_%s.pth' % (epoch_label, network_label)
         save_path = os.path.join(self.save_dir, save_filename)
         torch.save(network.cpu().state_dict(), save_path)
-        if len(gpu_ids) and torch.cuda.is_available():
-            network.cuda(gpu_ids[0])
+        network.to(self.device)
 
     def save_networks(self, model_names, epoch_labels):
         assert(len(model_names) == len(epoch_labels))
@@ -57,11 +57,10 @@ class BaseModel():
                 net = getattr(self, 'net' + name)
                 save_filename = '%s_net_%s.pth' % (epoch_labels[i], name)
                 save_path = os.path.join(self.save_dir, save_filename)
-                if len(self.gpu_ids) and torch.cuda.is_available():
-                    torch.save(net.cpu().state_dict(), save_path)
-                    net.cuda(self.gpu_ids[0])
-                else:
-                    torch.save(net.cpu().state_dict(), save_path)
+
+                torch.save(net.cpu().state_dict(), save_path)
+                net.to(self.device)
+        
 
 
     # # helper loading function that can be used by subclasses
