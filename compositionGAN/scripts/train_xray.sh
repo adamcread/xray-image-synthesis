@@ -9,8 +9,8 @@
 
 mode=train
 name="train_xray"
-datalist="../dataset/unpaired/training_paths.txt"
-datalist_test="../dataset/unpaired/test_paths.txt"
+datalist="../dataset/xray/unpaired/training_paths.txt"
+datalist_test="../dataset/xray/unpaired/test_paths.txt"
 
 exp_name="unpaired_compGAN" # suffix for naming
 dataset_mode='comp_decomp_unaligned' # dataset type to choose model type

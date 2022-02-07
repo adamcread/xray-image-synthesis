@@ -11,8 +11,8 @@ obj1=city
 mode=train
 name="${obj1}_${obj2}"
 
-datalist="dataset/${name}/unpaired.txt"
-datalist_t="dataset/${name}/test.txt"
+datalist="../dataset/${name}/unpaired.txt"
+datalist_t="../dataset/${name}/test.txt"
 
 exp_name="unpaired_compGAN"
 name_train="${name}_train_${exp_name}"
