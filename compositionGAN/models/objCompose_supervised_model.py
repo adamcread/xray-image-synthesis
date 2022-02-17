@@ -4,15 +4,12 @@
 # By Samaneh Azadi
 # ========================================================
 
-import numpy as np
 import torch
-import os
 from collections import OrderedDict
 from torch.autograd import Variable
 from util.image_pool import ImagePool
 from .base_model import BaseModel
 from . import networks
-from scipy import misc
 from torch import index_select, LongTensor, nn
 import torch.nn.functional as F
 

@@ -2,14 +2,9 @@ import torch.utils.data as data
 from PIL import Image
 import torchvision.transforms as transforms
 import torch
-from torch import index_select, LongTensor, nn
-from scipy import misc
-# from scipy.misc import imread
+from torch import LongTensor
 from imageio import imread
 import numpy as np
-
-# from skimage.transform import resize
-
 
 class BaseDataset(data.Dataset):
     def __init__(self):

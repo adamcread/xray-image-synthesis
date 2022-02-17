@@ -5,10 +5,9 @@ import time
 from . import util
 from . import html
 # from scipy.misc import imresize
-from skimage.transform import resize
+from PIL import Image
 
 
-# display on http server
 class Visualizer():
     def __init__(self, opt):
         # self.opt = opt
@@ -105,7 +104,7 @@ class Visualizer():
         self.plot_data['X'].append(epoch + counter_ratio)
         self.plot_data['Y'].append([errors[k].cpu().data.numpy() for k in self.plot_data['legend']])
         self.vis.line(
-            X=np.stack([list(np.array(self.plot_data['X']))] * len(self.plot_data['legend']), 1),
+            X=np.stack([np.array(self.plot_data['X'])] * len(self.plot_data['legend']), 1),
             Y=np.array(self.plot_data['Y']),
             opts={
                 'title': self.name + ' loss over time',
@@ -135,14 +134,16 @@ class Visualizer():
         links = []
 
         for label, im in visuals.items():
+            pil_im = Image(im)
             image_name = '%s_%s.png' % (name, label)
             save_path = os.path.join(image_dir, image_name)
             h, w, _ = im.shape
             if aspect_ratio > 1.0:
-                im = resize(im,  (h, int(w * aspect_ratio)))
+                # im = imresize(im, (h, int(w * aspect_ratio)), interp='bicubic')
+                im = pil_im.resize((h, int(w * aspect_ratio)))
             if aspect_ratio < 1.0:
-                im = resize(im,  (int(h / aspect_ratio), w))
-
+                # im = imresize(im, (int(h / aspect_ratio), w), interp='bicubic')
+                im = pil_im.resize((int(h / aspect_ratio), w))
             util.save_image(im, save_path)
 
             ims.append(image_name)

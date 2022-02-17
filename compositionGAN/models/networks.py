@@ -12,9 +12,7 @@ import functools
 from torch.autograd import Variable
 from torch.optim import lr_scheduler
 import torch.nn.functional as F
-import numpy as np
 from torch import index_select, LongTensor, nn
-from scipy import misc
 
 ###############################################################################
 # Functions

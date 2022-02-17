@@ -22,7 +22,7 @@ dataset_size = len(data_loader)
 # num of training images
 print('#training images = %d' % dataset_size)
 opt.display_id = 0
-opt.device = torch.device(f'cuda:{opt.gpu_ids}' if torch.cuda.is_available() else "cpu")
+opt.device = torch.device('cuda:0' if torch.cuda.is_available() else "cpu")
 model = create_model(opt)
 visualizer = Visualizer(opt)
 
@@ -157,3 +157,6 @@ for epoch in range(opt.epoch_count, opt.niter + opt.niter_decay + 1):
           (epoch, opt.niter + opt.niter_decay, time.time() - epoch_start_time))
     model.update_learning_rate()
 
+
+
+# linear scalong rule

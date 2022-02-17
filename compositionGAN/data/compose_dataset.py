@@ -7,12 +7,8 @@
 import os.path
 import torchvision.transforms as transforms
 from data.base_dataset import BaseDataset
-from data.image_folder import make_dataset
 from PIL import Image
 import numpy as np
-from scipy import misc
-# from scipy.misc import imread
-from imageio import imread
 import torch
 import random
 import ntpath
@@ -48,7 +44,7 @@ class ComposeDataset(BaseDataset):
         A2_path = self.A2_paths[index]
         if self.opt.xray:
             B_root, B_name = B_path.split('/unpaired_images/')
-            M_path = B_root + '/polygons/' + B_name
+            M_path = os.path.join(B_root, 'masks', 'resized', B_name)
         else:
             B_root = B_path.split('images')[0]
             B_name = ntpath.basename(B_path)

@@ -1,5 +1,4 @@
 from torch.utils.data import DataLoader
-# from data.base_data_loader import BaseDataLoader
 
 def CreateDataLoader(opt):
     data_loader = CustomDatasetDataLoader()

@@ -7,14 +7,12 @@
 
 import numpy as np
 import torch
-import os
 from collections import OrderedDict
 from torch.autograd import Variable
 from util.image_pool import ImagePool
 from .base_model import BaseModel
 from . import networks
 from torch import index_select, LongTensor, nn
-from scipy import misc
 from scipy.ndimage.morphology import binary_erosion
 import torch.nn.functional as F
 

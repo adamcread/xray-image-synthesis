@@ -1,43 +1,62 @@
-#!/bin/bash -f
+#!/bin/bash
 
-# ========================================================
-# Compositional GAN
-# Script for training the model with unpaired street views & cars
-# By Samaneh Azadi
-# ========================================================
+# X number of nodes with Y number of cores in each node.
+#SBATCH -N 1
+#SBATCH -c 4
 
+# partition time limit and resource limit for the job
+#SBATCH --gres=gpu
+#SBATCH -p gpu-bigmem
+#SBATCH --mem=28g
+#SBATCH --qos=long-low-prio
+#SBATCH -t 07-00:00:00
+
+# job name
+#SBATCH --job-name=unpaired_combined
+
+# Source the bash profile (required to use the module command)
+# source /etc/profile
+# source venv/bin/activate
+# module load cuda/11.0-cudnn8.0
 
 mode=train
-name="train_xray"
-datalist="../dataset/xray/unpaired/training_paths.txt"
-datalist_test="../dataset/xray/unpaired/test_paths.txt"
+name="train_xray_combined"
+
+datalist="../dataset/xray/unpaired/train_paths_combined.txt"
+datalist_test="../dataset/xray/unpaired/test_paths_combined.txt"
 
 exp_name="unpaired_compGAN" # suffix for naming
 dataset_mode='comp_decomp_unaligned' # dataset type to choose model type
 
-batch_size=10 # size of each training batch
+batch_size=128 # size of each training batch
 loadSizeY=256 # size to scale images to
 fineSizeY=256 # size image is
+loadSizeX=256 # size to scale images to
+fineSizeX=256 # size image is
 
 G1_comp=1 # completion on object 1	
 G2_comp=0 # completion on object 2
 STN_model='deep'
 lambda_mask=50
 lr=0.00002 # initial learning rate
-niter=100
-niter_decay=100
+niter=1000
+niter_decay=1000
 
-niterSTN=100 # epochs to train STN
-niterCompletion=100 # epochs to train inpainting
+niterSTN=500
+niterCompletion=500
+
 which_epoch=0
 which_epoch_completion=0 
 which_epoch_STN=0
+
 display_port=8775
 display_freq=550
 print_freq=30
 update_html_freq=550
 save_epoch_freq=50
-CUDA_ID=2
+CUDA_ID=0
+
+xray=true
 
 # if checkpoint directory doesn't exist make one
 if [ ! -d "./checkpoints/${name}" ]; then
@@ -60,7 +79,7 @@ CUDA_LAUNCH_BLOCKING=${CUDA_ID} CUDA_VISIBLE_DEVICES=${CUDA_ID} \
 	--decomp \
 	--name ${name} \
 	--dataset_mode ${dataset_mode} \
-	--xray=true \
+	--xray ${xray} \
 	--no_lsgan \
 	--conditional \
 	--img_completion \
@@ -70,6 +89,8 @@ CUDA_LAUNCH_BLOCKING=${CUDA_ID} CUDA_VISIBLE_DEVICES=${CUDA_ID} \
 	--which_epoch_completion ${which_epoch_completion} \
 	--fineSizeY ${fineSizeY} \
 	--loadSizeY ${loadSizeY} \
+	--fineSizeX ${fineSizeX} \
+	--loadSizeX ${loadSizeX} \
 	--G1_completion ${G1_comp} \
 	--G2_completion ${G2_comp} \
 	--lambda_mask ${lambda_mask} \
