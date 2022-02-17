@@ -723,6 +723,8 @@ class DeepSpatialTransformer(nn.Module):
         self.fc_loc[4].bias.data = torch.FloatTensor([1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0]).to(self.device)
 
     def forward(self, input, no_translatoin=False):
+        input = input.to(self.device)
+
         h = input.size(2)
         w = input.size(3)
 
