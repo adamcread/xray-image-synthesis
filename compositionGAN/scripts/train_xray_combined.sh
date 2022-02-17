@@ -15,9 +15,9 @@
 #SBATCH --job-name=unpaired_combined
 
 # Source the bash profile (required to use the module command)
-# source /etc/profile
-# source venv/bin/activate
-# module load cuda/11.0-cudnn8.0
+source /etc/profile
+source ../venv/bin/activate
+module load cuda/11.0-cudnn8.0
 
 mode=train
 name="train_xray_combined"
