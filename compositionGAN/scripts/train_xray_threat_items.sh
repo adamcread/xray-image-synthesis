@@ -6,7 +6,7 @@
 
 # partition time limit and resource limit for the job
 #SBATCH --gres=gpu
-#SBATCH -p gpu-bigmem
+#SBATCH -p ug-gpu-small	
 #SBATCH --mem=28g
 #SBATCH --qos=long-low-prio
 #SBATCH -t 07-00:00:00
