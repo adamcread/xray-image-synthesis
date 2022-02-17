@@ -618,7 +618,7 @@ class SpatialTransformer(nn.Module):
 
         mask = torch.Tensor(input.size()).fill_(1).to(self.device)
 
-        ONES = mask.clone()
+        ONES = mask.clone().to(self.device)
         mask.index_fill_(2, LongTensor([0, h-1]).to(self.device), 0)
         mask.index_fill_(3, LongTensor([0, w-1]).to(self.device), 0)
             
@@ -727,7 +727,7 @@ class DeepSpatialTransformer(nn.Module):
         w = input.size(3)
 
         mask = torch.Tensor(input.size()).fill_(1).to(self.device)
-        ONES = mask.clone()
+        ONES = mask.clone().to(self.device)
 
     
         mask.index_fill_(2, LongTensor([0, h-1]).to(self.device), 0)
