@@ -126,24 +126,15 @@ class objComposeSuperviseModel(BaseModel):
             self.L2_loss = torch.nn.MSELoss()
 
             # loss function initializations
-            if self.use_cuda:
-                self.loss_G_GAN = Variable(torch.cuda.Tensor(1).fill_(0).to(self.device))
-                self.loss_D_real = Variable(torch.cuda.Tensor(1).fill_(0).to(self.device))
-                self.loss_D_fake = Variable(torch.cuda.Tensor(1).fill_(0).to(self.device))
-                self.loss_G_L1 = Variable(torch.cuda.Tensor(1).fill_(0).to(self.device))
-                self.loss_gp = Variable(torch.cuda.Tensor(1).fill_(0).to(self.device))
-                self.loss_AFN = Variable(torch.cuda.Tensor(1).fill_(0).to(self.device))
-                self.loss_STN = Variable(torch.cuda.Tensor(1).fill_(0).to(self.device))
-                self.loss_segmetation = Variable(torch.cuda.Tensor(1).fill_(0).to(self.device))
-            else:
-                self.loss_G_GAN = Variable(torch.Tensor(1).fill_(0).to(self.device))
-                self.loss_D_real = Variable(torch.Tensor(1).fill_(0).to(self.device))
-                self.loss_D_fake = Variable(torch.Tensor(1).fill_(0).to(self.device))
-                self.loss_G_L1 = Variable(torch.Tensor(1).fill_(0).to(self.device))
-                self.loss_gp = Variable(torch.Tensor(1).fill_(0).to(self.device))
-                self.loss_AFN = Variable(torch.Tensor(1).fill_(0).to(self.device))
-                self.loss_STN = Variable(torch.Tensor(1).fill_(0).to(self.device))
-                self.loss_segmetation = Variable(torch.Tensor(1).fill_(0).to(self.device))
+            
+            self.loss_G_GAN = Variable(torch.Tensor(1).fill_(0).to(self.device))
+            self.loss_D_real = Variable(torch.Tensor(1).fill_(0).to(self.device))
+            self.loss_D_fake = Variable(torch.Tensor(1).fill_(0).to(self.device))
+            self.loss_G_L1 = Variable(torch.Tensor(1).fill_(0).to(self.device))
+            self.loss_gp = Variable(torch.Tensor(1).fill_(0).to(self.device))
+            self.loss_AFN = Variable(torch.Tensor(1).fill_(0).to(self.device))
+            self.loss_STN = Variable(torch.Tensor(1).fill_(0).to(self.device))
+            self.loss_segmetation = Variable(torch.Tensor(1).fill_(0).to(self.device))
 
         self.softmax = torch.nn.Softmax(dim=1)
    
@@ -211,14 +202,10 @@ class objComposeSuperviseModel(BaseModel):
         diff_2 = torch.sum(torch.pow(self.input_B2_T - self.input_B, 2),dim=1, keepdim=True)
         val, self.real_M = torch.min(torch.cat((diff_0, diff_1, diff_2), 1),1)
 
-        if self.use_cuda:
-            self.real_M1_s = Variable((self.real_M==1).unsqueeze(1).type(torch.cuda.FloatTensor))
-            self.real_M2_s = Variable((self.real_M==2).unsqueeze(1).type(torch.cuda.FloatTensor))
-            self.real_M = Variable(self.real_M.type(torch.cuda.LongTensor))
-        else:
-            self.real_M1_s = Variable((self.real_M==1).unsqueeze(1).type(torch.FloatTensor))
-            self.real_M2_s = Variable((self.real_M==2).unsqueeze(1).type(torch.FloatTensor))
-            self.real_M = Variable(self.real_M.type(torch.LongTensor))
+        
+        self.real_M1_s = Variable((self.real_M==1).unsqueeze(1).type(torch.FloatTensor)).to(self.device)
+        self.real_M2_s = Variable((self.real_M==2).unsqueeze(1).type(torch.FloatTensor)).to(self.device)
+        self.real_M = Variable(self.real_M.type(torch.LongTensor)).to(self.device)
 
 
         self.real_A1 = Variable(self.input_A1)
@@ -231,13 +218,10 @@ class objComposeSuperviseModel(BaseModel):
 
     def forward(self):
         '''starting from input object images'''
-        if self.use_cuda:
-            self.mask_A2 = (torch.mean(self.real_A2,dim=1,keepdim=True)<1).type(torch.cuda.FloatTensor) 
-            self.mask_A1 = (torch.mean(self.real_A1,dim=1,keepdim=True)<1).type(torch.cuda.FloatTensor).repeat(1,3,1,1) 
-        else:
-            self.mask_A2 = (torch.mean(self.real_A2,dim=1,keepdim=True)<1).type(torch.FloatTensor) 
-            self.mask_A1 = (torch.mean(self.real_A1,dim=1,keepdim=True)<1).type(torch.FloatTensor).repeat(1,3,1,1) 
         
+        self.mask_A2 = (torch.mean(self.real_A2,dim=1,keepdim=True)<1).type(torch.FloatTensor).to(self.device)
+        self.mask_A1 = (torch.mean(self.real_A1,dim=1,keepdim=True)<1).type(torch.FloatTensor).repeat(1,3,1,1).to(self.device)
+    
         #start the cycle from real_A1, real_A2
         #-------------------------
         #AFN
@@ -265,13 +249,10 @@ class objComposeSuperviseModel(BaseModel):
         self.M1_M2_normal = self.softmax(self.M1_M2)
         v,m = torch.max(self.M1_M2_normal, dim=1, keepdim=True)
 
-        if self.use_cuda:
-            self.fake_M1_s = ((m==1)*1).type(torch.cuda.FloatTensor)
-            self.fake_M2_s = ((m==2)*1).type(torch.cuda.FloatTensor)
-        else:
-            self.fake_M1_s = ((m==1)*1).type(torch.FloatTensor)
-            self.fake_M2_s = ((m==2)*1).type(torch.FloatTensor)
-            
+        
+        self.fake_M1_s = ((m==1)*1).type(torch.FloatTensor).to(self.device)
+        self.fake_M2_s = ((m==2)*1).type(torch.FloatTensor).to(self.device)
+        
         if self.opt.phase=='test':
             self.M1_M2 = self.softmax(self.M1_M2)
 
@@ -286,23 +267,17 @@ class objComposeSuperviseModel(BaseModel):
         self.mask_A1_fake = torch.mean(self.fake_A1_T,dim=1,keepdim=True)
         self.mask_A2_fake = torch.mean(self.fake_A2_T,dim=1,keepdim=True)
 
-        if self.use_cuda:
-            self.mask_A1_fake = (self.mask_A1_fake<self.opt.Thresh1*torch.max(self.fake_A1_T).data).type(torch.cuda.FloatTensor)
-            self.mask_A2_fake = (self.mask_A2_fake<self.opt.Thresh2*torch.max(self.fake_A2_T).data).type(torch.cuda.FloatTensor)
-            self.mask_A0_fake = 1 - (((self.mask_A1_fake + self.mask_A2_fake)>=1)*1).type(torch.cuda.FloatTensor)
-        else:
-            self.mask_A1_fake = (self.mask_A1_fake<self.opt.Thresh1*torch.max(self.fake_A1_T).data).type(torch.FloatTensor)
-            self.mask_A2_fake = (self.mask_A2_fake<self.opt.Thresh2*torch.max(self.fake_A2_T).data).type(torch.FloatTensor)
-            self.mask_A0_fake = 1 - (((self.mask_A1_fake + self.mask_A2_fake)>=1)*1).type(torch.FloatTensor)
+       
+        self.mask_A1_fake = (self.mask_A1_fake<self.opt.Thresh1*torch.max(self.fake_A1_T).data).type(torch.FloatTensor).to(self.device)
+        self.mask_A2_fake = (self.mask_A2_fake<self.opt.Thresh2*torch.max(self.fake_A2_T).data).type(torch.FloatTensor).to(self.device)
+        self.mask_A0_fake = 1 - (((self.mask_A1_fake + self.mask_A2_fake)>=1)*1).type(torch.FloatTensor).to(self.device)
 
         # AND between object mask and predicted mask
         self.fake_M1_s_ = torch.mul(self.fake_M1_s, self.mask_A1_fake).repeat(1,3,1,1)
         self.fake_M2_s_ = torch.mul(self.fake_M2_s, self.mask_A2_fake).repeat(1,3,1,1)
 
-        if self.use_cuda:
-            forgot_overlp = (((self.fake_M1_s_ + self.fake_M2_s_)==0)*1).type(torch.cuda.FloatTensor)
-        else:
-            forgot_overlp = (((self.fake_M1_s_ + self.fake_M2_s_)==0)*1).type(torch.FloatTensor)
+        
+        forgot_overlp = (((self.fake_M1_s_ + self.fake_M2_s_)==0)*1).type(torch.FloatTensor).to(self.device)
 
         self.forgot_A1 = torch.mul(forgot_overlp, self.mask_A1_fake)
         self.forgot_A2 = torch.mul(forgot_overlp, self.mask_A2_fake)
@@ -469,10 +444,8 @@ class objComposeSuperviseModel(BaseModel):
         #--------------------------
         # Loss for training RAFN
         #--------------------------
-        if self.use_cuda:
-            self.loss_AFN = Variable(torch.cuda.Tensor(1).fill_(0).to(self.device))
-        else:
-            self.loss_AFN = Variable(torch.Tensor(1).fill_(0).to(self.device))
+        
+        self.loss_AFN = Variable(torch.Tensor(1).fill_(0).to(self.device))
 
         if self.opt.random_view:
             if self.opt.lambda_AFN:

@@ -12,7 +12,7 @@ class BaseModel():
         self.device = opt.device
         self.use_cuda = torch.cuda.is_available()
         self.isTrain = opt.isTrain
-        self.Tensor = torch.cuda.FloatTensor if self.use_cuda else torch.Tensor
+        self.Tensor = torch.FloatTensor
         self.save_dir = os.path.join(opt.checkpoints_dir, opt.name)
         self.model_names = []
         self.epoch_labels = []

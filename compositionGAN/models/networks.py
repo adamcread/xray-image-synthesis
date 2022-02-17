@@ -610,7 +610,7 @@ class SpatialTransformer(nn.Module):
 
 
         self.fc_loc[2].weight.data.fill_(0)
-        self.fc_loc[2].bias.data = torch.FloatTensor([1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0])
+        self.fc_loc[2].bias.data = torch.FloatTensor([1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0]).to(self.device)
 
     def forward(self, input, no_translatoin=False):
         h = input.size(2)
@@ -720,7 +720,7 @@ class DeepSpatialTransformer(nn.Module):
 
 
         self.fc_loc[4].weight.data.fill_(0)
-        self.fc_loc[4].bias.data = torch.FloatTensor([1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0])
+        self.fc_loc[4].bias.data = torch.FloatTensor([1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0]).to(self.device)
 
     def forward(self, input, no_translatoin=False):
         h = input.size(2)
@@ -884,7 +884,7 @@ class AFNconvModel(nn.Module):
         # view = view.view([view.size(0), view.size(1)*view.size(2)]).type(torch.FloatTensor)
         if self.use_cuda:
             img = nn.parallel.data_parallel(self.encoder_conv_inp, img, [self.device])
-            view = view.unsqueeze(2).repeat(1, 1, 4, 4).type(torch.FloatTensor)
+            view = view.unsqueeze(2).repeat(1, 1, 4, 4).type(torch.FloatTensor).to(self.device)
             # normalize img features
             # img = F.normalize(img, p=2, dim=1)
             input = torch.cat((img, view), dim=1)
@@ -1069,7 +1069,7 @@ class DOAFNModel(nn.Module):
         self.mask_out = nn.Sequential(*mask_out)
 
     def forward(self, img, view):
-        view = view.view([view.size(0), view.size(1)*view.size(2)]).type(torch.FloatTensor)
+        view = view.view([view.size(0), view.size(1)*view.size(2)]).type(torch.FloatTensor).to(self.device)
         # if len(self.gpu_ids) and isinstance(img.data, torch.cuda.FloatTensor):
         #     view = view.cuda(self.gpu_ids[0], async=True)
         #     img = nn.parallel.data_parallel(self.encoder_conv_inp, img, self.gpu_ids)

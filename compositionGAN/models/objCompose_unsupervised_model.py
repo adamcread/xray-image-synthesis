@@ -26,7 +26,6 @@ class objComposeUnsuperviseModel(BaseModel):
         self.isTrain = opt.isTrain
         self.y_x = int(float(opt.fineSizeY)/opt.fineSizeX)
         self.device = opt.device
-        self.use_cuda = torch.cuda.is_available()
 
         # -------------------------------
         # Define Networks
@@ -167,30 +166,17 @@ class objComposeUnsuperviseModel(BaseModel):
             self.criterionbCLS = nn.BCELoss()
 
             # loss function initializations
-            if self.use_cuda:
-                self.loss_G_GAN = Variable(torch.cuda.Tensor(1).fill_(0).to(self.device))
-                self.loss_D_real = Variable(torch.cuda.Tensor(1).fill_(0).to(self.device))
-                self.loss_D_fake = Variable(torch.cuda.Tensor(1).fill_(0).to(self.device))
-                self.loss_G_L1 = Variable(torch.cuda.Tensor(1).fill_(0).to(self.device))
-                self.loss_G_seg = Variable(torch.cuda.Tensor(1).fill_(0).to(self.device))
-                self.loss_gp = Variable(torch.cuda.Tensor(1).fill_(0).to(self.device))
-                self.loss_AFN = Variable(torch.cuda.Tensor(1).fill_(0).to(self.device))
-                self.loss_G_mask = Variable(torch.cuda.Tensor(1).fill_(0).to(self.device))
-                self.loss_STN = Variable(torch.cuda.Tensor(1).fill_(0).to(self.device))
-                self.loss_G_completion = Variable(torch.cuda.Tensor(1).fill_(0).to(self.device))
-                self.loss_D_completion = Variable(torch.cuda.Tensor(1).fill_(0).to(self.device))
-            else:
-                self.loss_G_GAN = Variable(torch.Tensor(1).fill_(0).to(self.device))
-                self.loss_D_real = Variable(torch.Tensor(1).fill_(0).to(self.device))
-                self.loss_D_fake = Variable(torch.Tensor(1).fill_(0).to(self.device))
-                self.loss_G_L1 = Variable(torch.Tensor(1).fill_(0).to(self.device))
-                self.loss_G_seg = Variable(torch.Tensor(1).fill_(0).to(self.device))
-                self.loss_gp = Variable(torch.Tensor(1).fill_(0).to(self.device))
-                self.loss_AFN = Variable(torch.Tensor(1).fill_(0).to(self.device))
-                self.loss_G_mask = Variable(torch.Tensor(1).fill_(0).to(self.device))
-                self.loss_STN = Variable(torch.Tensor(1).fill_(0).to(self.device))
-                self.loss_G_completion = Variable(torch.Tensor(1).fill_(0).to(self.device))
-                self.loss_D_completion = Variable(torch.Tensor(1).fill_(0).to(self.device))
+            self.loss_G_GAN = Variable(torch.Tensor(1).fill_(0).to(self.device))
+            self.loss_D_real = Variable(torch.Tensor(1).fill_(0).to(self.device))
+            self.loss_D_fake = Variable(torch.Tensor(1).fill_(0).to(self.device))
+            self.loss_G_L1 = Variable(torch.Tensor(1).fill_(0).to(self.device))
+            self.loss_G_seg = Variable(torch.Tensor(1).fill_(0).to(self.device))
+            self.loss_gp = Variable(torch.Tensor(1).fill_(0).to(self.device))
+            self.loss_AFN = Variable(torch.Tensor(1).fill_(0).to(self.device))
+            self.loss_G_mask = Variable(torch.Tensor(1).fill_(0).to(self.device))
+            self.loss_STN = Variable(torch.Tensor(1).fill_(0).to(self.device))
+            self.loss_G_completion = Variable(torch.Tensor(1).fill_(0).to(self.device))
+            self.loss_D_completion = Variable(torch.Tensor(1).fill_(0).to(self.device))
 
                 
         self.softmax = torch.nn.Softmax(dim=1)
@@ -254,10 +240,8 @@ class objComposeUnsuperviseModel(BaseModel):
 
         self.real_M1_s = Variable(self.input_M1[:,0:3,:,:])
         self.real_M2_s = Variable(self.input_M2[:,0:3,:,:])
-        if self.use_cuda:
-            self.real_M = (self.real_M1_s + self.real_M2_s*2).type(torch.cuda.LongTensor)
-        else:
-            self.real_M = (self.real_M1_s + self.real_M2_s*2).type(torch.LongTensor)
+        
+        self.real_M = (self.real_M1_s + self.real_M2_s*2).type(torch.LongTensor).to(self.device)
         self.real_M = self.real_M[:,0,:,:]
 
     def forward_STN(self):
@@ -290,12 +274,9 @@ class objComposeUnsuperviseModel(BaseModel):
         self.mask_A1_T = torch.mean(self.real_A1_T,dim=1,keepdim=True)
         self.mask_A2_T = torch.mean(self.real_A2_T,dim=1,keepdim=True)
 
-        if self.use_cuda:
-            self.mask_A1_T = (self.mask_A1_T<0.9*torch.max(self.mask_A1_T).data).type(torch.cuda.FloatTensor)
-            self.mask_A2_T = (self.mask_A2_T<0.9*torch.cuda.max(self.mask_A2_T).data).type(torch.cuda.FloatTensor)
-        else:
-            self.mask_A1_T = (self.mask_A1_T<0.9*torch.max(self.mask_A1_T).data).type(torch.FloatTensor)
-            self.mask_A2_T = (self.mask_A2_T<0.9*torch.max(self.mask_A2_T).data).type(torch.FloatTensor)
+        
+        self.mask_A1_T = (self.mask_A1_T<0.9*torch.max(self.mask_A1_T).data).type(torch.FloatTensor).to(self.device)
+        self.mask_A2_T = (self.mask_A2_T<0.9*torch.max(self.mask_A2_T).data).type(torch.FloatTensor).to(self.device)
 
         self.mask_A1_T = self.mask_A1_T.repeat(1,3,1,1)
         self.mask_A2_T = self.mask_A2_T.repeat(1,3,1,1)
@@ -319,11 +300,7 @@ class objComposeUnsuperviseModel(BaseModel):
         self.real_A2 = Variable(self.input_A2)
         if self.opt.random_view:
             self.real_A1_r = Variable(self.input_A1_r)
-
-            if self.use_cuda:
-                self.mask_A2 = (torch.mean(self.real_A2,dim=1,keepdim=True)<1).type(torch.cuda.FloatTensor)
-            else:
-                self.mask_A2 = (torch.mean(self.real_A2,dim=1,keepdim=True)<1).type(torch.FloatTensor)
+            self.mask_A2 = (torch.mean(self.real_A2,dim=1,keepdim=True)<1).type(torch.FloatTensor).to(self.device)
             
 
 
@@ -344,12 +321,9 @@ class objComposeUnsuperviseModel(BaseModel):
         self.mask_A1_T = torch.mean(self.fake_A1_T,dim=1,keepdim=True)
         self.mask_A2_T = torch.mean(self.fake_A2_T,dim=1,keepdim=True)
         
-        if self.use_cuda:
-            self.mask_A1_T = (self.mask_A1_T<self.opt.Thresh1*torch.max(self.mask_A1_T).data).type(torch.cuda.FloatTensor)
-            self.mask_A2_T = (self.mask_A2_T<self.opt.Thresh2*torch.max(self.mask_A2_T).data).type(torch.cuda.FloatTensor)
-        else:
-            self.mask_A1_T = (self.mask_A1_T<self.opt.Thresh1*torch.max(self.mask_A1_T).data).type(torch.FloatTensor)
-            self.mask_A2_T = (self.mask_A2_T<self.opt.Thresh2*torch.max(self.mask_A2_T).data).type(torch.FloatTensor)
+        
+        self.mask_A1_T = (self.mask_A1_T<self.opt.Thresh1*torch.max(self.mask_A1_T).data).type(torch.FloatTensor).to(self.device)
+        self.mask_A2_T = (self.mask_A2_T<self.opt.Thresh2*torch.max(self.mask_A2_T).data).type(torch.FloatTensor).to(self.device)
         # print(self.mask_A1_T.size(),self.mask_A1_T[0,0,:,:].data.cpu().numpy().shape)
 
 
@@ -357,17 +331,11 @@ class objComposeUnsuperviseModel(BaseModel):
             #erode borders of gt masks to have clean outputs
             self.mask_A1_T = self.mask_A1_T.data.cpu().numpy().astype(int)
             self.mask_A2_T = self.mask_A2_T.data.cpu().numpy().astype(int)
-
-            if self.use_cuda:
-                self.mask_A1_T = Variable(torch.cuda.Tensor(1*binary_erosion(self.mask_A1_T, structure=np.ones((3,3))[np.newaxis,np.newaxis,:,:])).to(self.device))
-                self.mask_A2_T = Variable(torch.cuda.Tensor(1*binary_erosion(self.mask_A2_T, structure=np.ones((3,3))[np.newaxis,np.newaxis,:,:])).to(self.device))
-                self.mask_A1_T = self.mask_A1_T.type(torch.cuda.FloatTensor)
-                self.mask_A2_T = self.mask_A2_T.type(torch.cuda.FloatTensor)
-            else:
-                self.mask_A1_T = Variable(torch.Tensor(1*binary_erosion(self.mask_A1_T, structure=np.ones((3,3))[np.newaxis,np.newaxis,:,:])).to(self.device))
-                self.mask_A2_T = Variable(torch.Tensor(1*binary_erosion(self.mask_A2_T, structure=np.ones((3,3))[np.newaxis,np.newaxis,:,:])).to(self.device))
-                self.mask_A1_T = self.mask_A1_T.type(torch.FloatTensor)
-                self.mask_A2_T = self.mask_A2_T.type(torch.FloatTensor)
+            
+            self.mask_A1_T = Variable(torch.Tensor(1*binary_erosion(self.mask_A1_T, structure=np.ones((3,3))[np.newaxis,np.newaxis,:,:])).to(self.device))
+            self.mask_A2_T = Variable(torch.Tensor(1*binary_erosion(self.mask_A2_T, structure=np.ones((3,3))[np.newaxis,np.newaxis,:,:])).to(self.device))
+            self.mask_A1_T = self.mask_A1_T.type(torch.FloatTensor).to(self.device)
+            self.mask_A2_T = self.mask_A2_T.type(torch.FloatTensor).to(self.device)
 
 
         
@@ -398,12 +366,8 @@ class objComposeUnsuperviseModel(BaseModel):
             self.M1_M2_normal = self.softmax(self.M1_M2)
             v,m = torch.max(self.M1_M2_normal, dim=1, keepdim=True)
 
-            if self.use_cuda:
-                self.fake_M1_s = ((m==1)*1).type(torch.cuda.FloatTensor)
-                self.fake_M2_s = ((m==2)*1).type(torch.cuda.FloatTensor)
-            else:
-                self.fake_M1_s = ((m==1)*1).type(torch.FloatTensor)
-                self.fake_M2_s = ((m==2)*1).type(torch.FloatTensor)
+            self.fake_M1_s = ((m==1)*1).type(torch.FloatTensor).to(self.device)
+            self.fake_M2_s = ((m==2)*1).type(torch.FloatTensor).to(self.device)
 
         else:
             self.B1_B2 = self.netG_decomp(self.fake_B)
@@ -415,10 +379,8 @@ class objComposeUnsuperviseModel(BaseModel):
         self.fake_B2_T = index_select(self.B1_B2,1,Variable(LongTensor(range(self.opt.input_nc,2*self.opt.input_nc)).to(self.device)))
         #STN: return objects to the center
         self.fake_B1,self.fake_B2 = self.netSTN_dec(torch.cat((self.fake_B1_T, self.fake_B2_T),1))
-        if self.use_cuda:
-            self.real_M0_s = 1 - (((self.mask_A1_T + self.mask_A2_T)>=1)*1).type(torch.cuda.FloatTensor)
-        else:
-            self.real_M0_s = 1 - (((self.mask_A1_T + self.mask_A2_T)>=1)*1).type(torch.FloatTensor)
+        
+        self.real_M0_s = 1 - (((self.mask_A1_T + self.mask_A2_T)>=1)*1).type(torch.FloatTensor).to(self.device)
 
         #apply predicted mask on gt full mask
         self.M1_s_only = torch.mul(1-self.mask_A2_T, self.mask_A1_T)
@@ -430,10 +392,8 @@ class objComposeUnsuperviseModel(BaseModel):
             self.real_M1_s = torch.mul(self.real_M1_s, self.fake_M1_s)
             self.real_M2_s = torch.mul(self.real_M2_s, self.fake_M2_s)
 
-        if self.use_cuda:
-            missed_overlp = (((self.real_M1_s + self.real_M2_s)==0)*1).type(torch.FloatTensor)
-        else:
-            missed_overlp = (((self.real_M1_s + self.real_M2_s)==0)*1).type(torch.cuda.FloatTensor)
+        
+        missed_overlp = (((self.real_M1_s + self.real_M2_s)==0)*1).type(torch.FloatTensor).to(self.device)
 
         self.missed_A1 = torch.mul(missed_overlp, self.M1_s_only)
         self.missed_A2 = torch.mul(missed_overlp, self.M2_s_only)
@@ -445,10 +405,8 @@ class objComposeUnsuperviseModel(BaseModel):
         self.real_M2_s = self.real_M2_s.repeat(1,3,1,1)
         self.real_M0_s = self.real_M0_s.repeat(1,3,1,1)
 
-        if self.use_cuda:
-            self.real_M = (self.real_M1_s + self.real_M2_s*2).type(torch.cuda.LongTensor)
-        else:
-            self.real_M = (self.real_M1_s + self.real_M2_s*2).type(torch.LongTensor)
+        
+        self.real_M = (self.real_M1_s + self.real_M2_s*2).type(torch.LongTensor).to(self.device)
 
         self.real_M = self.real_M[:,0,:,:]
 
@@ -507,12 +465,9 @@ class objComposeUnsuperviseModel(BaseModel):
             self.M1_M2_normal = self.softmax(self.M1_M2)
             v,m = torch.max(self.M1_M2_normal, dim=1, keepdim=True)
             
-            if self.use_cuda:
-                self.fake_M1_s = ((m==1)*1).type(torch.cuda.FloatTensor)
-                self.fake_M2_s = ((m==2)*1).type(torch.cuda.FloatTensor)
-            else:
-                self.fake_M1_s = ((m==1)*1).type(torch.FloatTensor)
-                self.fake_M2_s = ((m==2)*1).type(torch.FloatTensor)
+            
+            self.fake_M1_s = ((m==1)*1).type(torch.FloatTensor).to(self.device)
+            self.fake_M2_s = ((m==2)*1).type(torch.FloatTensor).to(self.device)
 
         else:
             self.B1_B2 = self.netG_decomp(self.fake_B)
