@@ -16,8 +16,8 @@
 
 # Source the bash profile (required to use the module command)
 source /etc/profile
-source ../venv/bin/activate
 module load cuda/11.0-cudnn8.0
+source ../venv/bin/activate
 
 mode=train
 name="train_xray_threat_items"
