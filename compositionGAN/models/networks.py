@@ -734,6 +734,9 @@ class DeepSpatialTransformer(nn.Module):
         mask.index_fill_(3, LongTensor([0, w-1]).to(self.device), 0)
         mask = Variable(mask)
 
+        print(input.is_cuda)
+        print(mask.is_cuda)
+        print(Variable(ONES).is_cuda)
         # misc.imsave('/home/sazadi/projects/objectComposition-Pytorch/mask.png', mask.data.cpu().numpy().transpose(1,2,0))
         input = torch.mul(input,mask) + (Variable(ONES) - mask)
 
