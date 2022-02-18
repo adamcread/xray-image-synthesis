@@ -231,15 +231,15 @@ class objComposeUnsuperviseModel(BaseModel):
             self.input_A1_r = input['A1_r']
 
         self.input_B = input['B'].to(self.device)
-        self.B_paths = input['B_paths'].to(self.device)
+        self.B_paths = input['B_paths']
 
         input_vars = ['input_A1', 'input_A2', 'input_B',
                     'input_B1', 'input_B2', 'input_M1', 'input_M2']
         if self.opt.random_view:
             input_vars += ['input_A1_r']
 
-        self.real_M1_s = Variable(self.input_M1[:,0:3,:,:])
-        self.real_M2_s = Variable(self.input_M2[:,0:3,:,:])
+        self.real_M1_s = Variable(self.input_M1[:,0:3,:,:]).to(self.device)
+        self.real_M2_s = Variable(self.input_M2[:,0:3,:,:]).to(self.device)
         
         self.real_M = (self.real_M1_s + self.real_M2_s*2).type(torch.LongTensor).to(self.device)
         self.real_M = self.real_M[:,0,:,:].to(self.device)
