@@ -201,8 +201,8 @@ class objComposeUnsuperviseModel(BaseModel):
 
         self.ex_B1_T = torch.mul(self.ex_B, self.input_M1) + (1-self.input_M1)
         self.ex_B2_T = torch.mul(self.ex_B, self.input_M2) + (1-self.input_M2)
-        self.ex_B1_T = Variable(self.ex_B1_T.data, requires_grad=False)
-        self.ex_B2_T = Variable(self.ex_B2_T.data, requires_grad=False)
+        self.ex_B1_T = Variable(self.ex_B1_T.data, requires_grad=False).to(self.device)
+        self.ex_B2_T = Variable(self.ex_B2_T.data, requires_grad=False).to(self.device)
 
 
     def set_input_test(self, input):
@@ -220,18 +220,18 @@ class objComposeUnsuperviseModel(BaseModel):
     def set_input(self, input):
         '''Samples at training time'''
 
-        self.input_A1 = input['A1']
-        self.input_A2 = input['A2']
-        self.input_B1 = input['B1']
-        self.input_B2 = input['B2']
-        self.input_M1 = input['M1']
-        self.input_M2 = input['M2']
+        self.input_A1 = input['A1'].to(self.device)
+        self.input_A2 = input['A2'].to(self.device)
+        self.input_B1 = input['B1'].to(self.device)
+        self.input_B2 = input['B2'].to(self.device)
+        self.input_M1 = input['M1'].to(self.device)
+        self.input_M2 = input['M2'].to(self.device)
         self.A_paths = input['A_paths']
         if self.opt.random_view:
             self.input_A1_r = input['A1_r']
 
-        self.input_B = input['B']
-        self.B_paths = input['B_paths']
+        self.input_B = input['B'].to(self.device)
+        self.B_paths = input['B_paths'].to(self.device)
 
         input_vars = ['input_A1', 'input_A2', 'input_B',
                     'input_B1', 'input_B2', 'input_M1', 'input_M2']
@@ -242,7 +242,7 @@ class objComposeUnsuperviseModel(BaseModel):
         self.real_M2_s = Variable(self.input_M2[:,0:3,:,:])
         
         self.real_M = (self.real_M1_s + self.real_M2_s*2).type(torch.LongTensor).to(self.device)
-        self.real_M = self.real_M[:,0,:,:]
+        self.real_M = self.real_M[:,0,:,:].to(self.device)
 
     def forward_STN(self):
         '''Forward pass for the spatial transformer network'''
