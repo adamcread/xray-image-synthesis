@@ -565,6 +565,9 @@ class objComposeUnsuperviseModel(BaseModel):
         #real
         pred_real_A2 = self.netD2_completion(real_A2)
 
+        print(pred_fake_A1.is_cuda)
+        print(pred_fake_A2.is_cuda)
+
         loss_D_fake = self.criterionGAN(pred_fake_A1, False) + self.criterionGAN(pred_fake_A2, False)
         loss_D_real = self.criterionGAN(pred_real_A1, True) + self.criterionGAN(pred_real_A2, True)
         loss_gp_A1 = self.calc_gradient_penalty(self.netD1_completion, real_A1.detach(), fake_A1.detach())
