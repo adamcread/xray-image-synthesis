@@ -28,7 +28,7 @@ datalist_test="../dataset/xray/unpaired/test_paths_threat_items.txt"
 exp_name="unpaired_compGAN" # suffix for naming
 dataset_mode='comp_decomp_unaligned' # dataset type to choose model type
 
-batch_size=10 # size of each training batch
+batch_size=56 # size of each training batch
 loadSizeY=256 # size to scale images to
 fineSizeY=256 # size image is
 loadSizeX=256 # size to scale images to
@@ -42,8 +42,8 @@ lr=0.00002 # initial learning rate
 niter=1000
 niter_decay=1000
 
-niterSTN=100
-niterCompletion=100
+niterSTN=500
+niterCompletion=500
 
 which_epoch=0
 which_epoch_completion=0 

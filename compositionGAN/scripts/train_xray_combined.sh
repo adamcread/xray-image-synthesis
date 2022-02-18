@@ -28,7 +28,7 @@ datalist_test="../dataset/xray/unpaired/test_paths_combined.txt"
 exp_name="unpaired_compGAN" # suffix for naming
 dataset_mode='comp_decomp_unaligned' # dataset type to choose model type
 
-batch_size=128 # size of each training batch
+batch_size=56 # size of each training batch
 loadSizeY=256 # size to scale images to
 fineSizeY=256 # size image is
 loadSizeX=256 # size to scale images to
