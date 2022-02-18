@@ -24,6 +24,8 @@ print('#training images = %d' % dataset_size)
 opt.display_id = 0
 opt.device = torch.device('cuda:0' if torch.cuda.is_available() else "cpu")
 model = create_model(opt)
+
+
 visualizer = Visualizer(opt)
 
 print('Train the STN models')
