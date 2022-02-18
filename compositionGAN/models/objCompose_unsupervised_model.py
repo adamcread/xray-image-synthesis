@@ -186,11 +186,11 @@ class objComposeUnsuperviseModel(BaseModel):
     def set_input_train(self, input):
         '''samples of real distribution (from training set) to be used at test time'''
 
-        self.ex_B = input['B']
-        self.ex_B1 = input['B1']
-        self.ex_B2 = input['B2']
-        self.input_M1 = input['M1']
-        self.input_M2 = input['M2']
+        self.ex_B = input['B'].to(self.device)
+        self.ex_B1 = input['B1'].to(self.device)
+        self.ex_B2 = input['B2'].to(self.device)
+        self.input_M1 = input['M1'].to(self.device)
+        self.input_M2 = input['M2'].to(self.device)
         input_vars = ['ex_B', 'ex_B1', 'ex_B2',
                         'input_M1', 'input_M2']
 
