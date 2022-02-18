@@ -288,8 +288,8 @@ class objComposeUnsuperviseModel(BaseModel):
         self.segment_A2 = Variable(self.segment_A2.data, requires_grad=False)
 
         #Pass each masked object to its inpainting network
-        self.fake_A1_compl = self.netG1_completion(self.segment_A1)
-        self.fake_A2_compl = self.netG2_completion(self.segment_A2)
+        self.fake_A1_compl = self.netG1_completion(self.segment_A1).to(self.device)
+        self.fake_A2_compl = self.netG2_completion(self.segment_A2).to(self.device)
 
 
 
