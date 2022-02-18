@@ -208,8 +208,8 @@ class objComposeUnsuperviseModel(BaseModel):
     def set_input_test(self, input):
         ''' samples at test time; no target composite image given'''
 
-        self.input_A1 = input['A1']
-        self.input_A2 = input['A2']
+        self.input_A1 = input['A1'].to(self.device)
+        self.input_A2 = input['A2'].to(self.device)
         self.A_paths = input['A_paths']
         input_vars = ['input_A1', 'input_A2']
 
@@ -509,7 +509,7 @@ class objComposeUnsuperviseModel(BaseModel):
 
     def backward_STN(self):
         '''backward pass for training STN networks only'''
-        
+
         self.loss_STN = self.criterionL1(self.stn_B1, self.real_B1) + self.criterionL1(self.stn_B2, self.real_B2)
         self.loss_STN += 100*(self.criterionL1(self.stn_B1_T, self.real_B1_T) + self.criterionL1(self.stn_B2_T, self.real_B2_T))
         self.loss_STN.backward()
