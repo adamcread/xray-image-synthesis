@@ -43,6 +43,8 @@ if opt.dataset_mode=='comp_decomp_unaligned' and opt.niterSTN:
             visualizer.reset()
             total_steps += opt.batchSize
             epoch_iter += opt.batchSize
+            data.to(opt.device)
+
             model.set_input(data)
             model.optimize_parameters_STN()
 
