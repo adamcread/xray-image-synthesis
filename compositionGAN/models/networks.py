@@ -234,8 +234,6 @@ class GANLoss(nn.Module):
         self.fake_label_var = None
         self.Tensor = tensor
 
-        print("TENSOR", type(self.Tensor))
-
         if use_lsgan:
             self.loss = nn.MSELoss()
         else:
@@ -261,9 +259,6 @@ class GANLoss(nn.Module):
 
     def __call__(self, input, target_is_real):
         target_tensor = self.get_target_tensor(input, target_is_real)
-
-        print('targ', target_tensor.is_cuda)
-        print('inp', input.is_cuda)
         return self.loss(input, target_tensor)
 
 class fc_layer(nn.Module):

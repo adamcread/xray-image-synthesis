@@ -497,10 +497,13 @@ class objComposeUnsuperviseModel(BaseModel):
         '''Gradient Penalty'''
         alpha = self.Tensor(real.size(0), 1, 1, 1).uniform_()
         alpha = alpha.expand(real.size())
+
+        print('alpha', alpha.is_cuda)
+        print('real', real.data.is_cuda)
+        print('fake', fake.data.is_cuda)
+   
         mixed = Variable(alpha * real.data + (1 - alpha) * fake.data, requires_grad=True)
         pred = netD.forward(mixed)
-
-
         grad = torch.autograd.grad(outputs=pred, inputs=mixed, grad_outputs=torch.ones(pred.size()).to(self.device),
                                    create_graph=True, retain_graph=True, only_inputs=True)[0]
         grad = grad.view(real.size(0), -1)
@@ -565,9 +568,6 @@ class objComposeUnsuperviseModel(BaseModel):
         pred_fake_A2 = self.netD2_completion(fake_A2.detach())
         #real
         pred_real_A2 = self.netD2_completion(real_A2)
-
-        print(pred_fake_A1.is_cuda)
-        print(pred_fake_A2.is_cuda)
 
         loss_D_fake = self.criterionGAN(pred_fake_A1, False) + self.criterionGAN(pred_fake_A2, False)
         loss_D_real = self.criterionGAN(pred_real_A1, True) + self.criterionGAN(pred_real_A2, True)
