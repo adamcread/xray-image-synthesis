@@ -498,10 +498,6 @@ class objComposeUnsuperviseModel(BaseModel):
         alpha = self.Tensor(real.size(0), 1, 1, 1).uniform_()
         alpha = alpha.expand(real.size())
 
-        print('alpha', alpha.is_cuda)
-        print('real', real.data.is_cuda)
-        print('fake', fake.data.is_cuda)
-   
         mixed = Variable(alpha * real.data + (1 - alpha) * fake.data, requires_grad=True)
         pred = netD.forward(mixed)
         grad = torch.autograd.grad(outputs=pred, inputs=mixed, grad_outputs=torch.ones(pred.size()).to(self.device),
