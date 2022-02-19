@@ -5,6 +5,7 @@
 # ========================================================
 
 
+from ctypes.wintypes import tagRECT
 import torch
 import torch.nn as nn
 from torch.nn import init
@@ -254,10 +255,14 @@ class GANLoss(nn.Module):
                 fake_tensor = self.Tensor(input.size()).fill_(self.fake_label)
                 self.fake_label_var = Variable(fake_tensor, requires_grad=False)
             target_tensor = self.fake_label_var
-        return target_tensor
+        return target_tensor.to()
 
     def __call__(self, input, target_is_real):
+
         target_tensor = self.get_target_tensor(input, target_is_real)
+
+        print('targ', target_tensor.is_cuda)
+        print('inp', input.is_cuda)
         return self.loss(input, target_tensor)
 
 class fc_layer(nn.Module):
