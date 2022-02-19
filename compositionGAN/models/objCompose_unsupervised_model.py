@@ -26,6 +26,7 @@ class objComposeUnsuperviseModel(BaseModel):
         self.isTrain = opt.isTrain
         self.y_x = int(float(opt.fineSizeY)/opt.fineSizeX)
         self.device = opt.device
+        self.Tensor = torch.cuda.FloatTensor if self.device.type == 'cuda' else torch.FloatTensor
 
         # -------------------------------
         # Define Networks
@@ -160,8 +161,7 @@ class objComposeUnsuperviseModel(BaseModel):
             # ----------------------------------
             # define loss functions
             # ----------------------------------
-            self.criterionGAN = networks.GANLoss(use_lsgan=not opt.no_lsgan, 
-                                            tensor=torch.cuda.FloatTensor if self.device.type == 'cuda' else torch.FloatTensor)
+            self.criterionGAN = networks.GANLoss(use_lsgan=not opt.no_lsgan, tensor=self.Tensor)
             self.criterionL1 = torch.nn.L1Loss()
             self.criterionCLS = nn.CrossEntropyLoss()
             self.criterionbCLS = nn.BCELoss()
