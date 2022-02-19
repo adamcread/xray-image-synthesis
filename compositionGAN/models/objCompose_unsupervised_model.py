@@ -160,7 +160,8 @@ class objComposeUnsuperviseModel(BaseModel):
             # ----------------------------------
             # define loss functions
             # ----------------------------------
-            self.criterionGAN = networks.GANLoss(use_lsgan=not opt.no_lsgan, tensor=self.Tensor)
+            self.criterionGAN = networks.GANLoss(use_lsgan=not opt.no_lsgan, 
+                                            tensor=torch.cuda.FloatTensor if self.device.type == 'cuda' else torch.FloatTensor)
             self.criterionL1 = torch.nn.L1Loss()
             self.criterionCLS = nn.CrossEntropyLoss()
             self.criterionbCLS = nn.BCELoss()
