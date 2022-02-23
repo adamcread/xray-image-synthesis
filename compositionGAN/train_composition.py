@@ -162,5 +162,4 @@ for epoch in range(opt.epoch_count, opt.niter + opt.niter_decay + 1):
     model.update_learning_rate()
 
 
-
-# linear scalong rule
+# linear scaling rule
