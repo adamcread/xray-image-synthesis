@@ -58,7 +58,7 @@ cfg.checkpoint_config.interval = 3
 
 cfg.seed = 0
 set_random_seed(0, deterministic=False)
-cfg.gpu_ids = [-1]
+cfg.gpu_ids = range(1)
 
 cfg.load_from = 'checkpoints/cascade_rcnn_r101_fpn_1x_coco_20200317-0b6a2fbf.pth'
 cfg.work_dir = './outs'
