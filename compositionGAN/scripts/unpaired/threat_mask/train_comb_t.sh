@@ -20,7 +20,7 @@
 # source ../venv/bin/activate
 
 mode=train
-name="train_xray_threat_items"
+name="train_xray_stn"
 
 datalist="./scripts/unpaired/threat_mask/train_comb_t_paths.txt"
 datalist_test="./scripts/unpaired/test.txt"
