@@ -32,6 +32,9 @@ dataset_size = len(data_loader)
 
 model_G = opt.which_model_netG
 print('#training images = %d' % dataset_size)
+opt.device = torch.device('cuda:0' if torch.cuda.is_available() else "cpu")
+opt.display_id = 0
+
 opt.dataset_mode=dataset_mode
 model = create_model(opt)
 visualizer = Visualizer(opt)
@@ -108,7 +111,7 @@ for i, data in enumerate(dataset_test):
     for epoch in range(opt.epoch_count, opt.niter + opt.niter_decay + 1):
         torch.cuda.empty_cache()
         for j, ex in enumerate(dataset):
-            ex.to(self.device)
+            ex.to(opt.device)
             model.set_input_train(ex)
             model.optimize_parameters_test(total_steps)
             total_steps += opt.batchSize

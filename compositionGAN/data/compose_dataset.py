@@ -16,7 +16,6 @@ import pickle
 
 class ComposeDataset(BaseDataset):
     #taking sample from three distributions A1,A2,B
-
     def initialize(self, opt):
         self.opt = opt
     
@@ -44,7 +43,7 @@ class ComposeDataset(BaseDataset):
         A2_path = self.A2_paths[index]
         if self.opt.xray:
             B_root, B_name = B_path.split('/unpaired_images/')
-            M_path = os.path.join(B_root, 'masks', 'resized', B_name)
+            M_path = os.path.join(B_root, 'masks', B_name)
         else:
             B_root = B_path.split('images')[0]
             B_name = ntpath.basename(B_path)
@@ -173,6 +172,7 @@ class ComposeAlignedDataset(BaseDataset):
             # datalist is a txt file containing paths of images in A,B,azi 
             self.info = f.readlines()
         self.info = sorted(self.info)
+
         if opt.phase == 'test' and opt.random_view:
             if not os.path.exists(opt.test_path_azi):
                 azi = [random.randrange(-90, 91, 10) for x in range(int(opt.how_many))]

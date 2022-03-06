@@ -175,8 +175,10 @@ def define_STN(input_nc, res=64, device=None, y_x=1, STN_model=''):
         n_blocks = 2
     else:
         raise NotImplementedError("STN not defined for this image resolution:%s"%res)
+
     if STN_model =='deep':
         stn = DeepSpatialTransformer(input_nc, n_blocks, device, y_x)
+        
     else:
         stn = SpatialTransformer(input_nc, n_blocks, device, y_x)
     
@@ -204,8 +206,6 @@ def define_AFN(model, input_nc=3, view_dim=19, flow_mask=0, res=128, init_type='
     init_weights(netAFN, init_type=init_type)
 
     return netAFN
-
-
 
 def print_network(net):
     num_params = 0
@@ -288,6 +288,7 @@ class fc_layer(nn.Module):
 # downsampling/upsampling operations.
 # Code and idea originally from Justin Johnson's architecture.
 # https://github.com/jcjohnson/fast-neural-style/
+
 
 class ResnetGeneratorconv(nn.Module):
     def __init__(self, input_nc, output_nc, ngf=64, norm_layer=nn.BatchNorm2d, use_dropout=False, n_blocks=6, device=None, padding_type='reflect', noise=False, y_x=1):
@@ -502,8 +503,6 @@ class ResnetBlock(nn.Module):
     def forward(self, x):
         out = x + self.conv_block(x)
         return out
-
-
 
 
 # From https://github.com/junyanz/pytorch-CycleGAN-and-pix2pix

@@ -134,17 +134,19 @@ class Visualizer():
         links = []
 
         for label, im in visuals.items():
-            pil_im = Image(im)
+            pil_im = Image.fromarray(im)
             image_name = '%s_%s.png' % (name, label)
             save_path = os.path.join(image_dir, image_name)
             h, w, _ = im.shape
             if aspect_ratio > 1.0:
                 # im = imresize(im, (h, int(w * aspect_ratio)), interp='bicubic')
-                im = pil_im.resize((h, int(w * aspect_ratio)))
+                pil_im = pil_im.resize((h, int(w * aspect_ratio)))
             if aspect_ratio < 1.0:
                 # im = imresize(im, (int(h / aspect_ratio), w), interp='bicubic')
-                im = pil_im.resize((int(h / aspect_ratio), w))
-            util.save_image(im, save_path)
+                pil_im = pil_im.resize((int(h / aspect_ratio), w))
+
+            pil_im.save(save_path)
+            # util.save_image(im, save_path)
 
             ims.append(image_name)
             txts.append(label)

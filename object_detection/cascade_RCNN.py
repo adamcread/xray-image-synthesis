@@ -60,7 +60,7 @@ cfg.seed = 0
 set_random_seed(0, deterministic=False)
 cfg.gpu_ids = range(1)
 
-cfg.load_from = 'checkpoints/cascade_rcnn_r101_fpn_1x_coco_20200317-0b6a2fbf.pth'
+cfg.load_from = 'checkpoints/cascade_rcnn_r101_fpn_1x_coco_20200317-0b6a2fbf_2_classes.pth'
 cfg.work_dir = './outs'
 
 datasets = [build_dataset(cfg.data.train)]
