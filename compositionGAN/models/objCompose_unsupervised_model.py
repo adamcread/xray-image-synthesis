@@ -177,7 +177,7 @@ class objComposeUnsuperviseModel(BaseModel):
             # ----------------------------------
             self.criterionGAN = networks.GANLoss(use_lsgan=not opt.no_lsgan, tensor=self.Tensor)
             self.criterionL1 = torch.nn.L1Loss()
-            self.ssim_loss = pytorch_ssim.SSIM()
+            self.ssim_loss = pytorch_ssim.SSIM(device=self.device)
 
             self.criterionCLS = nn.CrossEntropyLoss()
             self.criterionbCLS = nn.BCELoss()
