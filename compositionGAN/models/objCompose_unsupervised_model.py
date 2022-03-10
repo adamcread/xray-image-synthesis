@@ -12,11 +12,14 @@ from torch.autograd import Variable
 from util.image_pool import ImagePool
 from .base_model import BaseModel
 from . import networks
-from torch import index_select, LongTensor, nn
+from torch import index_select, LongTensor, FloatTensor, nn
 from scipy.ndimage.morphology import binary_erosion
 import torch.nn.functional as F
 import pytorch_ssim
-
+from torchvision.utils import save_image
+import matplotlib.pyplot as plt
+# from torchvision.transforms import Grayscale
+from torchvision import transforms
 
 class objComposeUnsuperviseModel(BaseModel):
     def name(self):
@@ -24,11 +27,17 @@ class objComposeUnsuperviseModel(BaseModel):
 
     def initialize(self, opt):
         BaseModel.initialize(self, opt)
+
         self.isTrain = opt.isTrain
         self.y_x = int(float(opt.fineSizeY)/opt.fineSizeX)
         self.device = opt.device
         self.Tensor = torch.cuda.FloatTensor if self.device.type == 'cuda' else torch.FloatTensor
 
+        self.binarise = transforms.Compose([
+            transforms.Grayscale(),
+            lambda x: x>0.9,
+            lambda x: x.type(self.Tensor),
+        ])
         # -------------------------------
         # Define Networks
         # -------------------------------
@@ -198,8 +207,6 @@ class objComposeUnsuperviseModel(BaseModel):
                 
         self.softmax = torch.nn.Softmax(dim=1)
 
-
-
     def set_input_train(self, input):
         '''samples of real distribution (from training set) to be used at test time'''
 
@@ -220,7 +227,6 @@ class objComposeUnsuperviseModel(BaseModel):
         self.ex_B2_T = torch.mul(self.ex_B, self.input_M2) + (1-self.input_M2)
         self.ex_B1_T = Variable(self.ex_B1_T.data, requires_grad=False).to(self.device)
         self.ex_B2_T = Variable(self.ex_B2_T.data, requires_grad=False).to(self.device)
-
 
     def set_input_test(self, input):
         ''' samples at test time; no target composite image given'''
@@ -274,7 +280,6 @@ class objComposeUnsuperviseModel(BaseModel):
         self.stn_B1_T , self.stn_B2_T = self.netSTN_c(torch.cat((self.real_B1, self.real_B2),1))
         self.stn_B1 , self.stn_B2 = self.netSTN_dec(torch.cat((self.real_B1_T, self.real_B2_T),1))
 
-
     def forward_inpainting(self):
         '''forward pass for the inpainting network '''
 
@@ -305,7 +310,6 @@ class objComposeUnsuperviseModel(BaseModel):
         self.fake_A1_compl = self.netG1_completion(self.segment_A1).to(self.device)
         self.fake_A2_compl = self.netG2_completion(self.segment_A2).to(self.device)
         
-
     def forward_test(self):
         '''starting from full OBJ1 and OBJ2 @ test time'''
         self.real_A1 = Variable(self.input_A1)
@@ -439,6 +443,7 @@ class objComposeUnsuperviseModel(BaseModel):
         self.real_A1_T = torch.mul(self.real_B, self.real_M1_s) + (1-self.real_M1_s) 
         self.real_A2_T = torch.mul(self.real_B, self.real_M2_s) + (1-self.real_M2_s)
         
+        # image completion if required on translations
         if self.opt.G1_completion:
             self.real_A1_T = self.netG1_completion(self.real_A1_T)
         if self.opt.G2_completion:
@@ -449,11 +454,13 @@ class objComposeUnsuperviseModel(BaseModel):
         self.real_B1_T = self.real_A1_T
         self.real_B2_T = self.real_A2_T
 
+        # image completion on background
         if self.opt.G1_completion:
             self.fake_A1 = self.netG1_completion(self.real_A1)
         else:
             self.fake_A1 = self.real_A1
 
+        # image completion on foreground
         if self.opt.G2_completion:
             self.fake_A2 = self.netG2_completion(self.real_A2)
         else:
@@ -462,12 +469,15 @@ class objComposeUnsuperviseModel(BaseModel):
         self.real_B1 = Variable(self.fake_A1.data, requires_grad=False)
         self.real_B2 = Variable(self.fake_A2.data, requires_grad=False)
 
-
-        #Composition network
+        # composition network
         self.fake_A1 = Variable(self.fake_A1.data, requires_grad=False)
         self.fake_A2 = Variable(self.fake_A2.data, requires_grad=False)
+
+        # predict translation
         self.fake_A1_T, self.fake_A2_T = (self.netSTN_c(torch.cat((self.fake_A1,self.fake_A2), 1)))
         self.fake_A = torch.cat((self.fake_A1_T,self.fake_A2_T),1)
+
+        # predict composition
         self.fake_B = self.netG_comp(self.fake_A)
 
 
@@ -497,7 +507,6 @@ class objComposeUnsuperviseModel(BaseModel):
         self.fake_B_sum = (torch.mul(self.real_M1_s, self.fake_A1_T) + torch.mul(self.real_M2_s, self.fake_A2_T)
                             + (1-self.real_M1_s - self.real_M2_s))
 
-    # get image paths
     def get_image_paths(self):
         if self.opt.phase == 'test':
             return self.A_paths[0]
@@ -519,13 +528,17 @@ class objComposeUnsuperviseModel(BaseModel):
 
     def backward_STN(self):
         '''backward pass for training STN networks only'''
-        # self.loss_STN = (self.criterionL1(self.stn_B1, self.real_B1) + self.criterionL1(self.stn_B2, self.real_B2))
-        # self.loss_STN = 50*(self.criterionL1(self.stn_B2, self.real_B2))
-        # self.loss_STN += 100*(self.criterionL1(self.stn_B1_T, self.real_B1_T) + self.criterionL1(self.stn_B2_T, self.real_B2_T))
-        # self.loss_STN += 50*(self.criterionL1(self.stn_B2_T, self.real_B2_T))
+        real_B2_b = self.binarise(self.real_B2_T)
+        real_B2_T_b = self.binarise(self.real_B2_T)
+        stn_B2_b = self.binarise(self.stn_B2_T).requires_grad_()
+        stn_B2_T_b = self.binarise(self.stn_B2_T).requires_grad_()
 
-        self.loss_STN = 50*(2 - self.ssim_loss(self.stn_B1, self.real_B1) - self.ssim_loss(self.stn_B2, self.real_B2))
-        self.loss_STN = 50*(2 - self.ssim_loss(self.stn_B1_T, self.real_B1_T) - self.ssim_loss(self.stn_B2_T, self.real_B2_T))
+        comp_loss = self.criterionbCLS(stn_B2_T_b, real_B2_T_b)
+        decomp_loss = self.criterionbCLS(stn_B2_b, real_B2_b)
+
+        self.loss_STN = (self.criterionbCLS(stn_B2_T_b, real_B2_T_b))
+        self.loss_STN += (self.criterionbCLS(stn_B2_b, real_B2_b))
+
         self.loss_STN.backward()
 
     def backward_G_completion(self):
@@ -556,7 +569,6 @@ class objComposeUnsuperviseModel(BaseModel):
 
         self.loss_G_completion += self.opt.lambda_gan * loss_G_GAN        
         self.loss_G_completion.backward()
-
 
     def backward_D_completion(self): 
         '''Backward pass for the discriminator in training the inpainting networks only'''
@@ -875,7 +887,6 @@ class objComposeUnsuperviseModel(BaseModel):
                 self.optimizer_G2_completion.step()
 
     def optimize_parameters_STN(self):
-
         self.forward_STN()
         self.optimizer_STN_dec.zero_grad()
         self.optimizer_STN_c.zero_grad()
