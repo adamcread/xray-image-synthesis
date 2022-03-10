@@ -528,13 +528,10 @@ class objComposeUnsuperviseModel(BaseModel):
 
     def backward_STN(self):
         '''backward pass for training STN networks only'''
-        real_B2_b = self.binarise(self.real_B2_T)
+        real_B2_b = self.binarise(self.real_B2)
         real_B2_T_b = self.binarise(self.real_B2_T)
-        stn_B2_b = self.binarise(self.stn_B2_T).requires_grad_()
+        stn_B2_b = self.binarise(self.stn_B2).requires_grad_()
         stn_B2_T_b = self.binarise(self.stn_B2_T).requires_grad_()
-
-        comp_loss = self.criterionbCLS(stn_B2_T_b, real_B2_T_b)
-        decomp_loss = self.criterionbCLS(stn_B2_b, real_B2_b)
 
         self.loss_STN = (self.criterionbCLS(stn_B2_T_b, real_B2_T_b))
         self.loss_STN += (self.criterionbCLS(stn_B2_b, real_B2_b))
