@@ -15,11 +15,11 @@ from . import networks
 from torch import index_select, LongTensor, FloatTensor, nn
 from scipy.ndimage.morphology import binary_erosion
 import torch.nn.functional as F
-import pytorch_ssim
 from torchvision.utils import save_image
 import matplotlib.pyplot as plt
-# from torchvision.transforms import Grayscale
 from torchvision import transforms
+from . import losses
+
 
 class objComposeUnsuperviseModel(BaseModel):
     def name(self):
@@ -27,17 +27,11 @@ class objComposeUnsuperviseModel(BaseModel):
 
     def initialize(self, opt):
         BaseModel.initialize(self, opt)
-
         self.isTrain = opt.isTrain
         self.y_x = int(float(opt.fineSizeY)/opt.fineSizeX)
         self.device = opt.device
         self.Tensor = torch.cuda.FloatTensor if self.device.type == 'cuda' else torch.FloatTensor
 
-        self.binarise = transforms.Compose([
-            transforms.Grayscale(),
-            lambda x: x>0.9,
-            lambda x: x.type(self.Tensor),
-        ])
         # -------------------------------
         # Define Networks
         # -------------------------------
@@ -186,10 +180,16 @@ class objComposeUnsuperviseModel(BaseModel):
             # ----------------------------------
             self.criterionGAN = networks.GANLoss(use_lsgan=not opt.no_lsgan, tensor=self.Tensor)
             self.criterionL1 = torch.nn.L1Loss()
-            self.ssim_loss = pytorch_ssim.SSIM(device=self.device)
-
             self.criterionCLS = nn.CrossEntropyLoss()
-            self.criterionbCLS = nn.BCELoss()
+
+            self.criterionIoU = losses.IoULoss()
+            self.criterionDice = losses.DiceLoss()
+            self.criterionBCE = losses.BCELoss()
+            self.criterionFocal = losses.FocalLoss()
+            self.criterionTversky = losses.TverskyLoss()
+            self.criterionDiceBCE = losses.DiceBCELoss()
+            self.criterionDiceFocal = losses.DiceFocalLoss()
+            self.criterionFocalTversky = losses.FocalTverskyLoss()
 
             # loss function initializations
             self.loss_G_GAN = Variable(torch.Tensor(1).fill_(0).to(self.device))
@@ -268,7 +268,6 @@ class objComposeUnsuperviseModel(BaseModel):
 
     def forward_STN(self):
         '''Forward pass for the spatial transformer network'''
-        
         self.real_B = Variable(self.input_B)
         self.real_B1 = Variable(self.input_B1)
         self.real_B2 = Variable(self.input_B2)
@@ -282,7 +281,6 @@ class objComposeUnsuperviseModel(BaseModel):
 
     def forward_inpainting(self):
         '''forward pass for the inpainting network '''
-
         self.real_A1 = Variable(self.input_A1)
         self.real_A2 = Variable(self.input_A2)
 
@@ -528,16 +526,11 @@ class objComposeUnsuperviseModel(BaseModel):
 
     def backward_STN(self):
         '''backward pass for training STN networks only'''
-        real_B2_b = self.binarise(self.real_B2)
-        real_B2_T_b = self.binarise(self.real_B2_T)
-        stn_B2_b = self.binarise(self.stn_B2).requires_grad_()
-        stn_B2_T_b = self.binarise(self.stn_B2_T).requires_grad_()
-
-        self.loss_STN = (self.criterionbCLS(stn_B2_T_b, real_B2_T_b))
-        self.loss_STN += (self.criterionbCLS(stn_B2_b, real_B2_b))
+        self.loss_STN = (self.criterionDice(self.stn_B1_T, self.real_B1_T) + self.criterionDice(self.stn_B2_T, self.real_B2_T))
+        self.loss_STN += 100*(self.criterionDice(self.stn_B1, self.real_B1) + self.criterionDice(self.stn_B2, self.real_B2))
 
         self.loss_STN.backward()
-
+       
     def backward_G_completion(self):
         '''Backward pass for the generator in training the inpainting networks only'''
 
@@ -553,7 +546,6 @@ class objComposeUnsuperviseModel(BaseModel):
             #L1 pixel loss
             self.loss_G_completion = self.opt.lambda_L2 * self.criterionL1(self.fake_A1_compl, self.real_A1_T)
             
-
 
         if self.opt.G2_completion:
             #if inpainting OBJ2:
@@ -919,7 +911,6 @@ class objComposeUnsuperviseModel(BaseModel):
             self.optimizer_G_comp.step()
             self.optimizer_STN_c.step()
 
-
     def optimize_parameters_test(self, total_steps):
         self.forward_test()
         D_freq = 10
@@ -939,7 +930,6 @@ class objComposeUnsuperviseModel(BaseModel):
         self.backward_G_test()
         if total_steps%G_freq == 0:
             self.optimizer_G_comp.step()
-
 
     def optimize_parameters_test_random(self, index, theta, total_steps,rand_inds):
         self.forward_test_random_STN(index, theta,rand_inds)
@@ -961,7 +951,6 @@ class objComposeUnsuperviseModel(BaseModel):
         if total_steps%G_freq == 0:
             self.optimizer_G_comp.step()
 
-
     def get_current_errors(self):
         return OrderedDict([('G_GAN', self.loss_G_GAN.data),
                             ('D_real', self.loss_D_real.data),
@@ -975,7 +964,6 @@ class objComposeUnsuperviseModel(BaseModel):
                             ('D_compl', self.loss_D_completion.data)
                             ])
 
-
     def get_current_errors_test(self):
         return OrderedDict([('G_GAN', self.loss_G_GAN.data),
                             ('D_real', self.loss_D_real.data),
@@ -984,7 +972,6 @@ class objComposeUnsuperviseModel(BaseModel):
                             ('GP', self.loss_gp.data),
                             ('G_seg', self.loss_G_seg.data)
                             ])
-
 
     def get_current_visuals_STN(self):
         vis_tensors = ['stn_B1_T', 'stn_B2_T', 'stn_B1', 'stn_B2','real_B', 'real_B1_T', 
@@ -1003,7 +990,6 @@ class objComposeUnsuperviseModel(BaseModel):
         visuals = zip(vis_tensors, vis_ims)
         return OrderedDict(visuals)
 
-
     def get_current_visuals_A_segment(self):
 
 
@@ -1020,7 +1006,6 @@ class objComposeUnsuperviseModel(BaseModel):
         visuals = zip(vis_tensors, vis_ims)
                             
         return OrderedDict(visuals)
-
 
     def get_current_visuals(self):
         vis_tensors = ['real_A1', 'fake_A1', 'real_A2', 'fake_A2'
@@ -1073,7 +1058,3 @@ class objComposeUnsuperviseModel(BaseModel):
                 model_names += ['AFN']
                 labels += [AFN_label]
         self.save_networks(model_names, labels)
-
-
-
-
