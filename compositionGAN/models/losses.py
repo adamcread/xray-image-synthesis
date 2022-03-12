@@ -7,8 +7,8 @@ class IoULoss(nn.Module):
 
     def forward(self, inputs, targets, smooth=1e-5, threshold=0.95):
         # binarize inputs and targets for segmentation loss
-        inputs = 1 - torch.sigmoid(1e10*(inputs-threshold))
-        targets = 1 - torch.sigmoid(1e10*(targets-threshold))
+        inputs = 1 - torch.sigmoid(1e3*(inputs-threshold))
+        targets = 1 - torch.sigmoid(1e3*(targets-threshold))
         
         intersection = (inputs * targets).sum()  
         union = inputs.sum() + targets.sum() - intersection
@@ -24,8 +24,11 @@ class DiceLoss(nn.Module):
 
     def forward(self, inputs, targets, smooth=1e-5, threshold=0.95): 
         # binarize inputs and targets for segmentation loss  
-        inputs = 1 - torch.sigmoid(1e10*(inputs-threshold))
-        targets = 1 - torch.sigmoid(1e10*(targets-threshold)) 
+        inputs = 1 - torch.sigmoid(1e3*(inputs-threshold))
+        targets = 1 - torch.sigmoid(1e3*(targets-threshold)) 
+
+        inputs = inputs.view(-1)
+        targets = targets.view(-1)
 
         intersection = (inputs * targets).sum()
         union = inputs.sum() + targets.sum()
@@ -42,8 +45,8 @@ class BCELoss(nn.Module):
     
     def forward(self, inputs, targets, smooth=1e-5, threshold=0.95):
         # binarize inputs and targets for segmentation loss  
-        inputs = 1 - torch.sigmoid(1e10*(inputs-threshold))
-        targets = 1 - torch.sigmoid(1e10*(targets-threshold))
+        inputs = 1 - torch.sigmoid(1e3*(inputs-threshold))
+        targets = 1 - torch.sigmoid(1e3*(targets-threshold))
 
         bce_loss = self.BCELoss(inputs, targets)
 
@@ -56,8 +59,8 @@ class FocalLoss(nn.Module):
         self.BCELoss = nn.BCELoss()
 
     def forward(self, inputs, targets, threshold=0.95, alpha=0.8, gamma=2):
-        inputs = 1 - torch.sigmoid(1e10*(inputs-threshold))
-        targets = 1 - torch.sigmoid(1e10*(targets-threshold))  
+        inputs = 1 - torch.sigmoid(1e3*(inputs-threshold))
+        targets = 1 - torch.sigmoid(1e3*(targets-threshold))  
         
         bce_loss = self.BCELoss(inputs, targets)
         focal_loss = alpha * (1-torch.exp(-bce_loss))**gamma * bce_loss
@@ -70,8 +73,8 @@ class TverskyLoss(nn.Module):
         super(TverskyLoss, self).__init__()
 
     def forward(self, inputs, targets, smooth=1e-5, threshold=0.95, alpha=0.5, beta=0.5):
-        inputs = 1 - torch.sigmoid(1e10*(inputs-threshold))
-        targets = 1 - torch.sigmoid(1e10*(targets-threshold))   
+        inputs = 1 - torch.sigmoid(1e3*(inputs-threshold))
+        targets = 1 - torch.sigmoid(1e3*(targets-threshold))   
         
         TP = (inputs * targets).sum()    
         FP = ((1-targets) * inputs).sum()
@@ -88,8 +91,8 @@ class DiceBCELoss(nn.Module):
 
     def forward(self, inputs, targets, smooth=1e-5, threshold=0.95):
         # binarize inputs and targets for segmentation loss  
-        inputs = 1 - torch.sigmoid(1e10*(inputs-threshold))
-        targets = 1 - torch.sigmoid(1e10*(targets-threshold))
+        inputs = 1 - torch.sigmoid(1e3*(inputs-threshold))
+        targets = 1 - torch.sigmoid(1e3*(targets-threshold))
         
         intersection = (inputs * targets).sum()  
         union = inputs.sum() + targets.sum()
@@ -108,8 +111,8 @@ class DiceFocalLoss(nn.Module):
         self.BCELoss = nn.BCELoss()
     
     def forward(self, inputs, targets, threshold=0.95, smooth=1e-5, alpha=0.8, gamma=2):
-        inputs = 1 - torch.sigmoid(1e10*(inputs-threshold))
-        targets = 1 - torch.sigmoid(1e10*(targets-threshold))
+        inputs = 1 - torch.sigmoid(1e3*(inputs-threshold))
+        targets = 1 - torch.sigmoid(1e3*(targets-threshold))
 
         bce_loss = self.BCELoss(inputs, targets)
         focal_loss = alpha * (1-torch.exp(-bce_loss))**gamma * bce_loss
@@ -129,8 +132,8 @@ class FocalTverskyLoss(nn.Module):
         self.BCELoss = nn.BCELoss()
 
     def forward(self, inputs, targets, smooth=1e-5, alpha=0.5, beta=0.5, gamma=1, threshold=0.95):
-        inputs = 1 - torch.sigmoid(1e10*(inputs-threshold))
-        targets = 1 - torch.sigmoid(1e10*(targets-threshold))
+        inputs = 1 - torch.sigmoid(1e3*(inputs-threshold))
+        targets = 1 - torch.sigmoid(1e3*(targets-threshold))
         
         TP = (inputs * targets).sum()    
         FP = ((1-targets) * inputs).sum()

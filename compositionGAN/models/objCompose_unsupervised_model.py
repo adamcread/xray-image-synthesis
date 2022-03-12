@@ -32,6 +32,8 @@ class objComposeUnsuperviseModel(BaseModel):
         self.device = opt.device
         self.Tensor = torch.cuda.FloatTensor if self.device.type == 'cuda' else torch.FloatTensor
 
+        self.loss = []
+
         # -------------------------------
         # Define Networks
         # -------------------------------
@@ -526,9 +528,10 @@ class objComposeUnsuperviseModel(BaseModel):
 
     def backward_STN(self):
         '''backward pass for training STN networks only'''
-        self.loss_STN = (self.criterionDice(self.stn_B1_T, self.real_B1_T) + self.criterionDice(self.stn_B2_T, self.real_B2_T))
-        self.loss_STN += 100*(self.criterionDice(self.stn_B1, self.real_B1) + self.criterionDice(self.stn_B2, self.real_B2))
+        self.loss_STN = 50*(self.criterionDice(self.stn_B2_T, self.real_B2_T))
+        self.loss_STN += 50*(self.criterionDice(self.stn_B2, self.real_B2))
 
+        self.loss.append(self.loss_STN.detach().numpy())
         self.loss_STN.backward()
        
     def backward_G_completion(self):
