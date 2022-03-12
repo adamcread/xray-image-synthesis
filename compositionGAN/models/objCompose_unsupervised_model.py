@@ -31,9 +31,7 @@ class objComposeUnsuperviseModel(BaseModel):
         self.y_x = int(float(opt.fineSizeY)/opt.fineSizeX)
         self.device = opt.device
         self.Tensor = torch.cuda.FloatTensor if self.device.type == 'cuda' else torch.FloatTensor
-
-        self.loss = []
-
+        
         # -------------------------------
         # Define Networks
         # -------------------------------
@@ -531,7 +529,6 @@ class objComposeUnsuperviseModel(BaseModel):
         self.loss_STN = 50*(self.criterionDice(self.stn_B2_T, self.real_B2_T))
         self.loss_STN += 50*(self.criterionDice(self.stn_B2, self.real_B2))
 
-        self.loss.append(self.loss_STN.detach().numpy())
         self.loss_STN.backward()
        
     def backward_G_completion(self):
