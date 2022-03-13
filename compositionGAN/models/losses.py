@@ -21,11 +21,12 @@ class IoULoss(nn.Module):
 class DiceLoss(nn.Module):
     def __init__(self):
         super(DiceLoss, self).__init__()
+        self.sigmoid = nn.Sigmoid()
 
     def forward(self, inputs, targets, smooth=1e-5, threshold=0.95): 
         # binarize inputs and targets for segmentation loss  
-        inputs = 1 - torch.sigmoid((inputs-threshold))
-        targets = 1 - torch.sigmoid((targets-threshold)) 
+        inputs = 1 - self.sigmoid(1e3*(inputs-threshold))
+        targets = 1 - self.sigmoid(1e3*(targets-threshold)) 
 
         inputs = inputs.view(-1)
         targets = targets.view(-1)
