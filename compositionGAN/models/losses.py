@@ -24,8 +24,8 @@ class DiceLoss(nn.Module):
 
     def forward(self, inputs, targets, smooth=1e-5, threshold=0.95): 
         # binarize inputs and targets for segmentation loss  
-        inputs = 1 - torch.sigmoid(1e3*(inputs-threshold))
-        targets = 1 - torch.sigmoid(1e3*(targets-threshold)) 
+        inputs = 1 - torch.sigmoid((inputs-threshold))
+        targets = 1 - torch.sigmoid((targets-threshold)) 
 
         inputs = inputs.view(-1)
         targets = targets.view(-1)
