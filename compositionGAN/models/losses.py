@@ -26,17 +26,15 @@ class DiceLoss(nn.Module):
 
     def forward(self, inputs, targets, smooth=1e-5, threshold=0.95): 
         # binarize inputs and targets for segmentation loss  
-        save_image(inputs, 'inputs.png')
-        save_image(targets, 'targets.png')
+        print('inputs before:', inputs.is_cuda)
+        print('targets before:', targets.is_cuda)
 
-        # inputs = 1 - torch.sigmoid(1e3*(inputs-threshold))
-        # targets = 1 - torch.sigmoid(1e3*(targets-threshold))
+        inputs = 1 - torch.sigmoid(1e3*(inputs-threshold))
+        targets = 1 - torch.sigmoid(1e3*(targets-threshold))
 
-        save_image(inputs, 'inputs_b.png')
-        save_image(targets, 'targets_b.png')
+        print('inputs after:', inputs.is_cuda)
+        print('inputs after:', targets.is_cuda)
 
-        inputs = inputs.view(-1)
-        targets = targets.view(-1)
 
         intersection = (inputs * targets).sum()
         union = inputs.sum() + targets.sum()
