@@ -9,16 +9,8 @@ class IoULoss(nn.Module):
 
     def forward(self, inputs, targets, smooth=1e-5, threshold=0.95):
         # binarize inputs and targets for segmentation loss
-        save_image(inputs, 'inputs.png')
-        save_image(targets, 'targets.png')
-
-        inputs = 1 - torch.sigmoid(1e3*(inputs-threshold))
-        targets = 1 - torch.sigmoid(1e3*(targets-threshold))
-
-        save_image(inputs, 'inputs_b.png')
-        save_image(targets, 'targets_b.png')
-
-        sys.exit('stopped')
+        inputs = 1 - self.sigmoid(1e3*(inputs-threshold))
+        targets = 1 - self.sigmoid(1e3*(targets-threshold)) 
         
         intersection = (inputs * targets).sum()  
         union = inputs.sum() + targets.sum() - intersection
@@ -35,8 +27,14 @@ class DiceLoss(nn.Module):
 
     def forward(self, inputs, targets, smooth=1e-5, threshold=0.95): 
         # binarize inputs and targets for segmentation loss  
-        inputs = 1 - self.sigmoid(1e3*(inputs-threshold))
-        targets = 1 - self.sigmoid(1e3*(targets-threshold)) 
+        save_image(inputs, 'inputs.png')
+        save_image(targets, 'targets.png')
+
+        inputs = 1 - torch.sigmoid(1e3*(inputs-threshold))
+        targets = 1 - torch.sigmoid(1e3*(targets-threshold))
+
+        save_image(inputs, 'inputs_b.png')
+        save_image(targets, 'targets_b.png')
 
         inputs = inputs.view(-1)
         targets = targets.view(-1)
