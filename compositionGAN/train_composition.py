@@ -27,6 +27,7 @@ model = create_model(opt)
 
 
 visualizer = Visualizer(opt)
+torch.backends.cudnn.enabled = False
 
 print('Train the STN models')
 # Only for the unpaired case
