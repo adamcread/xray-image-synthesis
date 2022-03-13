@@ -24,7 +24,7 @@ class DiceLoss(nn.Module):
     def __init__(self):
         super(DiceLoss, self).__init__()
 
-    def forward(self, inputs, targets, smooth=1e-5, threshold=0.95): 
+    def forward(self, inputs, targets, smooth=1, threshold=0.95): 
         # binarize inputs and targets for segmentation loss  
         print('inputs before:', inputs.is_cuda)
         print('targets before:', targets.is_cuda)
