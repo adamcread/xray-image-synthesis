@@ -478,7 +478,6 @@ class objComposeUnsuperviseModel(BaseModel):
         # predict composition
         self.fake_B = self.netG_comp(self.fake_A)
 
-
         # Decomposition and mask prediction networks
         if self.opt.lambda_mask:
             self.B1_B2, self.M1_M2 = self.netG_decomp(self.fake_B)

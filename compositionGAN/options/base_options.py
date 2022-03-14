@@ -62,7 +62,8 @@ class BaseOptions():
         self.parser.add_argument('--decomp', action='store_true', help='if specified, do decomposition too.')
         self.parser.add_argument('--img_completion', action='store_true', help='if specified, do image completion')
         self.parser.add_argument('--erosion', action='store_true', help='if specified, erode the borders of the real masks (useful for test time')
-        self.parser.add_argument('--xray', type=bool, default=False, help='training using xray')
+        self.parser.add_argument('--xray', type=bool, default=False, help='specified if training on custom xray dataset')
+        self.parser.add_argument('--rotated', type=bool, default=False, help='specified if training on custom rotated xray dataset')
 
         self.initialized = True
 

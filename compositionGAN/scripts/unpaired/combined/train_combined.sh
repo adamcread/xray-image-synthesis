@@ -20,15 +20,13 @@
 # source ../venv/bin/activate
 
 mode=train
-name="train_xray_combined"
+name="xray_unpaired_combined"
 
-datalist="./scripts/unpaired/threat_mask/train_comb_tb_paths.txt"
-datalist_test="./scripts/unpaired/threat_mask/test_comb_tb_paths.txt"
-
-exp_name="unpaired_compGAN" # suffix for naming
+datalist="./scripts/unpaired/combined/paths_train_combined.txt"
+datalist_test="./scripts/unpaired/test.txt"
 dataset_mode='comp_decomp_unaligned' # dataset type to choose model type
 
-batch_size=8 # size of each training batch
+batch_size=16 # size of each training batch
 loadSizeY=128 # size to scale images to
 fineSizeY=128 # size image is
 loadSizeX=128 # size to scale images to
@@ -39,9 +37,9 @@ G2_comp=0 # completion on object 2
 STN_model='deep'
 lambda_mask=50
 lr=0.00002 # initial learning rate
-niter=100
-niter_decay=100
 
+niter=200
+niter_decay=200
 niterSTN=100
 niterCompletion=100
 
@@ -57,6 +55,11 @@ save_epoch_freq=50
 CUDA_ID=0
 
 xray=true
+rotated=false
+
+if [ "$rotated"=true ]; then 
+	name="xray_unpaired_combined_rotated"
+fi
 
 # if checkpoint directory doesn't exist make one
 if [ ! -d "./checkpoints/${name}" ]; then
