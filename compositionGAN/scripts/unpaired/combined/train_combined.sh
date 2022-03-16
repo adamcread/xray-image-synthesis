@@ -10,14 +10,15 @@
 #SBATCH --mem=28g
 #SBATCH --qos=long-low-prio
 #SBATCH -t 07-00:00:00
+#SBATCH -o 'unpaired_combined_dice.txt'
 
 # job name
 #SBATCH --job-name=unpaired_combined
 
 # Source the bash profile (required to use the module command)
-# source /etc/profile
-# module load cuda/11.0-cudnn8.0
-# source ../venv/bin/activate
+source /etc/profile
+module load cuda/11.0-cudnn8.0
+source ../venv/bin/activate
 
 mode=train
 name="xray_unpaired_combined"
