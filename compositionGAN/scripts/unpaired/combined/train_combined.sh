@@ -38,28 +38,23 @@ STN_model='deep'
 lambda_mask=50
 lr=0.00002 # initial learning rate
 
-niter=200
-niter_decay=200
-niterSTN=100
-niterCompletion=100
+niter=500
+niter_decay=500
+niterSTN=500
+niterCompletion=500
 
 which_epoch=0
 which_epoch_completion=0 
 which_epoch_STN=0
 
 display_port=8775
-display_freq=550
+display_freq=1000
 print_freq=30
-update_html_freq=550
+update_html_freq=1000
 save_epoch_freq=50
 CUDA_ID=0
 
 xray=true
-rotated=false
-
-if [ "$rotated"=true ]; then 
-	name="xray_unpaired_combined_rotated"
-fi
 
 # if checkpoint directory doesn't exist make one
 if [ ! -d "./checkpoints/${name}" ]; then

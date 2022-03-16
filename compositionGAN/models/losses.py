@@ -99,7 +99,7 @@ class DiceBCELoss(nn.Module):
         dice_loss = 1 - (2*intersection + smooth)/(union + smooth)  
         bce_loss = self.BCELoss(inputs, targets)
 
-        dice_bce_loss = (bce_loss + dice_loss)/2
+        dice_bce_loss = (bce_loss + dice_loss/10)/2
         
         return dice_bce_loss
 
@@ -120,7 +120,7 @@ class DiceFocalLoss(nn.Module):
         union = inputs.sum() + targets.sum()
         dice_loss = 1 - (2*intersection + smooth)/(union + smooth)
 
-        dice_focal_loss = (focal_loss + dice_loss)/2
+        dice_focal_loss = (focal_loss/100 + dice_loss)/2
 
         return dice_focal_loss
 
@@ -139,6 +139,6 @@ class FocalTverskyLoss(nn.Module):
         FN = (targets * (1-inputs)).sum()
         
         tversky_loss = (TP + smooth) / (TP + alpha*FP + beta*FN + smooth)  
-        focal_tversky_loss = (1 - tversky)**gamma
+        focal_tversky_loss = (1 - tversky_loss)**gamma
                        
         return focal_tversky_loss
