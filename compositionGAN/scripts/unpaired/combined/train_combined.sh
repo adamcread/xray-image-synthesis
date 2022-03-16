@@ -13,8 +13,6 @@
 
 # job name
 #SBATCH --job-name=unpaired_combined
-#SBATCH –mail-type=ALL
-#SBATCH –mail-user=adam.read@durham.ac.uk
 
 # Source the bash profile (required to use the module command)
 source /etc/profile
