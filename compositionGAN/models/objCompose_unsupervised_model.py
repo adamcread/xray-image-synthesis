@@ -526,8 +526,8 @@ class objComposeUnsuperviseModel(BaseModel):
     def backward_STN(self):
         '''backward pass for training STN networks only'''
 
-        self.loss_STN = 50*(self.criterionFocalTversky(self.stn_B2_T, self.real_B2_T))
-        self.loss_STN += 50*(self.criterionFocalTversky(self.stn_B2, self.real_B2))
+        self.loss_STN = 50*(self.criterionTversky(self.stn_B2_T, self.real_B2_T))
+        self.loss_STN += 50*(self.criterionTversky(self.stn_B2, self.real_B2))
 
         self.loss_STN.backward()
        
