@@ -9,7 +9,7 @@
 #SBATCH --mem=28g
 #SBATCH --qos=long-low-prio
 #SBATCH -t 07-00:00:00
-#SBATCH -o 'unpaired_combined_dice.txt'
+#SBATCH -o 'unpaired_combined_tversky.txt'
 
 # job name
 #SBATCH --job-name=unpaired_combined
@@ -22,7 +22,7 @@ module load cuda/11.0-cudnn8.0
 source ../venv/bin/activate
 
 mode=train
-name="xray_unpaired_combined_dice"
+name="xray_unpaired_combined_tversky"
 
 datalist="./scripts/unpaired/combined/paths_train_combined.txt"
 datalist_test="./scripts/unpaired/test.txt"
