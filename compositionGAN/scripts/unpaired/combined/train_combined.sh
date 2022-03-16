@@ -10,7 +10,7 @@
 #SBATCH --mem=28g
 #SBATCH --qos=long-low-prio
 #SBATCH -t 07-00:00:00
-#SBATCH -o 'unpaired_combined_dice.txt'
+#SBATCH -o 'unpaired_combined_tversky.txt'
 
 # job name
 #SBATCH --job-name=unpaired_combined
