@@ -7,7 +7,7 @@
 #SBATCH --gres=gpu
 #SBATCH -p ug-gpu-small	
 #SBATCH --mem=28g
-#SBATCH --qos=long-low-prio
+#SBATCH --qos=long-high-prio
 #SBATCH -t 07-00:00:00
 #SBATCH -o 'unpaired_combined_focal_tversky.txt'
 
