@@ -1,5 +1,4 @@
 #!/bin/bash
-
 # X number of nodes with Y number of cores in each node.
 #SBATCH -N 1
 #SBATCH -c 4
@@ -10,10 +9,12 @@
 #SBATCH --mem=28g
 #SBATCH --qos=long-low-prio
 #SBATCH -t 07-00:00:00
-#SBATCH -o 'unpaired_combined_tversky.txt'
+#SBATCH -o 'unpaired_combined_dice.txt'
 
 # job name
 #SBATCH --job-name=unpaired_combined
+#SBATCH –mail-type=ALL
+#SBATCH –mail-user=adam.read@durham.ac.uk
 
 # Source the bash profile (required to use the module command)
 source /etc/profile
@@ -21,7 +22,7 @@ module load cuda/11.0-cudnn8.0
 source ../venv/bin/activate
 
 mode=train
-name="xray_unpaired_combined"
+name="xray_unpaired_combined_dice"
 
 datalist="./scripts/unpaired/combined/paths_train_combined.txt"
 datalist_test="./scripts/unpaired/test.txt"
