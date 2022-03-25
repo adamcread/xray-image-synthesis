@@ -30,17 +30,17 @@ cfg = Config.fromfile('./configs/cascade_rcnn/cascade_rcnn_r101_fpn_1x_coco.py')
 cfg.dataset_type = 'CocoDataset'
 cfg.classes = ('FIREARM','KNIFE') 
 
-cfg.data.train.img_prefix = PREFIX + 'resized/images/' 
+cfg.data.train.img_prefix = PREFIX + 'original_size/composed_images/' 
 cfg.data.train.classes = cfg.classes
 cfg.data.train.ann_file = PREFIX + '/helper/annotation/dbf3_train.json'
 cfg.data.train.type = 'CocoDataset'
 
-cfg.data.val.img_prefix = PREFIX + 'resized/images/' 
+cfg.data.val.img_prefix = PREFIX + 'original_size/composed_images/' 
 cfg.data.val.classes = cfg.classes
 cfg.data.val.ann_file = PREFIX + '/helper/annotation/dbf3_test.json'
 cfg.data.val.type = 'CocoDataset'
 
-cfg.data.test.img_prefix = PREFIX + 'resized/images/' 
+cfg.data.test.img_prefix = PREFIX + 'original_size/composed_images/' 
 cfg.data.test.classes = cfg.classes
 cfg.data.test.ann_file = PREFIX + '/helper/annotation/dbf3_test.json'
 cfg.data.test.type = 'CocoDataset'

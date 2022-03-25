@@ -20,14 +20,14 @@
 # source ../venv/bin/activate
 
 mode=test
-name="xray"
+name="test"
 
 datalist="./scripts/unpaired/threat_mask/train_comb_t_paths.txt"
 datalist_test="./scripts/unpaired/test.txt"
 
 exp_name="unpaired_compGAN"
-name_train="combined"
-model_train="./checkpoints/composition_checkpoints/${name_train}" 
+name_train="test_checkpoints"
+model_train="./checkpoints/${name_train}" 
 
 name="${name}_test_${exp_name}"
 dataset_mode='comp_decomp_unaligned'
@@ -45,7 +45,7 @@ STN_model='deep'
 niter=1
 niter_decay=1
 LR=0.00005
-EPOCH="latest"
+EPOCH="best"
 display_port=8775
 display_freq=1
 print_freq=20
@@ -58,7 +58,7 @@ if [ ! -d "./checkpoints/${name}" ]; then
 fi
 
 
-cp ${model_train}/${EPOCH}_net_*.pth ./checkpoints/${name}/
+cp ${model_train}/*.pth ./checkpoints/${name}/
 
 
 CUDA_LAUNCH_BLOCKING=${CUDA_ID} CUDA_VISIBLE_DEVICES=${CUDA_ID} \

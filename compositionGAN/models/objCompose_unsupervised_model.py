@@ -111,21 +111,21 @@ class objComposeUnsuperviseModel(BaseModel):
                 self.model_names += ['AFN']
                 self.epoch_labels += [opt.which_epoch_AFN]
 
-            if opt.img_completion and opt.which_epoch == 'latest':
+            if opt.img_completion and opt.which_epoch in ['latest', 'best']:
                 self.model_names +=  ['G1_completion','G2_completion']
                 self.epoch_labels += [opt.which_epoch]*2
             elif self.opt.img_completion and (int(opt.which_epoch_completion)+int(opt.which_epoch))>0:
                 self.model_names +=  ['G1_completion','G2_completion']
                 self.epoch_labels += [str(int(opt.which_epoch_completion)+int(opt.which_epoch))]*2
             
-            if opt.which_epoch == 'latest':
+            if opt.which_epoch in ['latest', 'best']:
                 self.model_names += ['G_decomp','G_comp']
                 self.epoch_labels += [opt.which_epoch]*2
             elif int(opt.which_epoch):
                 self.model_names += ['G_decomp','G_comp']
                 self.epoch_labels += [opt.which_epoch]*2
             
-            if opt.which_epoch == 'latest':
+            if opt.which_epoch in ['latest', 'best']:
                 self.model_names += ['STN_dec','STN_c']
                 self.epoch_labels += [opt.which_epoch]*2
             elif int(opt.which_epoch)+int(opt.which_epoch_STN):
@@ -330,6 +330,7 @@ class objComposeUnsuperviseModel(BaseModel):
 
         #STN
         self.fake_A1_T, self.fake_A2_T = (self.netSTN_c(torch.cat((self.fake_A1.detach(), self.fake_A2), 1)))
+
         self.mask_A1_T = torch.mean(self.fake_A1_T,dim=1,keepdim=True)
         self.mask_A2_T = torch.mean(self.fake_A2_T,dim=1,keepdim=True)
         
@@ -348,7 +349,6 @@ class objComposeUnsuperviseModel(BaseModel):
             self.mask_A2_T = Variable(torch.Tensor(1*binary_erosion(self.mask_A2_T, structure=np.ones((3,3))[np.newaxis,np.newaxis,:,:])).to(self.device))
             self.mask_A1_T = self.mask_A1_T.type(torch.FloatTensor).to(self.device)
             self.mask_A2_T = self.mask_A2_T.type(torch.FloatTensor).to(self.device)
-
 
         
         if self.opt.G1_completion:
@@ -484,7 +484,6 @@ class objComposeUnsuperviseModel(BaseModel):
             self.M1_M2_normal = self.softmax(self.M1_M2)
             v,m = torch.max(self.M1_M2_normal, dim=1, keepdim=True)
             
-            
             self.fake_M1_s = ((m==1)*1).type(torch.FloatTensor).to(self.device)
             self.fake_M2_s = ((m==2)*1).type(torch.FloatTensor).to(self.device)
 
@@ -619,15 +618,15 @@ class objComposeUnsuperviseModel(BaseModel):
                 self.loss_G_GAN += self.opt.lambda_gan * (self.loss_G_GAN_B1 + self.loss_G_GAN_B2)
                 self.loss_G_GAN /= 3.0
 
-            self.loss_G +=  self.loss_G_GAN
+            self.loss_G += self.loss_G_GAN
         
         # pixel L1 loss
         self.loss_G_L1 = 0.5*(self.criterionL1(self.fake_B1_T, self.real_A1_T.detach()) +
                           self.criterionL1(self.fake_B2_T, self.real_A2_T.detach())) 
-
         self.loss_G_L1 += self.criterionL1(self.fake_B, self.real_B)
         self.loss_G_L1 += 0.5*(self.criterionL1(self.fake_A1_T, self.real_A1_T.detach()) +
                           self.criterionL1(self.fake_A2_T, self.real_A2_T.detach())) 
+
         self.loss_G += self.opt.lambda_L2 * self.loss_G_L1 
 
         # Mask loss
@@ -638,7 +637,6 @@ class objComposeUnsuperviseModel(BaseModel):
 
     def backward_D(self, AorB='B'):
         '''backward pass for the discriminator in training the unpaired model'''
-
         # Fake
         # stop backprop to the generator by detaching fake_B
         if self.opt.conditional:
@@ -688,7 +686,6 @@ class objComposeUnsuperviseModel(BaseModel):
         pred_real_B = self.netD_B(real_B.detach())
 
         self.loss_D_fake_B = self.criterionGAN(pred_fake_B,False)
-
         self.loss_D_real_B = self.criterionGAN(pred_real_B, True)
 
         self.loss_D_real = self.loss_D_real_B
@@ -864,7 +861,6 @@ class objComposeUnsuperviseModel(BaseModel):
         if total_steps%D_freq== 0 :
             self.optimizer_D1_completion.step()
             self.optimizer_D2_completion.step()
-
 
         self.optimizer_G1_completion.zero_grad()
         self.optimizer_G2_completion.zero_grad()
