@@ -37,7 +37,7 @@ cfg.data.train.type = 'CocoDataset'
 
 cfg.data.val.img_prefix = PREFIX + 'original_size/composed_images/' 
 cfg.data.val.classes = cfg.classes
-cfg.data.val.ann_file = PREFIX + '/helper/annotation/dbf3_test.json'
+cfg.data.val.ann_file = PREFIX + '/helper/annotation/dbf3_train.json'
 cfg.data.val.type = 'CocoDataset'
 
 cfg.data.test.img_prefix = PREFIX + 'original_size/composed_images/' 
@@ -64,8 +64,7 @@ cfg.load_from = 'checkpoints/cascade_rcnn_r101_fpn_1x_coco_20200317-0b6a2fbf_2_c
 cfg.work_dir = './outs'
 
 datasets = [build_dataset(cfg.data.train)]
-print(datasets)
 model = build_detector(cfg.model)
 
 mkdir_or_exist(osp.abspath(cfg.work_dir))
-train_detector(model, datasets[0], cfg, distributed=False, validate=False)
+train_detector(model, datasets[0], cfg, distributed=False, validate=True)
