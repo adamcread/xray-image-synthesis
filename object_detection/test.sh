@@ -19,9 +19,9 @@ source /etc/profile
 module load cuda/11.0-cudnn8.0
 source ../venv/bin/activate
 
-python tools/test.py \
+python3 tools/test.py \
     './configs/custom/cascade_rcnn_config.py' \
-    'checkpoints/epoch_6.pth' \
+    'checkpoints/epoch_12.pth' \
     --out 'test.pkl' \
     --eval 'mAP' \
     --show

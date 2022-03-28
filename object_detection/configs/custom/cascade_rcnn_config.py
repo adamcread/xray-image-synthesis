@@ -71,18 +71,19 @@ dataset_type = 'COCODataset'
 classes = ('FIREARM', 'KNIFE')
 data = dict(
     train=dict(
-        img_prefix='../dataset/xray/unpaired/original_size/composed_images/',
+        img_prefix='../dataset/xray/synthetic_composed/unpaired_combined_dice_100/',
         classes=classes,
-        ann_file='../dataset/xray/unpaired/helper/annotation/dbf3_train.json'),
+        ann_file='../dataset/xray/synthetic_composed/helper/annotation/unpaired_combined_dice_100.json'),
     val=dict(
-        img_prefix='../dataset/xray/unpaired/original_size/composed_images/',
+        img_prefix='../dataset/xray/synthetic_composed/unpaired_combined_dice_100/',
         classes=classes,
-        ann_file='../dataset/xray/unpaired/helper/annotation/dbf3_train.json'),
+        ann_file='../dataset/xray/synthetic_composed/helper/annotation/unpaired_combined_dice_100.json'),
     test=dict(
-        img_prefix='../dataset/xray/unpaired/original_size/composed_images/',
+        img_prefix='../dataset/xray/synthetic_composed/unpaired_combined_dice_100/',
         classes=classes,
-        ann_file='../dataset/xray/unpaired/helper/annotation/dbf3_train.json'))
+        ann_file='../dataset/xray/synthetic_composed/helper/annotation/unpaired_combined_dice_100.json')
+)
 
 # We can use the pre-trained Mask RCNN model to obtain higher performance
-load_from = 'checkpoints/epoch_6.pth'
+load_from = 'checkpoints/checkpoints/cascade_rcnn_r101_fpn_1x_coco_20200317-0b6a2fbf_2_classes.pth'
 

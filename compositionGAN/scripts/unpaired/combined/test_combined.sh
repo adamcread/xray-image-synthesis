@@ -1,36 +1,16 @@
-#!/bin/bash
-
-# X number of nodes with Y number of cores in each node.
-#SBATCH -N 1
-#SBATCH -c 4
-
-# partition time limit and resource limit for the job
-#SBATCH --gres=gpu
-#SBATCH -p ug-gpu-small	
-#SBATCH --mem=28g
-#SBATCH --qos=long-low-prio
-#SBATCH -t 07-00:00:00
-
-# job name
-#SBATCH --job-name=unpaired_combined
-
-# Source the bash profile (required to use the module command)
-# source /etc/profile
-# module load cuda/11.0-cudnn8.0
-# source ../venv/bin/activate
-
 mode=test
 name="test"
 
-datalist="./scripts/unpaired/threat_mask/train_comb_t_paths.txt"
+datalist="./scripts/unpaired/threat_mask/train_comb_paths.txt"
 datalist_test="./scripts/unpaired/test.txt"
 
-exp_name="unpaired_compGAN"
-name_train="test_checkpoints"
+exp_name="test_unpaired_combined_dice_500"
+name_train="test_unpaired_combined_dice_500"
 model_train="./checkpoints/${name_train}" 
 
-name="${name}_test_${exp_name}"
+name="${exp_name}"
 dataset_mode='comp_decomp_unaligned'
+how_many=640
 batch_size=1
 loadSizeY=128
 fineSizeY=128
@@ -57,9 +37,7 @@ if [ ! -d "./checkpoints/${name}" ]; then
 	mkdir "./checkpoints/${name}"
 fi
 
-
 cp ${model_train}/*.pth ./checkpoints/${name}/
-
 
 CUDA_LAUNCH_BLOCKING=${CUDA_ID} CUDA_VISIBLE_DEVICES=${CUDA_ID} \
 	python3 test_composition.py \
@@ -91,6 +69,6 @@ CUDA_LAUNCH_BLOCKING=${CUDA_ID} CUDA_VISIBLE_DEVICES=${CUDA_ID} \
 	--print_freq ${print_freq} \
 	--update_html_freq ${update_html_freq} \
 	--n_latest ${n_latest} \
+	--how_many ${how_many} \
 	--eval
-
 
