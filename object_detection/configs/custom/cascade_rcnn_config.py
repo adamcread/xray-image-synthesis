@@ -85,5 +85,5 @@ data = dict(
 )
 
 # We can use the pre-trained Mask RCNN model to obtain higher performance
-load_from = 'checkpoints/checkpoints/cascade_rcnn_r101_fpn_1x_coco_20200317-0b6a2fbf_2_classes.pth'
+load_from = './checkpoints/cascade_rcnn_r101_fpn_1x_coco_20200317-0b6a2fbf_2_classes.pth'
 
