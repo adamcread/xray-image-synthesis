@@ -23,5 +23,5 @@ python3 tools/test.py \
     './configs/custom/cascade_rcnn_config.py' \
     'checkpoints/epoch_12.pth' \
     --out 'test.pkl' \
-    --eval 'mAP' \
-    --show
+    --eval 'bbox' \
+    --options "classwise=True"
