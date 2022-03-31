@@ -22,11 +22,11 @@ source ../venv/bin/activate
 if [ $1 = "dbf3_crcnn" ] || [ $1 = "dbf3_fsaf" ]
 then
     python3 tools/train.py './configs/custom/cascade_rcnn_config.py' \
-        --cfg-options   "work_dir=work_dir/train/$1" \
+        --cfg-options   "work_dir=work_dirs/train/$1" \
         --gpu-id=0  
 else
     python3 tools/train.py './configs/custom/cascade_rcnn_config.py' \
-            --cfg-options   "work_dir=work_dir/train/$1" \
+            --cfg-options   "work_dir=work_dirs/train/$1" \
                             "data.train.img_prefix=../dataset/xray/composed/$2/$1/" \
                             "data.train.ann_file=../dataset/xray/composed/$2/helper/annotation/$1.json" \
             --gpu-id=0  

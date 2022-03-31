@@ -78,3 +78,4 @@ data = dict(
         ann_file='../dataset/xray/unpaired/helper/annotation/dbf3_test_resized.json')
 )
 
+runner = dict(type='EpochBasedRunner', max_epochs=24)
