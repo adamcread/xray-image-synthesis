@@ -9,7 +9,7 @@
 #SBATCH --mem=28g
 #SBATCH --qos=long-high-prio
 #SBATCH -t 07-00:00:00
-#SBATCH -o 'train_obj_det.txt'
+#SBATCH -o 'train_obj_det_$1.txt'
 
 # job name
 #SBATCH --job-name=train_obj_det
@@ -19,10 +19,16 @@ source /etc/profile
 module load cuda/11.0-cudnn8.0
 source ../venv/bin/activate
 
-
-python3 tools/train.py './configs/custom/cascade_rcnn_config.py' \
-    --cfg-options   "work_dir=work_dir/train/$1" \
-                    "data.train.img_prefix=$2" \
-                    "data.train.ann_file=$3" \
-    --gpu-id=0
+if [ $1 = "dbf3_crcnn" ] || [ $1 = "dbf3_fsaf" ]
+then
+    python3 tools/train.py './configs/custom/cascade_rcnn_config.py' \
+        --cfg-options   "work_dir=work_dir/train/$1" \
+        --gpu-id=0  
+else
+    python3 tools/train.py './configs/custom/cascade_rcnn_config.py' \
+            --cfg-options   "work_dir=work_dir/train/$1" \
+                            "data.train.img_prefix=../dataset/xray/composed/$2/$1/" \
+                            "data.train.ann_file=../dataset/xray/composed/$2/helper/annotation/$1.json" \
+            --gpu-id=0  
+fi
 
