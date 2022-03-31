@@ -25,8 +25,8 @@ name="test"
 datalist="./scripts/unpaired/threat_mask/train_comb_paths.txt"
 datalist_test="./scripts/unpaired/test.txt"
 
-exp_name="test_unpaired_combined_focal_tversky_900"
-name_train="test_unpaired_combined_focal_tversky_900"
+exp_name="test_unpaired_combined_dice_500"
+name_train="test_unpaired_combined_dice_500"
 model_train="./checkpoints/${name_train}" 
 
 name="${exp_name}"

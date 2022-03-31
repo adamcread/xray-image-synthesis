@@ -9,10 +9,10 @@
 #SBATCH --mem=28g
 #SBATCH --qos=long-high-prio
 #SBATCH -t 07-00:00:00
-#SBATCH -o 'obj_detection_test.txt'
+#SBATCH -o 'test_obj_det.txt'
 
 # job name
-#SBATCH --job-name=obj_detection_test
+#SBATCH --job-name=test_obj_detection
 
 # Source the bash profile (required to use the module command)
 source /etc/profile
@@ -20,8 +20,10 @@ module load cuda/11.0-cudnn8.0
 source ../venv/bin/activate
 
 python3 tools/test.py \
-    './configs/custom/cascade_rcnn_config.py' \
-    'checkpoints/epoch_12.pth' \
-    --out 'test.pkl' \
-    --eval 'bbox' \
-    --options "classwise=True"
+    "./configs/custom/cascade_rcnn_config.py" \
+    "checkpoints/$1/best.pth" \    
+    --eval "bbox" \
+    --cfg-options   "classwise=True" \
+                    "work_dir=work_dir/test/$1" \
+                    "data.test.img_prefix=$2" \
+                    "data.test.ann_file=$3"

@@ -71,17 +71,17 @@ dataset_type = 'COCODataset'
 classes = ('FIREARM', 'KNIFE')
 data = dict(
     train=dict(
-        img_prefix='../dataset/xray/synthetic_composed/unpaired_combined_dice_100/',
+        img_prefix='../dataset/xray/unpaired/resized_128x128/composed_images/',
         classes=classes,
-        ann_file='../dataset/xray/synthetic_composed/helper/annotation/unpaired_combined_dice_100.json'),
+        ann_file='../dataset/xray/unpaired/helper/annotation/dbf3_train_resized.json'),
     val=dict(
-        img_prefix='../dataset/xray/synthetic_composed/unpaired_combined_dice_100/',
+        img_prefix='../dataset/xray/unpaired/resized_128x128/composed_images/',
         classes=classes,
-        ann_file='../dataset/xray/synthetic_composed/helper/annotation/unpaired_combined_dice_100.json'),
+        ann_file='../dataset/xray/unpaired/helper/annotation/dbf3_test_resized.json'),
     test=dict(
-        img_prefix='../dataset/xray/synthetic_composed/unpaired_combined_dice_100/',
+        img_prefix='../dataset/xray/unpaired/resized_128x128/composed_images/',
         classes=classes,
-        ann_file='../dataset/xray/synthetic_composed/helper/annotation/unpaired_combined_dice_100.json')
+        ann_file='../dataset/xray/unpaired/helper/annotation/dbf3_test_resized.json')
 )
 
 # We can use the pre-trained Mask RCNN model to obtain higher performance
