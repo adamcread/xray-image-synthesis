@@ -9,7 +9,6 @@
 #SBATCH --mem=28g
 #SBATCH --qos=long-high-prio
 #SBATCH -t 07-00:00:00
-#SBATCH -o 'train_obj_det_$1.txt'
 
 # job name
 #SBATCH --job-name=train_obj_det
@@ -31,4 +30,3 @@ else
                             "data.train.ann_file=../dataset/xray/composed/$2/helper/annotation/$1.json" \
             --gpu-id=0  
 fi
-
