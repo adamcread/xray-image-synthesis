@@ -1,5 +1,7 @@
 _base_ = '../cascade_rcnn/cascade_mask_rcnn_r101_fpn_1x_coco.py'
 
+# We can use the pre-trained Mask RCNN model to obtain higher performance
+load_from = './checkpoints/cascade_rcnn_r101_fpn_1x_coco_20200317-0b6a2fbf_2_classes.pth'
 # We also need to change the num_classes in head to match the dataset's annotation
 model = dict(
     roi_head=dict(
@@ -83,7 +85,4 @@ data = dict(
         classes=classes,
         ann_file='../dataset/xray/unpaired/helper/annotation/dbf3_test_resized.json')
 )
-
-# We can use the pre-trained Mask RCNN model to obtain higher performance
-load_from = './checkpoints/cascade_rcnn_r101_fpn_1x_coco_20200317-0b6a2fbf_2_classes.pth'
 
