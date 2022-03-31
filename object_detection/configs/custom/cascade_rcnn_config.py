@@ -1,4 +1,4 @@
-_base_ = '../cascade_rcnn/cascade_mask_rcnn_r101_fpn_1x_coco.py'
+_base_ = '../cascade_rcnn/cascade_rcnn_r101_fpn_1x_coco.py'
 
 # We can use the pre-trained Mask RCNN model to obtain higher performance
 load_from = './checkpoints/cascade_rcnn_r101_fpn_1x_coco_20200317-0b6a2fbf_2_classes.pth'
@@ -56,15 +56,7 @@ model = dict(
                     use_sigmoid=False,
                     loss_weight=1.0),
                 loss_bbox=dict(type='SmoothL1Loss', beta=1.0, loss_weight=1.0))
-        ],
-        mask_head=dict(
-            type='FCNMaskHead',
-            num_convs=4,
-            in_channels=256,
-            conv_out_channels=256,
-            num_classes=2,
-            loss_mask=dict(
-                type='CrossEntropyLoss', use_mask=True, loss_weight=1.0))
+        ]
     )
 )
 
