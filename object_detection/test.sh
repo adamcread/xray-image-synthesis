@@ -19,10 +19,21 @@ module load cuda/11.0-cudnn8.0
 source ../venv/bin/activate
 
 
+if [ $1 = "dbf3_crcnn" ] || [ $1 = "dbf3_fsaf" ]
+then
+    python3 tools/test.py \
+        "./configs/custom/cascade_rcnn_config.py" \
+        "work_dirs/$1/best.pth" \
+        --eval "bbox" \
+        --cfg-options   "classwise=True" \
+                        "work_dir=work_dirs/$1" \
+else
+    python3 tools/test.py \
+        "./configs/custom/cascade_rcnn_config.py" \
+        "work_dirs/$2/$1/best.pth" \  
+        --eval "bbox" \
+        --cfg-options   "classwise=True" \
+                        "work_dir=work_dirs/$2/$1" \
+fi
 
-python3 tools/test.py \
-    "./configs/custom/cascade_rcnn_config.py" \
-    "work_dirs/train/$1/best.pth" \
-    --eval "bbox" \
-    --cfg-options   "classwise=True" \
-                    "work_dir=work_dirs/test/$1" \
+
