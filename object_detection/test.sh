@@ -34,6 +34,4 @@ else
     --eval "bbox" \
     --cfg-options   "classwise=True" \
                     "work_dir=work_dir/test/$1" \
-                    "data.test.img_prefix=../dataset/xray/composed/$2/$1/" \
-                    "data.test.ann_file=../dataset/xray/composed/$2/helper/annotation/$1.json"
 fi
