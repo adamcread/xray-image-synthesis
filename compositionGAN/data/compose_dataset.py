@@ -13,6 +13,9 @@ import torch
 import random
 import ntpath
 import pickle
+import albumentations as A
+from torchvision.utils import save_image
+
 
 class ComposeDataset(BaseDataset):
     #taking sample from three distributions A1,A2,B
@@ -36,6 +39,21 @@ class ComposeDataset(BaseDataset):
         self.fineSizeX = opt.fineSizeX
         self.loadSizeY = opt.loadSizeY
         self.fineSizeY = opt.fineSizeY
+
+        self.data_augmentation = A.Compose([
+                A.augmentations.crops.transforms.RandomResizedCrop(width=self.opt.loadSizeX, height=self.opt.loadSizeY, scale=[0.6, 1], p=0.5),
+                A.HorizontalFlip(p=0.5),
+                A.VerticalFlip(p=0.5),
+                A.augmentations.geometric.rotate.RandomRotate90(p=0.5)],
+                additional_targets={
+                    'A1': 'image',
+                    'A2': 'image',
+                    'B1': 'image',
+                    'B2': 'image',
+                    'M1': 'image',
+                    'M2': 'image',
+                } 
+        )
 
     def __getitem__(self, index):
         B_path = self.B_paths[index]
@@ -91,7 +109,7 @@ class ComposeDataset(BaseDataset):
         all_M = Image.open(M_path)
 
         all_M = all_M.resize((self.opt.loadSizeY*2, self.opt.loadSizeX), Image.NEAREST)
-        all_M = transforms.ToTensor()(all_M)    
+        all_M = transforms.ToTensor()(all_M)
 
 
         M1 = all_M[0:3, h_offset:h_offset + self.opt.fineSizeX,
@@ -130,6 +148,26 @@ class ComposeDataset(BaseDataset):
         A2 = A2.resize((self.opt.loadSizeY, self.opt.loadSizeX), Image.BICUBIC)
         A2 = transforms.ToTensor()(A2)
 
+        if self.opt.data_augmentation:
+            transformed = self.data_augmentation(
+                image=B.permute(1, 2, 0).numpy(), 
+                B1=B1.permute(1, 2, 0).numpy(),
+                B2=B2.permute(1, 2, 0).numpy(),
+                A1=A1.permute(1, 2, 0).numpy(),
+                A2=A2.permute(1, 2, 0).numpy(),
+                M1=M1.permute(1, 2, 0).numpy(),
+                M2=M2.permute(1, 2, 0).numpy()
+            )
+
+            B = transforms.ToTensor()(transformed['image'])
+            B1 = transforms.ToTensor()(transformed['B1'])
+            B2 = transforms.ToTensor()(transformed['B2'])
+            A1 = transforms.ToTensor()(transformed['A1'])
+            A2 = transforms.ToTensor()(transformed['A2'])
+            M1 = transforms.ToTensor()(transformed['M1'])
+            M2 = transforms.ToTensor()(transformed['M2'])
+
+
         w = A2.size(2)
         h = A2.size(1)
         w_offset = random.randint(0, max(0, w - self.opt.fineSizeY - 1))
@@ -144,7 +182,9 @@ class ComposeDataset(BaseDataset):
         B = transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))(B)
         if self.opt.random_view:
             A1_r = transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))(A1_r)
-
+        
+        
+        save_image(torch.cat((B, B1, B2, M1, M2, A1, A2), 1), f'data{random.randint(1, 100)}.png')
         if not self.opt.random_view:
             out_dict = {'B': B, 'B1':B1, 'B2':B2, \
                     'M1':M1, 'M2':M2, 'B_paths': B_path, \

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env python3
 # X number of nodes with Y number of cores in each node.
 #SBATCH -N 1
 #SBATCH -c 4
@@ -33,6 +33,7 @@ name="${exp_name}"
 dataset_mode='comp_decomp_unaligned'
 how_many=20000
 batch_size=1
+
 loadSizeY=128
 fineSizeY=128
 loadSizeX=128

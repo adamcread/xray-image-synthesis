@@ -19,12 +19,32 @@ source /etc/profile
 module load cuda/11.0-cudnn8.0
 source ../venv/bin/activate
 
-mode=train
-name="xray_unpaired_combined_dice"
+# one for paired or unpaired
+# one for data aug
 
-datalist="./scripts/unpaired/combined/paths_train_combined.txt"
-datalist_test="./scripts/unpaired/test.txt"
-dataset_mode='comp_decomp_unaligned' # dataset type to choose model type
+mode=train
+
+name="xray_"$1"_combined_"$2
+
+datalist="./scripts/unpaired/paths_train_combined.txt"
+datalist_test="./scripts/test.txt"
+
+if [ $1 = "paired" ]
+then
+	dataset_mode="comp_decomp_aligned"
+elif [ $1 = "unpaired" ]
+then
+	dataset_mode="comp_decomp_unaligned" # dataset type to choose model type
+fi
+
+if [ $2 = "aug" ]
+then 
+	data_augmentation=1
+elif [ $2 = "no-aug" ]
+then
+	data_augmentation=0
+fi
+
 
 batch_size=16 # size of each training batch
 loadSizeY=128 # size to scale images to
@@ -106,5 +126,6 @@ CUDA_LAUNCH_BLOCKING=${CUDA_ID} CUDA_VISIBLE_DEVICES=${CUDA_ID} \
 	--print_freq ${print_freq} \
 	--display_port ${display_port} \
 	--save_epoch_freq ${save_epoch_freq} \
+	--data_augmentation ${data_augmentation}
 
  

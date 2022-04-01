@@ -63,7 +63,7 @@ class BaseOptions():
         self.parser.add_argument('--img_completion', action='store_true', help='if specified, do image completion')
         self.parser.add_argument('--erosion', action='store_true', help='if specified, erode the borders of the real masks (useful for test time')
         self.parser.add_argument('--xray', type=bool, default=False, help='specified if training on custom xray dataset')
-        self.parser.add_argument('--rotated', type=bool, default=False, help='specified if training on custom rotated xray dataset')
+        self.parser.add_argument('--data_augmentation', type=int, default=0, help='specified if training with augmentations flip, rotate and crop')
 
         self.initialized = True
 
