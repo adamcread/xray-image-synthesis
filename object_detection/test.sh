@@ -22,7 +22,7 @@ source ../venv/bin/activate
 
 python3 tools/test.py \
     "./configs/custom/cascade_rcnn_config.py" \
-    "work_dirs/traim/$1/best.pth" \
+    "work_dirs/train/$1/best.pth" \
     --eval "bbox" \
     --cfg-options   "classwise=True" \
                     "work_dir=work_dirs/test/$1" \
