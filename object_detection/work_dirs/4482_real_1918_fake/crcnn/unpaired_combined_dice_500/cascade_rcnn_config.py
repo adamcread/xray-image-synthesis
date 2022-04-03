@@ -220,9 +220,9 @@ data = dict(
     train=dict(
         type='CocoDataset',
         ann_file=
-        '../dataset/xray/composed/0_real_20000_fake/helper/annotation/unpaired_combined_tversky_700.json',
+        '../dataset/xray/composed/4482_real_1918_fake/helper/annotation/unpaired_combined_dice_500.json',
         img_prefix=
-        '../dataset/xray/composed/0_real_20000_fake/unpaired_combined_tversky_700/',
+        '../dataset/xray/composed/4482_real_1918_fake/unpaired_combined_dice_500/',
         pipeline=[
             dict(type='LoadImageFromFile'),
             dict(type='LoadAnnotations', with_bbox=True),
@@ -297,7 +297,7 @@ lr_config = dict(
     warmup_iters=500,
     warmup_ratio=0.001,
     step=[8, 11])
-runner = dict(type='EpochBasedRunner', max_epochs=24)
+runner = dict(type='EpochBasedRunner', max_epochs=12)
 checkpoint_config = dict(interval=1)
 log_config = dict(interval=50, hooks=[dict(type='TextLoggerHook')])
 custom_hooks = [dict(type='NumClassCheckHook')]
@@ -309,6 +309,6 @@ workflow = [('train', 1)]
 opencv_num_threads = 0
 mp_start_method = 'fork'
 classes = ('FIREARM', 'KNIFE')
-work_dir = 'work_dirs/0_real_20000_fake/unpaired_combined_tversky_700/'
+work_dir = 'work_dirs/4482_real_1918_fake/unpaired_combined_dice_500/'
 auto_resume = False
 gpu_ids = [0]
