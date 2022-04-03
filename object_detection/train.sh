@@ -24,9 +24,9 @@ then
         --cfg-options   "work_dir=work_dirs/$1/" \
         --gpu-id=0  
 else
-    python3 tools/train.py './configs/custom/cascade_rcnn_config.py' \
-            --cfg-options   "work_dir=work_dirs/$2/$1/" \
-                            "data.train.img_prefix=../dataset/xray/composed/$2/$1/" \
-                            "data.train.ann_file=../dataset/xray/composed/$2/helper/annotation/$1.json" \
+    python3 tools/train.py  "./configs/custom/$2_config.py" \
+            --cfg-options   "work_dir=work_dirs/$3/$2/$1/" \
+                            "data.train.img_prefix=../dataset/xray/composed/$3/$1/" \
+                            "data.train.ann_file=../dataset/xray/composed/$3/helper/annotation/$1.json" \
             --gpu-id=0  
 fi
