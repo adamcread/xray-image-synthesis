@@ -8,3 +8,4 @@ object_detection/checkpoints/
 object_detection/mmdet/
 object_detection/work_dirs/**/*.pth
 dataset/
+/**/*slurm*.out
