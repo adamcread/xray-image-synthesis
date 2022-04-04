@@ -18,4 +18,4 @@ source /etc/profile
 module load cuda/11.0-cudnn8.0
 source ../venv/bin/activate
 
-python3 collect_env.py
+python3 mmdet/utils/collect_env.py
