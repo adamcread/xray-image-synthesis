@@ -24,8 +24,7 @@ class objComposeSuperviseModel(BaseModel):
         self.isTrain = opt.isTrain
         self.y_x = int(float(opt.fineSizeY)/opt.fineSizeX)
         self.device = opt.device
-        self.use_cuda = torch.cuda.is_available()
-
+        self.Tensor = torch.cuda.FloatTensor if self.device.type == 'cuda' else torch.FloatTensor
 
         # -------------------------------------
         # Define Networks
