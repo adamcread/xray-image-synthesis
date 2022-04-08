@@ -339,9 +339,6 @@ class ComposeAlignedDataset(BaseDataset):
             B2 = transforms.ToTensor()(transformed['B2'])
             B1_T = transforms.ToTensor()(transformed['B1_T'])
             B2_T = transforms.ToTensor()(transformed['B2_T'])  
-
-        save_image(torch.cat((B, B1, B2, B1_T, B2_T), 1), f'data{random.randint(1, 100)}.png')
-
         
         A1 = transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))(A1)
         A2 = transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))(A2)
