@@ -12,6 +12,7 @@ from .base_model import BaseModel
 from . import networks
 from torch import index_select, LongTensor, nn
 import torch.nn.functional as F
+from . import losses
 
 
 class objComposeSuperviseModel(BaseModel):
@@ -121,6 +122,7 @@ class objComposeSuperviseModel(BaseModel):
             # ----------------------------------
             self.criterionGAN = networks.GANLoss(use_lsgan=not opt.no_lsgan, tensor=self.Tensor)
             self.criterionL1 = torch.nn.L1Loss()
+            self.criterionFocalTversky = losses.FocalTverskyLoss()
             self.criterionCLS = nn.CrossEntropyLoss()
             self.criterionbCLS = nn.BCELoss()
             self.L2_loss = torch.nn.MSELoss()
@@ -427,17 +429,14 @@ class objComposeSuperviseModel(BaseModel):
         L2_loss = torch.nn.MSELoss()
 
         if self.opt.decomp:
-            self.loss_G_L1 += 0.5*(self.criterionL1(self.fake_B1, self.fake_A1.detach()) +
-                               self.criterionL1(self.fake_B2, self.fake_A2.detach()))
-        
-        
-            self.loss_G_L1 += ( 1.0/(1+lambda_A2) * L2_loss(self.fake_B1_T, self.real_B1_T)+
-                    lambda_A2/(1+lambda_A2) * L2_loss(self.fake_B2_T, self.real_B2_T))
+            # loss between fake 
+            self.loss_G_L1 += 0.5*(self.criterionFocalTversky(self.fake_B1, self.fake_A1.detach()) +
+                               self.criterionFocalTversky(self.fake_B2, self.fake_A2.detach()))
+            self.loss_G_L1 += ( 1.0/(1+lambda_A2) * self.criterionFocalTversky(self.fake_B1_T, self.real_B1_T)+
+                    lambda_A2/(1+lambda_A2) * self.criterionFocalTversky(self.fake_B2_T, self.real_B2_T))
 
-        self.loss_G_L1 += (1.0/(1+lambda_A2) * L2_loss(self.fake_A1_T,self.real_B1_T)+
-                           lambda_A2/(1+lambda_A2) *L2_loss(self.fake_A2_T,self.real_B2_T))
-
-
+        self.loss_G_L1 += (1.0/(1+lambda_A2) * self.criterionFocalTversky(self.fake_A1_T,self.real_B1_T)+
+                           lambda_A2/(1+lambda_A2) *self.criterionFocalTversky(self.fake_A2_T,self.real_B2_T))
 
         self.loss_G += self.opt.lambda_L2 * self.loss_G_L1 
 

@@ -184,7 +184,6 @@ class ComposeDataset(BaseDataset):
             A1_r = transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))(A1_r)
         
         
-        save_image(torch.cat((B, B1, B2, M1, M2, A1, A2), 1), f'data{random.randint(1, 100)}.png')
         if not self.opt.random_view:
             out_dict = {'B': B, 'B1':B1, 'B2':B2, \
                     'M1':M1, 'M2':M2, 'B_paths': B_path, \
@@ -231,6 +230,19 @@ class ComposeAlignedDataset(BaseDataset):
         self.loadSizeY = opt.loadSizeY
         self.fineSizeY = opt.fineSizeY
 
+        self.data_augmentation = A.Compose([
+                A.augmentations.crops.transforms.RandomResizedCrop(width=self.opt.loadSizeX, height=self.opt.loadSizeY, scale=[0.9, 1], p=0.5),
+                A.HorizontalFlip(p=0.5),
+                A.VerticalFlip(p=0.5),
+                A.augmentations.geometric.rotate.RandomRotate90(p=0.5)],
+                additional_targets={
+                    'B1': 'image',
+                    'B2': 'image',
+                    'B1_T': 'image',
+                    'B2_T': 'image',
+                } 
+        )
+
 
     def __getitem__(self, index):
         B_path = self.B_paths[index]
@@ -263,6 +275,7 @@ class ComposeAlignedDataset(BaseDataset):
             offset_center_min_y = int(self.loadSizeY/2.0 - self.fineSizeY/2.0)
             offset_center_max_y = int(self.loadSizeY/2.0 + self.fineSizeY/2.0)
 
+        # combined
         B = AB[:, h_offset:h_offset + self.fineSizeX,
                w_offset:w_offset + self.fineSizeY]
 
@@ -270,15 +283,19 @@ class ComposeAlignedDataset(BaseDataset):
             B1 = AB[:, offset_center_min_x:offset_center_max_x,
                    1*w +offset_center_min_y:1*w +offset_center_max_y]
         else:
+            # just bag
             B1 = AB[:, h_offset:h_offset + self.fineSizeX,
                    w + w_offset: w + w_offset + self.fineSizeY]
-
+        
+        # just threat item
         B2 = AB[:, offset_center_min_x:offset_center_max_x,
                2*w +offset_center_min_y:2*w +offset_center_max_y]
         
-
+        # just bag transposed
         B1_T = AB[:, h_offset:h_offset + self.fineSizeX,
                3*w + w_offset:3*w + w_offset + self.fineSizeY]
+               
+        # just threat item composed
         B2_T = AB[:, h_offset:h_offset + self.fineSizeX,
                4*w + w_offset:4*w + w_offset + self.fineSizeY]
 
@@ -306,6 +323,25 @@ class ComposeAlignedDataset(BaseDataset):
             A1 = B1.clone()
 
         A2 = B2.clone()
+
+
+        if self.opt.data_augmentation:
+            transformed = self.data_augmentation(
+                image=B.permute(1, 2, 0).numpy(), 
+                B1=B1.permute(1, 2, 0).numpy(),
+                B2=B2.permute(1, 2, 0).numpy(),
+                B1_T=B1_T.permute(1, 2, 0).numpy(),
+                B2_T=B2_T.permute(1, 2, 0).numpy()
+            )
+
+            B = transforms.ToTensor()(transformed['image'])
+            B1 = transforms.ToTensor()(transformed['B1'])
+            B2 = transforms.ToTensor()(transformed['B2'])
+            B1_T = transforms.ToTensor()(transformed['B1_T'])
+            B2_T = transforms.ToTensor()(transformed['B2_T'])  
+
+        save_image(torch.cat((B, B1, B2, B1_T, B2_T), 1), f'data{random.randint(1, 100)}.png')
+
         
         A1 = transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))(A1)
         A2 = transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))(A2)

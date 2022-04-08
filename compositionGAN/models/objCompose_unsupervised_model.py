@@ -525,8 +525,8 @@ class objComposeUnsuperviseModel(BaseModel):
     def backward_STN(self):
         '''backward pass for training STN networks only'''
 
-        self.loss_STN = 50*(self.criterionDice(self.stn_B2_T, self.real_B2_T))
-        self.loss_STN += 50*(self.criterionDice(self.stn_B2, self.real_B2))
+        self.loss_STN = 50*(self.criterionFocalTversky(self.stn_B2_T, self.real_B2_T))
+        self.loss_STN += 50*(self.criterionFocalTversky(self.stn_B2, self.real_B2))
 
         self.loss_STN.backward()
        
@@ -621,11 +621,11 @@ class objComposeUnsuperviseModel(BaseModel):
             self.loss_G += self.loss_G_GAN
         
         # pixel L1 loss
-        self.loss_G_L1 = 0.5*(self.criterionL1(self.fake_B1_T, self.real_A1_T.detach()) +
-                          self.criterionL1(self.fake_B2_T, self.real_A2_T.detach())) 
+        self.loss_G_L1 = 0.5*(self.criterionFocalTversky(self.fake_B1_T, self.real_A1_T.detach()) +
+                          self.criterionFocalTversky(self.fake_B2_T, self.real_A2_T.detach()))
         self.loss_G_L1 += self.criterionL1(self.fake_B, self.real_B)
-        self.loss_G_L1 += 0.5*(self.criterionL1(self.fake_A1_T, self.real_A1_T.detach()) +
-                          self.criterionL1(self.fake_A2_T, self.real_A2_T.detach())) 
+        self.loss_G_L1 += 0.5*(self.criterionFocalTversky(self.fake_A1_T, self.real_A1_T.detach()) +
+                          self.criterionFocalTversky(self.fake_A2_T, self.real_A2_T.detach()))
 
         self.loss_G += self.opt.lambda_L2 * self.loss_G_L1 
 
