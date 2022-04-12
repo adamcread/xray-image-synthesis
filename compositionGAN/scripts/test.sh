@@ -9,7 +9,7 @@
 #SBATCH --mem=28g
 #SBATCH --qos=long-high-prio
 #SBATCH -t 07-00:00:00
-#SBATCH -o 'unpaired_combined_dice_batch.txt'
+#SBATCH -o 'test.txt'
 
 # job name
 #SBATCH --job-name=generate_imagery

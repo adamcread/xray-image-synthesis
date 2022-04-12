@@ -62,7 +62,6 @@ for i, data in enumerate(dataset_test):
 webpage.save()
 
 ##Finetune over test example
-
 opt.serial_batches = False
 opt.datalist = datalist_train
 opt.dataset_mode = dataset_mode
@@ -111,7 +110,6 @@ for i, data in enumerate(dataset_test):
     for epoch in range(opt.epoch_count, opt.niter + opt.niter_decay + 1):
         torch.cuda.empty_cache()
         for j, ex in enumerate(dataset):
-            ex.to(opt.device)
             model.set_input_train(ex)
             model.optimize_parameters_test(total_steps)
             total_steps += opt.batchSize
