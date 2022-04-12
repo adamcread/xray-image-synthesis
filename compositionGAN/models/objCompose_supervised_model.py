@@ -81,10 +81,17 @@ class objComposeSuperviseModel(BaseModel):
         #----------------------------------
 
         if not self.isTrain or opt.continue_train:
-            if int(opt.which_epoch):
+            if opt.which_epoch in ['latest', 'best']:
                 self.model_names += ['G_decomp','G_comp']
                 self.epoch_labels += [opt.which_epoch]*2
-            if int(opt.which_epoch)+int(opt.which_epoch_STN):
+            elif int(opt.which_epoch):
+                self.model_names += ['G_decomp','G_comp']
+                self.epoch_labels += [opt.which_epoch]*2
+
+            if opt.which_epoch in ['latest', 'best']:
+                self.model_names += ['STN_dec','STN_c']
+                self.epoch_labels += [opt.which_epoch]*2
+            elif int(opt.which_epoch)+int(opt.which_epoch_STN):
                 self.model_names += ['STN_dec','STN_c']
                 self.epoch_labels += [str(int(opt.which_epoch)+int(opt.which_epoch_STN))]*2
 
