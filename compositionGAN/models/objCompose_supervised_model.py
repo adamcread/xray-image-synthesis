@@ -277,7 +277,6 @@ class objComposeSuperviseModel(BaseModel):
         self.fake_M1_s_ = torch.mul(self.fake_M1_s, self.mask_A1_fake).repeat(1,3,1,1)
         self.fake_M2_s_ = torch.mul(self.fake_M2_s, self.mask_A2_fake).repeat(1,3,1,1)
 
-        
         forgot_overlp = (((self.fake_M1_s_ + self.fake_M2_s_)==0)*1).type(torch.FloatTensor).to(self.device)
 
         self.forgot_A1 = torch.mul(forgot_overlp, self.mask_A1_fake)

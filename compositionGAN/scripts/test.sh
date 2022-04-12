@@ -22,16 +22,33 @@ source ../venv/bin/activate
 mode=test
 name="test"
 
-datalist="./scripts/unpaired/threat_mask/train_comb_paths.txt"
-datalist_test="./scripts/unpaired/test.txt"
+# if statement based on number of arguments -> if just 3 given assume all same epoch
+# move things using python script
+# rename things using python script
 
-exp_name="test_unpaired_combined_dice_500"
-name_train="test_unpaired_combined_dice_500"
-model_train="./checkpoints/${name_train}" 
+# 1 - root
+# 2 - epoch for STN
+# 3 - epoch for compl
+# 4 - epoch for GAN
+# 5 - number of images to produce
 
-name="${exp_name}"
-dataset_mode='comp_decomp_unaligned'
-how_many=20000
+datalist_test="./scripts/paths_test.txt"
+
+if [ $1 == "paired" ]
+then
+	dataset_mode="comp_decomp_aligned"
+	datalist="./scripts/paths_train_paired.txt"
+elif [ $1 == "unpaired" ]
+then
+	dataset_mode="comp_decomp_unaligned" # dataset type to choose model type
+	datalist="./scripts/paths_train_unpaired.txt"
+fi
+
+exp_train="train_"$1"_"$2
+name="test_"$1"_"$2
+model_train="./checkpoints/${exp_train}/"
+
+how_many=$4
 batch_size=1
 
 loadSizeY=128
@@ -59,7 +76,11 @@ if [ ! -d "./checkpoints/${name}" ]; then
 	mkdir "./checkpoints/${name}"
 fi
 
-cp ${model_train}/*.pth ./checkpoints/${name}/
+python3 move_checkpoints.py \
+	-i ${model_train} \
+	-e $3 \
+	-d "./checkpoints/${name}/"
+
 
 CUDA_LAUNCH_BLOCKING=${CUDA_ID} CUDA_VISIBLE_DEVICES=${CUDA_ID} \
 	python3 test_composition.py \
