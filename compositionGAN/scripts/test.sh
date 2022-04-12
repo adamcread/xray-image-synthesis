@@ -12,9 +12,7 @@
 #SBATCH -o 'unpaired_combined_dice_batch.txt'
 
 # job name
-#SBATCH --job-name=unpaired_combined
-
-# Source the bash profile (required to use the module command)
+#SBATCH --job-name=generate_imagery
 source /etc/profile
 module load cuda/11.0-cudnn8.0
 source ../venv/bin/activate
