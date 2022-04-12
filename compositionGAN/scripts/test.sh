@@ -22,16 +22,6 @@ source ../venv/bin/activate
 mode=test
 name="test"
 
-# if statement based on number of arguments -> if just 3 given assume all same epoch
-# move things using python script
-# rename things using python script
-
-# 1 - root
-# 2 - epoch for STN
-# 3 - epoch for compl
-# 4 - epoch for GAN
-# 5 - number of images to produce
-
 datalist_test="./scripts/paths_test.txt"
 
 if [ $1 = "paired" ]
