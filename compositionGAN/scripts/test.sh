@@ -34,11 +34,11 @@ name="test"
 
 datalist_test="./scripts/paths_test.txt"
 
-if [ $1 == "paired" ]
+if [ $1 = "paired" ]
 then
 	dataset_mode="comp_decomp_aligned"
 	datalist="./scripts/paths_train_paired.txt"
-elif [ $1 == "unpaired" ]
+elif [ $1 = "unpaired" ]
 then
 	dataset_mode="comp_decomp_unaligned" # dataset type to choose model type
 	datalist="./scripts/paths_train_unpaired.txt"
