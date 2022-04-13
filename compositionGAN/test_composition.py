@@ -104,6 +104,7 @@ for i, data in enumerate(dataset_test):
     else:
         print("file extention not found; file name not recognized.")
         im_name = ''
+        
     model.forward_test()
     visuals = model.get_current_visuals()
     visualizer.display_current_results(visuals, total_steps, True,opt.update_html_freq,im_name)
