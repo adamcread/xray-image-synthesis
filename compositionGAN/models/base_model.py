@@ -92,9 +92,9 @@ class BaseModel():
 
     # update learning rate (called once every epoch)
     def update_learning_rate(self):
+        lr = self.optimizers[0].param_groups[0]['lr']
         for scheduler in self.schedulers:
             scheduler.step()
-        lr = self.optimizers[0].param_groups[0]['lr']
         print('learning rate = %.7f' % lr)
 
     def eval(self):

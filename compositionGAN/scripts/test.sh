@@ -10,6 +10,8 @@
 #SBATCH --qos=long-high-prio
 #SBATCH -t 07-00:00:00
 #SBATCH -o 'test.txt'
+#SBATCH --mail-type=ALL
+#SBATCH --mail-user=adam.read@durham.ac.uk 
 
 # job name
 #SBATCH --job-name=generate_imagery
@@ -58,6 +60,8 @@ display_freq=1
 print_freq=20
 update_html_freq=5
 n_latest=1
+xray=true
+
 
 
 if [ ! -d "./checkpoints/${name}" ]; then
@@ -74,6 +78,7 @@ CUDA_LAUNCH_BLOCKING=${CUDA_ID} CUDA_VISIBLE_DEVICES=${CUDA_ID} \
 	python3 test_composition.py \
 	--datalist ${datalist} \
 	--datalist_test ${datalist_test} \
+	--xray ${xray} \
 	--decomp \
 	--name ${name} \
 	--dataset_mode ${dataset_mode} \
