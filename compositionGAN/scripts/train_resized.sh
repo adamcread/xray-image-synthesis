@@ -10,7 +10,7 @@
 #SBATCH --qos=long-high-prio
 #SBATCH -t 07-00:00:00
 #SBATCH -o 'test_resized.txt'
-#SBATCH --nodelist=gpu7
+#SBATCH --nodelist=gpu12
 
 # job name
 #SBATCH --job-name=unpaired_combined
