@@ -108,3 +108,20 @@ CUDA_LAUNCH_BLOCKING=${CUDA_ID} CUDA_VISIBLE_DEVICES=${CUDA_ID} \
 	--how_many ${how_many} \
 	--eval
 
+
+rm -rf "results/${name}/test_"$3"/"
+mv "results/${name}/test_best/" "results/${name}/test_"$3"/"
+
+python3 composed_dataset.py \
+	--file="${name}" \
+	--test="test_"$3
+
+
+python3 ../object_detection/tools/test.py \
+    "../object_detection/configs/custom/crcnn_config.py" \
+    "../object_detection/work_dirs/dbf3/crcnn/best.pth" \
+    --eval "bbox" \
+    --cfg-options   "classwise=True" \
+                    "work_dir=../object_detection/work_dirs/test/" \
+                    "data.test.img_prefix=./results/${name}/test_$3/images/" \
+                    "data.test.ann_file=./results/${name}/annotation/test_$3.json" 

@@ -48,5 +48,6 @@ class TrainOptions(BaseOptions):
         self.parser.add_argument('--aspect_ratio', type=float, default=1.0, help='aspect ratio of result images')
         self.parser.add_argument('--how_many', type=int, default=50, help='how many test images to run')
         self.parser.add_argument('--eval', action='store_true', help='run in eval mode')
+        self.parser.add_argument('--refine', action='store_true', help='run refinement')
 
         self.isTrain = True

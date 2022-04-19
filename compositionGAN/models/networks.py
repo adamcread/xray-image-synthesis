@@ -306,6 +306,8 @@ class ResnetGeneratorconv(nn.Module):
         else:
             use_bias = norm_layer == nn.InstanceNorm2d
 
+        # pads the image with the boundary reflection
+        # conv layer going down + normalisation + ReLU
         #128 #256
         model1 = [nn.ReflectionPad2d(3), #134 #262
                  nn.Conv2d(input_nc, ngf, kernel_size=7, padding=0,
@@ -320,6 +322,7 @@ class ResnetGeneratorconv(nn.Module):
                           norm_layer(ngf * mult),
                           nn.ReLU(True)]
 
+        # convolutional layer going down + norm + ReLU
         model1 += [nn.Conv2d(ngf *mult, ngf *mult* 2, kernel_size=3, 
                                 stride=2, padding=1, bias=use_bias),#64 #64
                       norm_layer(ngf * mult * 2),
@@ -331,6 +334,8 @@ class ResnetGeneratorconv(nn.Module):
             nc_in = ngf * mult + int(ngf * mult/4.0)
         else:
             nc_in = ngf * mult 
+        
+        # another layer going down
         model2 = [nn.Conv2d(nc_in, ngf * mult * 2, kernel_size=3,
                                 stride=2, padding=1, bias=use_bias), #32 #64
                       norm_layer(ngf * mult * 2),
@@ -339,9 +344,11 @@ class ResnetGeneratorconv(nn.Module):
         n_downsampling = 2
         mode = 'nearest'
         mult = 2**n_downsampling
+        # extract features
         for i in range(n_blocks):
             model2 += [ResnetBlock(ngf * mult, padding_type=padding_type, norm_layer=norm_layer, use_dropout=use_dropout, use_bias=use_bias)]
 
+        # upsampling
         for i in range(n_downsampling):
             mult = 2**(n_downsampling - i)
             model2 += [nn.Upsample(scale_factor=2, mode=mode),
@@ -356,6 +363,7 @@ class ResnetGeneratorconv(nn.Module):
                   norm_layer(int(ngf * mult / 2)),
                   nn.ReLU(True)]
 
+        # upsapling
         model2 += [nn.ReflectionPad2d(3)]
         model2 += [nn.Conv2d(ngf, output_nc, kernel_size=7, padding=0)]
         model2 += [nn.Tanh()]
@@ -685,71 +693,85 @@ class DeepSpatialTransformer(nn.Module):
         self.use_cuda = torch.cuda.is_available()
         self.input_nc = input_nc
         self.n_blocks = n_blocks
+        
         # Spatial transformer localization-network
-        #128X128
+        #128X128 or 256x526x3
         self.localization = []
-        self.localization += [nn.Conv2d(input_nc, 32, kernel_size=7),#122 #(122,250)
+        self.localization += [
+            nn.Conv2d(input_nc, 32, kernel_size=7),#122 #(122,250)
             nn.MaxPool2d(2, stride=2), #62 , #(62,126)
-            nn.ReLU(True)]
+            nn.ReLU(True)
+        ]
+
         if y_x == 2:
             self.localization += [nn.Conv2d(32, 32, kernel_size=(1,5)),#(62, 122)
                 nn.MaxPool2d((1,2), stride=(1,2)), #(62, 62)
                 nn.ReLU(True)]
-        self.localization += [nn.Conv2d(32, 64, kernel_size=5), #58 #(58, 58)
+
+        self.localization += [
+            nn.Conv2d(32, 64, kernel_size=5), #58 #(58, 58)
             nn.MaxPool2d(2, stride=2), #30
             nn.ReLU(True),
             nn.Conv2d(64, 128, kernel_size=5), #26
             nn.MaxPool2d(2, stride=2), #14
-            nn.ReLU(True)]
+            nn.ReLU(True)
+        ]
 
         self.out_dim = 4
-        for i in range(0,n_blocks):
-            self.localization += [nn.Conv2d(128, 128, kernel_size=5),#10
-                                nn.MaxPool2d(2, stride=2),nn.ReLU(True)] #4
+        for _ in range(0,n_blocks):
+            self.localization += [
+                nn.Conv2d(128, 128, kernel_size=5),#10
+                nn.MaxPool2d(2, stride=2),
+                nn.ReLU(True)
+            ] #4
 
         self.localization = nn.Sequential(*self.localization)
 
+        # fully-connected layer
         # Regressor for the 3 * 2 affine matrix
         self.fc_loc = nn.Sequential(
             nn.Linear(128 * self.out_dim * self.out_dim, 128),
             nn.ReLU(True),
             nn.Linear(128, 64),
             nn.ReLU(True),
-            nn.Linear(64, 3*4)
+            nn.Linear(64, 3*4) # 3x4?
         )
 
-
-        self.fc_loc[4].weight.data.fill_(0)
-        self.fc_loc[4].bias.data = torch.FloatTensor([1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0]).to(self.device)
+        self.fc_loc[4].weight.data.fill_(0) # initialise final fc layer to zero
+        self.fc_loc[4].bias.data = torch.FloatTensor([1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0]).to(self.device) # initialise biases for final fc layer
 
     def forward(self, input, no_translatoin=False):
         input = input.to(self.device)
 
-        h = input.size(2)
-        w = input.size(3)
+        # channels = 3
+        h = input.size(2) # height = 256
+        w = input.size(3) # width = 256
 
-        mask = torch.Tensor(input.size()).fill_(1).to(self.device)
-        ONES = mask.clone().to(self.device)
+        mask = torch.Tensor(input.size()).fill_(1).to(self.device) # initialise sample grid
+        ONES = mask.clone().to(self.device) # identity
 
-    
-        mask.index_fill_(2, LongTensor([0, h-1]).to(self.device), 0)
-        mask.index_fill_(3, LongTensor([0, w-1]).to(self.device), 0)
+        mask.index_fill_(2, LongTensor([0, h-1]).to(self.device), 0) # second dimension of mask fill mask with coordinates of height (e.g. 0 - 255)
+        mask.index_fill_(3, LongTensor([0, w-1]).to(self.device), 0) # third dimension of mask fill with coordinates of width (e.g. 0-255)
         mask = Variable(mask)
 
         # misc.imsave('/home/sazadi/projects/objectComposition-Pytorch/mask.png', mask.data.cpu().numpy().transpose(1,2,0))
-        input = torch.mul(input,mask) + (Variable(ONES) - mask)
+        input = torch.mul(input,mask) + (Variable(ONES) - mask) 
 
+        # get feature map
         if self.use_cuda:
             xs = nn.parallel.data_parallel(self.localization, input, [self.device])
         else:
             xs = self.localization(input)
 
+        # convert feature map into vector
         xs = xs.view(-1, 128 * self.out_dim * self.out_dim)
         ind1 = Variable(LongTensor(range(0,2)))
         ind2 = Variable(LongTensor(range(2,4)))
+
         inp1 = Variable(LongTensor(range(0,int(input.size(1)/2))))
         inp2 = Variable(LongTensor(range(int(input.size(1)/2),input.size(1))))
 
+        # get weights for 3*2 affine matrix
         if self.use_cuda:
             theta = nn.parallel.data_parallel(self.fc_loc, xs, [self.device])
         else:
@@ -760,23 +782,28 @@ class DeepSpatialTransformer(nn.Module):
         inp1 = inp1.to(self.device)
         inp2 = inp2.to(self.device)
 
+        # 4x3 matrix
         theta = theta.view(-1, 4, 3)
 
-
+        # get two thetas
         theta_1 = index_select(theta,1, ind1)
         theta_2 = index_select(theta,1, ind2)
+
         if no_translatoin:
             translation_mat = Variable(torch.ones((2,3)).to(),requires_grad=False)
             translation_mat[:,2] = 0
             theta_1_linear = torch.mul(theta_1, translation_mat)
             theta_2_linear = torch.mul(theta_2, translation_mat)
 
-
+        # get two inputs
         input_1 = index_select(input, 1, inp1)
         input_2 = index_select(input, 1, inp2)
+
+        # create two affine grids
         grid_1 = F.affine_grid(theta_1, input_1.size(), align_corners=True)
         grid_2 = F.affine_grid(theta_2, input_2.size(), align_corners=True)
 
+        # sample from both the addine grids using the thetas provided 
         x1 = F.grid_sample(input_1, grid_1, padding_mode="border", align_corners=True)
         x2 = F.grid_sample(input_2, grid_2, padding_mode="border", align_corners=True)
         if no_translatoin:
@@ -785,6 +812,8 @@ class DeepSpatialTransformer(nn.Module):
             x1_linear = F.grid_sample(input_1, grid_1, padding_mode="border", align_corners=True)
             x2_linear = F.grid_sample(input_2, grid_2, padding_mode="border", align_corners=True)
             return x1,x2, x1_linear, x2_linear
+
+        # get the output of the two objects?
         return x1,x2
 
 

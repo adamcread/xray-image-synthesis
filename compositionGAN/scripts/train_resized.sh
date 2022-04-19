@@ -9,7 +9,7 @@
 #SBATCH --mem=28g
 #SBATCH --qos=long-high-prio
 #SBATCH -t 07-00:00:00
-#SBATCH -o 'unpaired_combined_dice.txt'
+#SBATCH -o 'test_resized.txt'
 #SBATCH --nodelist=gpu7
 
 # job name
