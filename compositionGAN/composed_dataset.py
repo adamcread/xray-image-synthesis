@@ -84,22 +84,21 @@ def create_coco(root, composed_images, out_file):
         json.dump(coco_dataset, fp, indent=4)
 
 
-if __name__ == "__main__":
-    import argparse
+import argparse
 
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--file', type=str, help="file for test")
-    parser.add_argument('--test', type=str, help="epoch for test")
+parser = argparse.ArgumentParser()
+parser.add_argument('--file', type=str, help="file for test")
+parser.add_argument('--test', type=str, help="epoch for test")
 
-    args = parser.parse_args()
+args = parser.parse_args()
 
-    print(args.test)
+print(args.test)
 
-    root = f'./results/{args.file}/{args.test}/images/'
-    composed_images = list(set(map(lambda x: '_'.join(x.split('_')[:2]), os.listdir(root))))
-    print(composed_images)
-    create_coco(
-        root = root,
-        composed_images = composed_images,
-        out_file = f'./results/{args.file}/annotation/{args.test}.json'
-    )
+root = f'./results/{args.file}/{args.test}/images/'
+composed_images = list(set(map(lambda x: '_'.join(x.split('_')[:2]), os.listdir(root))))
+print(composed_images)
+create_coco(
+    root = root,
+    composed_images = composed_images,
+    out_file = f'./results/{args.file}/annotation/{args.test}.json'
+)
