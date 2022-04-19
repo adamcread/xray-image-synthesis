@@ -171,7 +171,7 @@ def define_STN(input_nc, res=64, device=None, y_x=1, STN_model=''):
         n_blocks=0
     elif res==128:
         n_blocks = 1
-    elif res==256:
+    elif res==256 or res==512:
         n_blocks = 2
     else:
         raise NotImplementedError("STN not defined for this image resolution:%s"%res)
