@@ -741,13 +741,11 @@ class DeepSpatialTransformer(nn.Module):
         self.fc_loc[4].bias.data = torch.FloatTensor([1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0]).to(self.device) # initialise biases to identity matrix
 
     def forward(self, input, no_translatoin=False):
-        input = input.to(self.device)
-
-        print("input", input.size())
+        input = input.to(self.device) # 16, 6, 512, 512
 
         # channels = 3
-        h = input.size(2) # height = 256
-        w = input.size(3) # width = 256
+        h = input.size(2) # height = 512
+        w = input.size(3) # width = 512
 
         mask = torch.Tensor(input.size()).fill_(1).to(self.device) # initialise sample grid
         ONES = mask.clone().to(self.device) # identity
@@ -764,9 +762,10 @@ class DeepSpatialTransformer(nn.Module):
             xs = nn.parallel.data_parallel(self.localization, input, [self.device])
         else:
             xs = self.localization(input)
-
-        # convert feature map into vector
+            
+        print("xs", xs.size())            
         xs = xs.view(-1, 128 * self.out_dim * self.out_dim)
+        print("xs", xs.size())            
 
         ind1 = Variable(LongTensor(range(0,2)))
         ind2 = Variable(LongTensor(range(2,4)))
