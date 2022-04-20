@@ -695,7 +695,7 @@ class DeepSpatialTransformer(nn.Module):
         self.n_blocks = n_blocks
         
         # Spatial transformer localization-network
-        #128X128 or 256x526x3
+        #128X128x3 or 256x526x3
         self.localization = []
         self.localization += [
             nn.Conv2d(input_nc, 32, kernel_size=7),#122 #(122,250)
@@ -742,6 +742,8 @@ class DeepSpatialTransformer(nn.Module):
 
     def forward(self, input, no_translatoin=False):
         input = input.to(self.device)
+
+        print("input", input.size())
 
         # channels = 3
         h = input.size(2) # height = 256
