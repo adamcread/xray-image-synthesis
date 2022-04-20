@@ -734,11 +734,11 @@ class DeepSpatialTransformer(nn.Module):
             nn.ReLU(True),
             nn.Linear(128, 64),
             nn.ReLU(True),
-            nn.Linear(64, 3*4) # 3x4?
+            nn.Linear(64, 3*4) # 3x4 -> 12 so we have the right numeber of things
         )
 
         self.fc_loc[4].weight.data.fill_(0) # initialise final fc layer to zero
-        self.fc_loc[4].bias.data = torch.FloatTensor([1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0]).to(self.device) # initialise biases for final fc layer
+        self.fc_loc[4].bias.data = torch.FloatTensor([1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0]).to(self.device) # initialise biases to identity matrix
 
     def forward(self, input, no_translatoin=False):
         input = input.to(self.device)
@@ -785,9 +785,10 @@ class DeepSpatialTransformer(nn.Module):
 
         # 4x3 matrix
         theta = theta.view(-1, 4, 3)
+        print("theta", theta.size())
 
         # get two thetas
-        theta_1 = index_select(theta,1, ind1)
+        theta_1 = index_select(theta, 1, ind1)
         theta_2 = index_select(theta,1, ind2)
 
         if no_translatoin:
