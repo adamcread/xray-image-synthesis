@@ -783,9 +783,11 @@ class DeepSpatialTransformer(nn.Module):
         inp1 = inp1.to(self.device)
         inp2 = inp2.to(self.device)
 
+
         # 4x3 matrix
+        print("theta1", theta.size())
         theta = theta.view(-1, 4, 3)
-        print("theta", theta.size())
+        print("theta2", theta.size())
 
         # get two thetas
         theta_1 = index_select(theta, 1, ind1)
