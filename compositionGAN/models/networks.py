@@ -765,6 +765,7 @@ class DeepSpatialTransformer(nn.Module):
 
         # convert feature map into vector
         xs = xs.view(-1, 128 * self.out_dim * self.out_dim)
+
         ind1 = Variable(LongTensor(range(0,2)))
         ind2 = Variable(LongTensor(range(2,4)))
 
@@ -798,6 +799,9 @@ class DeepSpatialTransformer(nn.Module):
         # get two inputs
         input_1 = index_select(input, 1, inp1)
         input_2 = index_select(input, 1, inp2)
+
+        print(theta_1.size(), theta_2.size())
+        print(input_1.size(), input_2.size())
 
         # create two affine grids
         grid_1 = F.affine_grid(theta_1, input_1.size(), align_corners=True)
