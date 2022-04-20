@@ -764,7 +764,7 @@ class DeepSpatialTransformer(nn.Module):
             xs = self.localization(input)
             
         print("xs", xs.size())            
-        xs = xs.view(-1, 128 * self.out_dim * self.out_dim)
+        xs = xs.view(-1, 512 * self.out_dim * self.out_dim)
         print("xs", xs.size())            
 
         ind1 = Variable(LongTensor(range(0,2)))
