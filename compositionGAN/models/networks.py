@@ -171,8 +171,10 @@ def define_STN(input_nc, res=64, device=None, y_x=1, STN_model=''):
         n_blocks=0
     elif res==128:
         n_blocks = 1
-    elif res==256 or res==512:
+    elif res==256:
         n_blocks = 2
+    elif res == 512:
+        n_blocks = 3
     else:
         raise NotImplementedError("STN not defined for this image resolution:%s"%res)
 
@@ -763,9 +765,7 @@ class DeepSpatialTransformer(nn.Module):
         else:
             xs = self.localization(input)
             
-        print("xs", xs.size())            
-        xs = xs.view(-1, 512 * self.out_dim * self.out_dim)
-        print("xs", xs.size())            
+        xs = xs.view(-1, 128 * self.out_dim * self.out_dim)
 
         ind1 = Variable(LongTensor(range(0,2)))
         ind2 = Variable(LongTensor(range(2,4)))
@@ -786,9 +786,7 @@ class DeepSpatialTransformer(nn.Module):
 
 
         # 4x3 matrix
-        print("theta1", theta.size())
         theta = theta.view(-1, 4, 3)
-        print("theta2", theta.size())
 
         # get two thetas
         theta_1 = index_select(theta, 1, ind1)
@@ -803,9 +801,6 @@ class DeepSpatialTransformer(nn.Module):
         # get two inputs
         input_1 = index_select(input, 1, inp1)
         input_2 = index_select(input, 1, inp2)
-
-        print(theta_1.size(), theta_2.size())
-        print(input_1.size(), input_2.size())
 
         # create two affine grids
         grid_1 = F.affine_grid(theta_1, input_1.size(), align_corners=True)
