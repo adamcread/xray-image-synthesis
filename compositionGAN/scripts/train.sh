@@ -9,7 +9,7 @@
 #SBATCH --mem=28g
 #SBATCH --qos=long-high-prio
 #SBATCH -t 07-00:00:00
-#SBATCH -o 'unpaired_combined_dice.txt'
+#SBATCH -o 'train_unpaired_no-aug.txt'
 #SBATCH --nodelist=gpu12
 
 # job name
@@ -48,7 +48,7 @@ then
 fi
 
 
-batch_size=64 # size of each training batch
+batch_size=128 # size of each training batch
 loadSizeY=128 # size to scale images to
 fineSizeY=128 # size image is
 loadSizeX=128 # size to scale images to

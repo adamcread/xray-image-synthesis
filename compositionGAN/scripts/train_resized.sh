@@ -48,7 +48,7 @@ then
 fi
 
 
-batch_size=16 # size of each training batch
+batch_size=12 # size of each training batch
 loadSizeY=512 # size to scale images to
 fineSizeY=512 # size image is
 loadSizeX=512 # size to scale images to
@@ -60,10 +60,10 @@ STN_model='deep'
 lambda_mask=50
 lr=0.00002 # initial learning rate
 
-niter=1
-niter_decay=0
-niterSTN=1
-niterCompletion=1
+niter=800
+niter_decay=200
+niterSTN=500
+niterCompletion=250
 
 which_epoch=0
 which_epoch_completion=0 
