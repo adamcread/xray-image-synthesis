@@ -75,7 +75,7 @@ class TverskyLoss(nn.Module):
         inputs = 1 - torch.sigmoid(1e3*(inputs-threshold))
         targets = 1 - torch.sigmoid(1e3*(targets-threshold))   
         
-        TP = (inputs * targets).sum()    
+        TP = (inputs * targets).sum() 
         FP = ((1-targets) * inputs).sum()
         FN = (targets * (1-inputs)).sum()
         tversky_loss = 1- (TP + smooth) / (TP + alpha*FP + beta*FN + smooth)  
@@ -130,7 +130,7 @@ class FocalTverskyLoss(nn.Module):
         super(FocalTverskyLoss, self).__init__()
         self.BCELoss = nn.BCELoss()
 
-    def forward(self, inputs, targets, smooth=1e-5, alpha=0.5, beta=0.5, gamma=1, threshold=0.95):
+    def forward(self, inputs, targets, smooth=1e-5, alpha=0.7, beta=0.3, gamma=4/3, threshold=0.95):
         inputs = 1 - torch.sigmoid(1e3*(inputs-threshold))
         targets = 1 - torch.sigmoid(1e3*(targets-threshold))
         
