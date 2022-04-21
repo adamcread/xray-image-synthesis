@@ -25,7 +25,7 @@ source ../venv/bin/activate
 
 mode=train
 
-name="xray_"$1"_"$2
+name="train_"$1"_"$2
 
 datalist_test="./scripts/paths_test.txt"
 

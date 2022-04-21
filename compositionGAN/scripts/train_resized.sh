@@ -9,7 +9,7 @@
 #SBATCH --mem=28g
 #SBATCH --qos=long-high-prio
 #SBATCH -t 07-00:00:00
-#SBATCH -o 'test_resized.txt'
+#SBATCH -o 'train_resized_unpaired_no-aug.txt'
 #SBATCH --nodelist=gpu12
 
 # job name
@@ -25,7 +25,7 @@ source ../venv/bin/activate
 
 mode=train
 
-name="xray_"$1"_"$2
+name="train_resized_"$1"_"$2
 
 datalist_test="./scripts/paths_test.txt"
 
