@@ -106,8 +106,8 @@ CUDA_LAUNCH_BLOCKING=${CUDA_ID} CUDA_VISIBLE_DEVICES=${CUDA_ID} \
 	--eval
 
 
-rm -rf "results/${name}/test_"$3"/"
-cp "results/${name}/test_best/" "results/${name}/test_"$3"/"
+rm -rf "./results/${name}/test_"$3"/"
+cp -R "./results/${name}/test_best/" "./results/${name}/test_"$3"/"
 
 python3 composed_dataset.py \
 	--file="${name}" \
