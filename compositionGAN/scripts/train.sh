@@ -66,8 +66,8 @@ niterSTN=500
 niterCompletion=100
 
 which_epoch=0
-which_epoch_completion=0 
-which_epoch_STN=0
+which_epoch_completion="latest" 
+which_epoch_STN="latest"
 
 display_port=8775
 display_freq=1000
