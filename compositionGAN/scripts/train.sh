@@ -62,8 +62,8 @@ lr=0.00002 # initial learning rate
 
 niter=800
 niter_decay=200
-niterSTN=500
-niterCompletion=100
+niterSTN=0
+niterCompletion=0
 
 which_epoch=0
 which_epoch_completion="latest" 
