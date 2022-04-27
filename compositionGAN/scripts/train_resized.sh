@@ -60,10 +60,10 @@ STN_model='deep'
 lambda_mask=50
 lr=0.00002 # initial learning rate
 
-niter=800
-niter_decay=200
+niter=750
+niter_decay=50
 niterSTN=500
-niterCompletion=250
+niterCompletion=500
 
 which_epoch=0
 which_epoch_completion=0 

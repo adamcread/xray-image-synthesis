@@ -10,7 +10,6 @@
 #SBATCH --qos=long-high-prio
 #SBATCH -t 07-00:00:00
 #SBATCH -o 'train_unpaired_no-aug.txt'
-#SBATCH --nodelist=gpu12
 
 # job name
 #SBATCH --job-name=unpaired_combined
@@ -48,7 +47,7 @@ then
 fi
 
 
-batch_size=128 # size of each training batch
+batch_size=16 # size of each training batch
 loadSizeY=128 # size to scale images to
 fineSizeY=128 # size image is
 loadSizeX=128 # size to scale images to
@@ -60,14 +59,14 @@ STN_model='deep'
 lambda_mask=50
 lr=0.00002 # initial learning rate
 
-niter=800
-niter_decay=200
-niterSTN=0
-niterCompletion=0
+niter=500
+niter_decay=500
+niterSTN=500
+niterCompletion=500
 
 which_epoch=0
-which_epoch_completion="latest" 
-which_epoch_STN="latest"
+which_epoch_completion=0
+which_epoch_STN=0
 
 display_port=8775
 display_freq=1000
