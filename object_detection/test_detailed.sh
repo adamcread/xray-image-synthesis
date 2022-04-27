@@ -22,7 +22,7 @@ source ../venv/bin/activate
 # $2 -> objdet architecture 
 # $3 -> dataset type
 
-python3 tools/test.py \
+python3 tools/test_detailed.py \
     "./configs/custom/cascade_rcnn_config.py" \
     "work_dirs/$3/$2/$1/best.pth" \
     --eval "bbox" \
