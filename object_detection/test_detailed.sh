@@ -18,14 +18,16 @@ source /etc/profile
 module load cuda/11.0-cudnn8.0
 source ../venv/bin/activate
 
+# $1 -> composition test
+# $2 -> objdet architecture 
+# $3 -> dataset type
 
 python3 tools/test.py \
     "./configs/custom/cascade_rcnn_config.py" \
-    "work_dirs/dbf3/crcnn/best.pth" \
+    "work_dirs/$3/$2/$1/best.pth" \
     --eval "bbox" \
     --outfile "test.txt"
     --outcsv "test.csv"
     --cfg-options   "classwise=True" \
-                    "work_dir=work_dirs/$1" \
-                    "data.test.img_prefix=./results/$1/$2/" \
-                    "data.test.ann_file=./results/$1/annotation/$2.json" 
+                    "work_dir=work_dirs/test/$3/$2/$1/" \
+
