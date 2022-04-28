@@ -30,12 +30,13 @@ python3 tools/test_detailed.py \
     "./work_dirs/dbf3/crcnn/best.pth" \
     --db "../dataset/" \
     --format-only \
+    --eval-options "jsonfile_prefix=./statistics/test" \
+    --dbpath "../dataset/xray/unpaired/resized_128x128/composed_images/" \
+    --testimg "../dataset/xray/unpaired/resized_128x128/composed_images/" \
+    --testgt "../dataset/xray/unpaired/helper/annotation/dbf3_test_resized.json" \
     --outfile "test.png" \
     --predfile "test.bbox.json" \
     --outcsv "test.csv" \
-    --dbpath "../dataset/xray/unpaired/resized_128x128/composed_images/" \
-    --testimg "../dataset/xray/unpaired/resized_128x128/composed_images/" \
-    --testgt "../dataset/xray/unpaired/helper/annotation/dbf3_test_resized.json"
  
 
 
