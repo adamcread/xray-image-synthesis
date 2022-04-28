@@ -230,12 +230,14 @@ def main():
 
     cls_name = []
 
-    with open(f'{args.dbpath}/{args.db}/annotation/{args.db}_train.json') as f:
-       json_data = json.load(f)
-    for data_id, data_info in json_data.items():
-        if data_id == 'categories':
-            for cat in data_info:
-                cls_name.append(cat['name'])
+    #! redo this
+    # with open(f'{args.dbpath}/{args.db}/annotation/{args.db}_train.json') as f:
+    #    json_data = json.load(f)
+    # for data_id, data_info in json_data.items():
+    #     if data_id == 'categories':
+    #         for cat in data_info:
+    #             cls_name.append(cat['name'])
+    cls_name = ["FIREARM", "KNIFE", "FIREARMPARTS"]
     cls_name = tuple(cls_name)
     
     cfg.data_root = args.dbpath
