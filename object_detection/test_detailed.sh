@@ -34,9 +34,9 @@ python3 tools/test_detailed.py \
     --dbpath "../dataset/xray/unpaired/resized_128x128/composed_images/" \
     --testimg "../dataset/xray/unpaired/resized_128x128/composed_images/" \
     --testgt "../dataset/xray/unpaired/helper/annotation/dbf3_test_resized.json" \
-    --outfile "test.png" \
-    --predfile "test.bbox.json" \
-    --outcsv "test.csv" \
+    --outfile "./statistics/test.png" \
+    --predfile "./statistics/test.bbox.json" \
+    --outcsv "./statistics/test.csv" \
  
 
 
