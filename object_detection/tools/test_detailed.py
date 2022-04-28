@@ -237,7 +237,7 @@ def main():
     #     if data_id == 'categories':
     #         for cat in data_info:
     #             cls_name.append(cat['name'])
-    cls_name = ["FIREARM", "KNIFE", "FIREARMPARTS"]
+    cls_name = ["FIREARM", "KNIFE"]
     cls_name = tuple(cls_name)
     
     cfg.data_root = args.dbpath
