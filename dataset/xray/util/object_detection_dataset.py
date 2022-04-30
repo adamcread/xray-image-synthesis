@@ -97,14 +97,14 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser()
     parser.add_argument('--test_name')
-    parser.add_argument('--fake_count')
     parser.add_argument('--real_count')
+    parser.add_argument('--fake_count')
 
     args = parser.parse_args()
 
     main(
         total_real = 4433,
         test_name = args.test_name,
-        fake_count = args.fake_count,
-        real_count = args.real_count
+        real_count = int(args.real_count),
+        fake_count = int(args.fake_count)
     )
