@@ -6,8 +6,8 @@
 # partition time limit and resource limit for the job
 #SBATCH -p cpu
 #SBATCH --mem=28g
-#SBATCH --qos=long-high-prio
-#SBATCH -t 07-00:00:00
+#SBATCH --qos=debig
+#SBATCH -t 00:30:00
 
 # job name
 #SBATCH --job-name=runner
