@@ -12,4 +12,5 @@ dataset/xray/composed/
 dataset/xray/paired/
 dataset/xray/unpaired/
 dataset/xray/test/
+dataset/xray/TIP/
 /**/*slurm*.out

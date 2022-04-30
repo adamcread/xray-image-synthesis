@@ -97,9 +97,9 @@ def resize_coco(json_roots, image_list, image_root, out_file, res, mask_root=Non
 
 
 resize_coco(
-    json_roots = ['../unpaired/helper/annotation/dbf3_test_filtered.json'], 
-    image_list = '../unpaired/helper/file_lists/composed_firearm_knife.txt', 
-    image_root = '../unpaired/original_size/composed_images/',
-    out_file = 'dbf3_train_512x512_resized.json',
-    res=512
+    json_roots = ['../TIP/helper/annotation/dbf3_TIP100_train.json'], 
+    image_list = '../TIP/helper/file_lists/firearm_knife_TIP.txt', 
+    image_root = '../TIP/original_size/',
+    out_file = '../TIP/helper/annotation/dbf3_TIP_resized.json',
+    res=128
 )

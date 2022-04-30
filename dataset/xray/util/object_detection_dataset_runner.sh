@@ -15,7 +15,17 @@ source /etc/profile
 module load cuda/11.0-cudnn8.0
 source ../../../venv/bin/activate
 
-python3 object_detection_dataset.py \
-    --test_name $1 \
-    --real_count $2 \
-    --fake_count $3 
+
+if [ $1 = "tip" ]
+then
+    python3 object_detection_dataset.py \
+        --test_name $1 \
+        --real_count $2 \
+        --fake_count $3 \
+        --tip
+else
+    python3 object_detection_dataset.py \
+        --test_name $1 \
+        --real_count $2 \
+        --fake_count $3 
+fi

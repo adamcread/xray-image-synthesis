@@ -6,7 +6,7 @@ import random
 import shutil
 from coco_merger import merger
 
-def move_files(fake_root, real_root, real_json, classes, fake_count, real_count, dest):
+def move_files(fake_root, real_root, real_json, classes, fake_count, real_count, dest, tip=False):
     if os.path.isdir(dest):
         shutil.rmtree(dest)
     os.mkdir(dest)
@@ -14,13 +14,20 @@ def move_files(fake_root, real_root, real_json, classes, fake_count, real_count,
     coco = COCO(annotation_file=real_json)
     fake_images = os.listdir(fake_root)
 
-    for class_name in classes:
-        class_filtered = [image for image in fake_images if class_name in image]
-        class_filtered = random.sample(class_filtered, k=len(class_filtered))
-        for i in range(0, fake_count//len(classes)):
-            print(class_name, i+1)
-            random_file = class_filtered.pop()
+    if not tip:
+        for class_name in classes:
+            class_filtered = [image for image in fake_images if class_name in image]
+            class_filtered = random.sample(class_filtered, k=len(class_filtered))
+            for i in range(0, fake_count//len(classes)):
+                print(class_name, i+1)
+                random_file = class_filtered.pop()
+                shutil.copy(fake_root+random_file, dest+random_file)
+    else:
+        fake_shuffled = random.sample(fake_images, k=fake_count)
+        for i, random_file in enumerate(fake_shuffled):
+            print('fake', i+1)
             shutil.copy(fake_root+random_file, dest+random_file)
+
     
     real_images = [x['file_name'] for x in coco.loadImgs(coco.getImgIds())]
     print(len(real_images))
@@ -30,7 +37,7 @@ def move_files(fake_root, real_root, real_json, classes, fake_count, real_count,
         shutil.copy(real_root+random_file, dest+random_file)
 
 
-def main(total_real, test_name, fake_count, real_count):
+def main(total_real, test_name, fake_count, real_count, tip):
     fake_amount = total_real*fake_count // 100
     real_amount = total_real*real_count // 100
 
@@ -41,7 +48,8 @@ def main(total_real, test_name, fake_count, real_count):
         classes = ['knife', 'firearm'],
         fake_count=fake_amount,
         real_count=real_amount,
-        dest= f'../composed/{real_count}_real_{fake_count}_fake/{test_name}/'
+        dest= f'../composed/{real_count}_real_{fake_count}_fake/{test_name}/',
+        tip=tip
     )
 
     file_list(
@@ -99,6 +107,7 @@ if __name__ == "__main__":
     parser.add_argument('--test_name')
     parser.add_argument('--real_count')
     parser.add_argument('--fake_count')
+    parser.add_argument('--tip', action="store_true")
 
     args = parser.parse_args()
 
@@ -106,5 +115,6 @@ if __name__ == "__main__":
         total_real = 4433,
         test_name = args.test_name,
         real_count = int(args.real_count),
-        fake_count = int(args.fake_count)
+        fake_count = int(args.fake_count),
+        tip=args.tip
     )
