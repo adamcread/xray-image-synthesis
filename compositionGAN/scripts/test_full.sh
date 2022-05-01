@@ -35,7 +35,7 @@ exp_train="train_"$1"_"$2
 name="test_"$1"_"$2
 model_train="./checkpoints/${exp_train}/"
 
-how_many=$4
+how_many=$3
 batch_size=1
 
 loadSizeY=128
