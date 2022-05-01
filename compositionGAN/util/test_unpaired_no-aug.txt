@@ -1,0 +1,444 @@
+------------ Options -------------
+G1_completion: 1
+G2_completion: 0
+STN_model: deep
+Thresh1: 0.99
+Thresh2: 0.99
+aspect_ratio: 1.0
+batchSize: 1
+beta1: 0.5
+checkpoints_dir: ./checkpoints
+conditional: True
+continue_train: False
+data_augmentation: 0
+datalist: ./scripts/paths_train_unpaired.txt
+datalist_test: ./scripts/paths_test.txt
+dataset_mode: comp_decomp_unaligned
+decomp: True
+display_freq: 1
+display_id: 1
+display_port: 8775
+display_single_pane_ncols: 0
+display_winsize: 256
+epoch_count: 1
+erosion: True
+eval: True
+fineSizeX: 128
+fineSizeY: 128
+gpu_ids: [0]
+how_many: 200
+identity: 0.5
+img_completion: True
+init_type: normal
+input_nc: 3
+isTrain: True
+lambda_A: 1.0
+lambda_AFN: 100.0
+lambda_B: 1.0
+lambda_L2: 500.0
+lambda_STN: 1.0
+lambda_gan: 1.0
+lambda_gp: 10.0
+lambda_identity: 1.0
+lambda_mask: 50.0
+loadSizeX: 128
+loadSizeY: 128
+lr: 5e-05
+lr_decay_iters: 50
+lr_policy: lambda
+max_dataset_size: 20000
+model: objCompose
+nThreads: 2
+n_latest: 1
+n_layers_D: 3
+name: test_unpaired_aug
+ndf: 64
+ngf: 64
+niter: 1
+niterCompletion: 0
+niterSTN: 0
+niter_decay: 1
+no_dropout: False
+no_flip: True
+no_html: False
+no_lsgan: False
+noise: False
+norm: batch
+ntest: inf
+num_az: 36
+output_nc: 3
+phase: train
+pool_size: 50
+print_freq: 20
+random_view: False
+resize_or_crop: resize
+results_dir: ./results/
+save_epoch_freq: 5
+save_latest_freq: 5000
+serial_batches: False
+test_path_azi: dataset/chair_table/test_random_azi.pkl
+update_html_freq: 5
+which_epoch: best
+which_epoch_AFN: 100
+which_epoch_STN: 0
+which_epoch_completion: 0
+which_model_AFN: DOAFNCompose
+which_model_netD: n_layers
+which_model_netG: resnetUp_6blocks
+xray: True
+-------------- End ----------------
+CustomDatasetDataLoader
+dataset [ComposeAlignedDataset] was created
+#training images = 20000
+initialization method [normal]
+initialization method [normal]
+initialization method [normal]
+initialization method [normal]
+Traceback (most recent call last):
+  File "test_composition.py", line 39, in <module>
+    model = create_model(opt)
+  File "/home2/fsfr78/xray_image_synthesis/compositionGAN/models/models.py", line 23, in create_model
+    model.initialize(opt)
+  File "/home2/fsfr78/xray_image_synthesis/compositionGAN/models/objCompose_unsupervised_model.py", line 150, in initialize
+    self.load_networks()
+  File "/home2/fsfr78/xray_image_synthesis/compositionGAN/models/base_model.py", line 81, in load_networks
+    net.load_state_dict(torch.load(save_path))
+  File "/home2/fsfr78/xray_image_synthesis/venv/lib/python3.8/site-packages/torch/serialization.py", line 594, in load
+    return _load(opened_zipfile, map_location, pickle_module, **pickle_load_args)
+  File "/home2/fsfr78/xray_image_synthesis/venv/lib/python3.8/site-packages/torch/serialization.py", line 853, in _load
+    result = unpickler.load()
+  File "/home2/fsfr78/xray_image_synthesis/venv/lib/python3.8/site-packages/torch/serialization.py", line 845, in persistent_load
+    load_tensor(data_type, size, key, _maybe_decode_ascii(location))
+  File "/home2/fsfr78/xray_image_synthesis/venv/lib/python3.8/site-packages/torch/serialization.py", line 833, in load_tensor
+    storage = zip_file.get_storage_from_record(name, size, dtype).storage()
+RuntimeError: [enforce fail at inline_container.cc:222] . file not found: archive/data/86014384
+------------ Options -------------
+G1_completion: 1
+G2_completion: 0
+STN_model: deep
+Thresh1: 0.99
+Thresh2: 0.99
+aspect_ratio: 1.0
+batchSize: 1
+beta1: 0.5
+checkpoints_dir: ./checkpoints
+conditional: True
+continue_train: False
+data_augmentation: 0
+datalist: ./scripts/paths_train_unpaired.txt
+datalist_test: ./scripts/paths_test.txt
+dataset_mode: comp_decomp_unaligned
+decomp: True
+display_freq: 1
+display_id: 1
+display_port: 8775
+display_single_pane_ncols: 0
+display_winsize: 256
+epoch_count: 1
+erosion: True
+eval: True
+fineSizeX: 128
+fineSizeY: 128
+gpu_ids: [0]
+how_many: 200
+identity: 0.5
+img_completion: True
+init_type: normal
+input_nc: 3
+isTrain: True
+lambda_A: 1.0
+lambda_AFN: 100.0
+lambda_B: 1.0
+lambda_L2: 500.0
+lambda_STN: 1.0
+lambda_gan: 1.0
+lambda_gp: 10.0
+lambda_identity: 1.0
+lambda_mask: 50.0
+loadSizeX: 128
+loadSizeY: 128
+lr: 5e-05
+lr_decay_iters: 50
+lr_policy: lambda
+max_dataset_size: 20000
+model: objCompose
+nThreads: 2
+n_latest: 1
+n_layers_D: 3
+name: test_unpaired_aug
+ndf: 64
+ngf: 64
+niter: 1
+niterCompletion: 0
+niterSTN: 0
+niter_decay: 1
+no_dropout: False
+no_flip: True
+no_html: False
+no_lsgan: False
+noise: False
+norm: batch
+ntest: inf
+num_az: 36
+output_nc: 3
+phase: train
+pool_size: 50
+print_freq: 20
+random_view: False
+resize_or_crop: resize
+results_dir: ./results/
+save_epoch_freq: 5
+save_latest_freq: 5000
+serial_batches: False
+test_path_azi: dataset/chair_table/test_random_azi.pkl
+update_html_freq: 5
+which_epoch: best
+which_epoch_AFN: 100
+which_epoch_STN: 0
+which_epoch_completion: 0
+which_model_AFN: DOAFNCompose
+which_model_netD: n_layers
+which_model_netG: resnetUp_6blocks
+xray: True
+-------------- End ----------------
+CustomDatasetDataLoader
+dataset [ComposeAlignedDataset] was created
+#training images = 20000
+initialization method [normal]
+initialization method [normal]
+initialization method [normal]
+initialization method [normal]
+------------ Options -------------
+G1_completion: 1
+G2_completion: 0
+STN_model: deep
+Thresh1: 0.99
+Thresh2: 0.99
+aspect_ratio: 1.0
+batchSize: 1
+beta1: 0.5
+checkpoints_dir: ./checkpoints
+conditional: True
+continue_train: False
+data_augmentation: 0
+datalist: ./scripts/paths_train_unpaired.txt
+datalist_test: ./scripts/paths_test.txt
+dataset_mode: comp_decomp_unaligned
+decomp: True
+display_freq: 1
+display_id: 1
+display_port: 8775
+display_single_pane_ncols: 0
+display_winsize: 256
+epoch_count: 1
+erosion: True
+eval: True
+fineSizeX: 128
+fineSizeY: 128
+gpu_ids: [0]
+how_many: 200
+identity: 0.5
+img_completion: True
+init_type: normal
+input_nc: 3
+isTrain: True
+lambda_A: 1.0
+lambda_AFN: 100.0
+lambda_B: 1.0
+lambda_L2: 500.0
+lambda_STN: 1.0
+lambda_gan: 1.0
+lambda_gp: 10.0
+lambda_identity: 1.0
+lambda_mask: 50.0
+loadSizeX: 128
+loadSizeY: 128
+lr: 5e-05
+lr_decay_iters: 50
+lr_policy: lambda
+max_dataset_size: 20000
+model: objCompose
+nThreads: 2
+n_latest: 1
+n_layers_D: 3
+name: test_unpaired_aug
+ndf: 64
+ngf: 64
+niter: 1
+niterCompletion: 0
+niterSTN: 0
+niter_decay: 1
+no_dropout: False
+no_flip: True
+no_html: False
+no_lsgan: False
+noise: False
+norm: batch
+ntest: inf
+num_az: 36
+output_nc: 3
+phase: train
+pool_size: 50
+print_freq: 20
+random_view: False
+resize_or_crop: resize
+results_dir: ./results/
+save_epoch_freq: 5
+save_latest_freq: 5000
+serial_batches: False
+test_path_azi: dataset/chair_table/test_random_azi.pkl
+update_html_freq: 5
+which_epoch: best
+which_epoch_AFN: 100
+which_epoch_STN: 0
+which_epoch_completion: 0
+which_model_AFN: DOAFNCompose
+which_model_netD: n_layers
+which_model_netG: resnetUp_6blocks
+xray: True
+-------------- End ----------------
+CustomDatasetDataLoader
+dataset [ComposeAlignedDataset] was created
+#training images = 20000
+initialization method [normal]
+initialization method [normal]
+initialization method [normal]
+initialization method [normal]
+------------ Options -------------
+G1_completion: 1
+G2_completion: 0
+STN_model: deep
+Thresh1: 0.99
+Thresh2: 0.99
+aspect_ratio: 1.0
+batchSize: 1
+beta1: 0.5
+checkpoints_dir: ./checkpoints
+conditional: True
+continue_train: False
+data_augmentation: 0
+datalist: ./scripts/paths_train_unpaired.txt
+datalist_test: ./scripts/paths_test.txt
+dataset_mode: comp_decomp_unaligned
+decomp: True
+display_freq: 1
+display_id: 1
+display_port: 8775
+display_single_pane_ncols: 0
+display_winsize: 256
+epoch_count: 1
+erosion: True
+eval: True
+fineSizeX: 128
+fineSizeY: 128
+gpu_ids: [0]
+how_many: 200
+identity: 0.5
+img_completion: True
+init_type: normal
+input_nc: 3
+isTrain: True
+lambda_A: 1.0
+lambda_AFN: 100.0
+lambda_B: 1.0
+lambda_L2: 500.0
+lambda_STN: 1.0
+lambda_gan: 1.0
+lambda_gp: 10.0
+lambda_identity: 1.0
+lambda_mask: 50.0
+loadSizeX: 128
+loadSizeY: 128
+lr: 5e-05
+lr_decay_iters: 50
+lr_policy: lambda
+max_dataset_size: 20000
+model: objCompose
+nThreads: 2
+n_latest: 1
+n_layers_D: 3
+name: test_unpaired_aug
+ndf: 64
+ngf: 64
+niter: 1
+niterCompletion: 0
+niterSTN: 0
+niter_decay: 1
+no_dropout: False
+no_flip: True
+no_html: False
+no_lsgan: False
+noise: False
+norm: batch
+ntest: inf
+num_az: 36
+output_nc: 3
+phase: train
+pool_size: 50
+print_freq: 20
+random_view: False
+resize_or_crop: resize
+results_dir: ./results/
+save_epoch_freq: 5
+save_latest_freq: 5000
+serial_batches: False
+test_path_azi: dataset/chair_table/test_random_azi.pkl
+update_html_freq: 5
+which_epoch: best
+which_epoch_AFN: 100
+which_epoch_STN: 0
+which_epoch_completion: 0
+which_model_AFN: DOAFNCompose
+which_model_netD: n_layers
+which_model_netG: resnetUp_6blocks
+xray: True
+-------------- End ----------------
+CustomDatasetDataLoader
+dataset [ComposeAlignedDataset] was created
+#training images = 20000
+initialization method [normal]
+initialization method [normal]
+initialization method [normal]
+initialization method [normal]
+Traceback (most recent call last):
+  File "test_composition.py", line 39, in <module>
+    model = create_model(opt)
+  File "/home2/fsfr78/xray_image_synthesis/compositionGAN/models/models.py", line 23, in create_model
+    model.initialize(opt)
+  File "/home2/fsfr78/xray_image_synthesis/compositionGAN/models/objCompose_unsupervised_model.py", line 150, in initialize
+    self.load_networks()
+  File "/home2/fsfr78/xray_image_synthesis/compositionGAN/models/base_model.py", line 81, in load_networks
+    net.load_state_dict(torch.load(save_path))
+  File "/home2/fsfr78/xray_image_synthesis/venv/lib/python3.8/site-packages/torch/serialization.py", line 587, in load
+    with _open_zipfile_reader(opened_file) as opened_zipfile:
+  File "/home2/fsfr78/xray_image_synthesis/venv/lib/python3.8/site-packages/torch/serialization.py", line 242, in __init__
+    super(_open_zipfile_reader, self).__init__(torch._C.PyTorchFileReader(name_or_buffer))
+RuntimeError: [enforce fail at inline_container.cc:145] . PytorchStreamReader failed reading zip archive: invalid header or archive is corrupted
+Traceback (most recent call last):
+  File "test_composition.py", line 39, in <module>
+    model = create_model(opt)
+  File "/home2/fsfr78/xray_image_synthesis/compositionGAN/models/models.py", line 23, in create_model
+    model.initialize(opt)
+  File "/home2/fsfr78/xray_image_synthesis/compositionGAN/models/objCompose_unsupervised_model.py", line 150, in initialize
+    self.load_networks()
+  File "/home2/fsfr78/xray_image_synthesis/compositionGAN/models/base_model.py", line 81, in load_networks
+    net.load_state_dict(torch.load(save_path))
+  File "/home2/fsfr78/xray_image_synthesis/venv/lib/python3.8/site-packages/torch/serialization.py", line 587, in load
+    with _open_zipfile_reader(opened_file) as opened_zipfile:
+  File "/home2/fsfr78/xray_image_synthesis/venv/lib/python3.8/site-packages/torch/serialization.py", line 242, in __init__
+    super(_open_zipfile_reader, self).__init__(torch._C.PyTorchFileReader(name_or_buffer))
+RuntimeError: [enforce fail at inline_container.cc:145] . PytorchStreamReader failed reading zip archive: invalid header or archive is corrupted
+Traceback (most recent call last):
+  File "test_composition.py", line 39, in <module>
+    model = create_model(opt)
+  File "/home2/fsfr78/xray_image_synthesis/compositionGAN/models/models.py", line 23, in create_model
+    model.initialize(opt)
+  File "/home2/fsfr78/xray_image_synthesis/compositionGAN/models/objCompose_unsupervised_model.py", line 150, in initialize
+    self.load_networks()
+  File "/home2/fsfr78/xray_image_synthesis/compositionGAN/models/base_model.py", line 81, in load_networks
+    net.load_state_dict(torch.load(save_path))
+  File "/home2/fsfr78/xray_image_synthesis/venv/lib/python3.8/site-packages/torch/serialization.py", line 587, in load
+    with _open_zipfile_reader(opened_file) as opened_zipfile:
+  File "/home2/fsfr78/xray_image_synthesis/venv/lib/python3.8/site-packages/torch/serialization.py", line 242, in __init__
+    super(_open_zipfile_reader, self).__init__(torch._C.PyTorchFileReader(name_or_buffer))
+RuntimeError: [enforce fail at inline_container.cc:145] . PytorchStreamReader failed reading zip archive: invalid header or archive is corrupted
