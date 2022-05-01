@@ -46,12 +46,12 @@ def get_bbox(img_path):
     contours = cv.findContours(thresh1, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
 
     contours = imutils.grab_contours(contours)
-    max_contour = max(contours, key=cv.contourArea)
 
     img_h = transformed_img.shape[0]
     img_w = transformed_img.shape[1]
 
     try:
+        max_contour = max(contours, key=cv.contourArea)
         x,y,w,h = cv.boundingRect(max_contour)
     except ValueError:
         x = img_w // 2

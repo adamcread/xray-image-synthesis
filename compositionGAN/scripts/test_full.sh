@@ -115,7 +115,6 @@ do
 		--file="${name}" \
 		--test="test_"${epoch}
 
-
 	python3 ../object_detection/tools/test.py \
 		"../object_detection/configs/custom/crcnn_config.py" \
 		"../object_detection/work_dirs/dbf3/crcnn/best.pth" \
