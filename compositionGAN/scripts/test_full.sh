@@ -123,7 +123,7 @@ do
 		--cfg-options   "classwise=True" \
 						"work_dir=../object_detection/work_dirs/test/" \
 						"data.test.img_prefix=./results/${name}/test_${epoch}/images/" \
-						"data.test.ann_file=./results/${name}/annotation/test_${epoch}.json" 
+						"data.test.ann_file=./results/${name}/annotation/test_${epoch}.json" \
 		--epoch_count ${which_epoch} \
 		--update_html_freq ${update_html_freq} \
 		--display_freq ${display_freq} \
