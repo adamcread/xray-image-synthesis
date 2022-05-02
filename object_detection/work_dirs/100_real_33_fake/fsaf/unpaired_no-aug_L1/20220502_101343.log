@@ -2559,3 +2559,68 @@ after_run:
 2022-05-02 15:20:29,605 - mmdet - INFO - Epoch [17][2000/2814]	lr: 1.000e-04, eta: 1:56:16, time: 0.339, data_time: 0.005, memory: 3159, loss_cls: 0.1865, loss_bbox: 0.2244, num_pos: 4.3900, pos_recall: 94.0513, loss: 0.4110, grad_norm: 4.1165
 2022-05-02 15:20:46,711 - mmdet - INFO - Epoch [17][2050/2814]	lr: 1.000e-04, eta: 1:55:59, time: 0.342, data_time: 0.006, memory: 3159, loss_cls: 0.2281, loss_bbox: 0.2528, num_pos: 4.5400, pos_recall: 95.6239, loss: 0.4810, grad_norm: 4.4832
 2022-05-02 15:21:03,548 - mmdet - INFO - Epoch [17][2100/2814]	lr: 1.000e-04, eta: 1:55:42, time: 0.337, data_time: 0.005, memory: 3159, loss_cls: 0.2209, loss_bbox: 0.2587, num_pos: 4.2800, pos_recall: 93.3333, loss: 0.4795, grad_norm: 4.5231
+2022-05-02 15:21:20,410 - mmdet - INFO - Epoch [17][2150/2814]	lr: 1.000e-04, eta: 1:55:25, time: 0.337, data_time: 0.005, memory: 3159, loss_cls: 0.1819, loss_bbox: 0.2154, num_pos: 4.3800, pos_recall: 95.6667, loss: 0.3973, grad_norm: 4.0501
+2022-05-02 15:21:37,612 - mmdet - INFO - Epoch [17][2200/2814]	lr: 1.000e-04, eta: 1:55:08, time: 0.344, data_time: 0.008, memory: 3159, loss_cls: 0.2003, loss_bbox: 0.2200, num_pos: 4.3500, pos_recall: 91.6000, loss: 0.4202, grad_norm: 3.9570
+2022-05-02 15:21:54,434 - mmdet - INFO - Epoch [17][2250/2814]	lr: 1.000e-04, eta: 1:54:51, time: 0.336, data_time: 0.005, memory: 3159, loss_cls: 0.2295, loss_bbox: 0.2365, num_pos: 4.5700, pos_recall: 93.9556, loss: 0.4659, grad_norm: 4.5961
+2022-05-02 15:22:11,273 - mmdet - INFO - Epoch [17][2300/2814]	lr: 1.000e-04, eta: 1:54:33, time: 0.337, data_time: 0.005, memory: 3159, loss_cls: 0.2189, loss_bbox: 0.2532, num_pos: 4.3100, pos_recall: 88.0000, loss: 0.4721, grad_norm: 4.0895
+2022-05-02 15:22:28,131 - mmdet - INFO - Epoch [17][2350/2814]	lr: 1.000e-04, eta: 1:54:16, time: 0.337, data_time: 0.005, memory: 3159, loss_cls: 0.2002, loss_bbox: 0.2911, num_pos: 4.0000, pos_recall: 92.6667, loss: 0.4913, grad_norm: 4.5406
+2022-05-02 15:22:44,980 - mmdet - INFO - Epoch [17][2400/2814]	lr: 1.000e-04, eta: 1:53:59, time: 0.337, data_time: 0.005, memory: 3159, loss_cls: 0.2367, loss_bbox: 0.2766, num_pos: 4.1900, pos_recall: 97.1667, loss: 0.5132, grad_norm: 4.7207
+2022-05-02 15:23:02,185 - mmdet - INFO - Epoch [17][2450/2814]	lr: 1.000e-04, eta: 1:53:42, time: 0.344, data_time: 0.006, memory: 3159, loss_cls: 0.1769, loss_bbox: 0.1829, num_pos: 3.9800, pos_recall: 89.7778, loss: 0.3598, grad_norm: 3.6336
+2022-05-02 15:23:19,378 - mmdet - INFO - Epoch [17][2500/2814]	lr: 1.000e-04, eta: 1:53:25, time: 0.344, data_time: 0.006, memory: 3159, loss_cls: 0.2761, loss_bbox: 0.2712, num_pos: 4.1000, pos_recall: 95.1111, loss: 0.5474, grad_norm: 4.6969
+2022-05-02 15:23:36,357 - mmdet - INFO - Epoch [17][2550/2814]	lr: 1.000e-04, eta: 1:53:08, time: 0.340, data_time: 0.005, memory: 3159, loss_cls: 0.2293, loss_bbox: 0.2403, num_pos: 4.6600, pos_recall: 97.1667, loss: 0.4696, grad_norm: 4.2291
+2022-05-02 15:23:53,451 - mmdet - INFO - Epoch [17][2600/2814]	lr: 1.000e-04, eta: 1:52:52, time: 0.342, data_time: 0.005, memory: 3159, loss_cls: 0.2115, loss_bbox: 0.2214, num_pos: 4.3500, pos_recall: 95.8182, loss: 0.4330, grad_norm: 4.2364
+2022-05-02 15:24:10,933 - mmdet - INFO - Epoch [17][2650/2814]	lr: 1.000e-04, eta: 1:52:35, time: 0.350, data_time: 0.005, memory: 3159, loss_cls: 0.2486, loss_bbox: 0.2820, num_pos: 4.4200, pos_recall: 100.0000, loss: 0.5305, grad_norm: 4.8700
+2022-05-02 15:24:28,012 - mmdet - INFO - Epoch [17][2700/2814]	lr: 1.000e-04, eta: 1:52:18, time: 0.342, data_time: 0.005, memory: 3159, loss_cls: 0.1999, loss_bbox: 0.2344, num_pos: 4.1100, pos_recall: 96.0000, loss: 0.4343, grad_norm: 4.4598
+2022-05-02 15:24:44,870 - mmdet - INFO - Epoch [17][2750/2814]	lr: 1.000e-04, eta: 1:52:01, time: 0.337, data_time: 0.005, memory: 3159, loss_cls: 0.2260, loss_bbox: 0.2402, num_pos: 4.1100, pos_recall: 96.0000, loss: 0.4662, grad_norm: 4.2291
+2022-05-02 15:25:01,732 - mmdet - INFO - Epoch [17][2800/2814]	lr: 1.000e-04, eta: 1:51:44, time: 0.337, data_time: 0.005, memory: 3159, loss_cls: 0.2058, loss_bbox: 0.2244, num_pos: 3.5000, pos_recall: 88.0000, loss: 0.4302, grad_norm: 4.3625
+2022-05-02 15:25:06,494 - mmdet - INFO - Saving checkpoint at 17 epochs
+2022-05-02 15:27:40,964 - mmdet - INFO - Evaluating bbox...
+2022-05-02 15:27:45,865 - mmdet - INFO - 
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.422
+ Average Precision  (AP) @[ IoU=0.50      | area=   all | maxDets=1000 ] = 0.681
+ Average Precision  (AP) @[ IoU=0.75      | area=   all | maxDets=1000 ] = 0.477
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area= small | maxDets=1000 ] = 0.422
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=medium | maxDets=1000 ] = -1.000
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area= large | maxDets=1000 ] = -1.000
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.549
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=300 ] = 0.549
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=1000 ] = 0.549
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area= small | maxDets=1000 ] = 0.549
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=medium | maxDets=1000 ] = -1.000
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area= large | maxDets=1000 ] = -1.000
+
+2022-05-02 15:27:45,936 - mmdet - INFO - Exp name: fsaf_config.py
+2022-05-02 15:27:45,937 - mmdet - INFO - Epoch(val) [17][1912]	bbox_mAP: 0.4220, bbox_mAP_50: 0.6810, bbox_mAP_75: 0.4770, bbox_mAP_s: 0.4220, bbox_mAP_m: -1.0000, bbox_mAP_l: -1.0000, bbox_mAP_copypaste: 0.422 0.681 0.477 0.422 -1.000 -1.000
+2022-05-02 15:28:05,347 - mmdet - INFO - Epoch [18][50/2814]	lr: 1.000e-04, eta: 1:51:21, time: 0.388, data_time: 0.050, memory: 3159, loss_cls: 0.2176, loss_bbox: 0.2411, num_pos: 4.5800, pos_recall: 96.0000, loss: 0.4587, grad_norm: 4.1435
+2022-05-02 15:28:23,106 - mmdet - INFO - Epoch [18][100/2814]	lr: 1.000e-04, eta: 1:51:04, time: 0.355, data_time: 0.014, memory: 3159, loss_cls: 0.2088, loss_bbox: 0.2652, num_pos: 4.4800, pos_recall: 95.5000, loss: 0.4740, grad_norm: 4.2515
+2022-05-02 15:28:40,084 - mmdet - INFO - Epoch [18][150/2814]	lr: 1.000e-04, eta: 1:50:47, time: 0.340, data_time: 0.005, memory: 3159, loss_cls: 0.1959, loss_bbox: 0.2327, num_pos: 4.6000, pos_recall: 97.0000, loss: 0.4285, grad_norm: 4.0236
+2022-05-02 15:28:56,927 - mmdet - INFO - Epoch [18][200/2814]	lr: 1.000e-04, eta: 1:50:30, time: 0.337, data_time: 0.005, memory: 3159, loss_cls: 0.2117, loss_bbox: 0.2328, num_pos: 4.3500, pos_recall: 96.0000, loss: 0.4445, grad_norm: 3.8672
+2022-05-02 15:29:13,778 - mmdet - INFO - Epoch [18][250/2814]	lr: 1.000e-04, eta: 1:50:13, time: 0.337, data_time: 0.005, memory: 3159, loss_cls: 0.2121, loss_bbox: 0.2413, num_pos: 3.7000, pos_recall: 89.8333, loss: 0.4534, grad_norm: 4.5510
+2022-05-02 15:29:30,623 - mmdet - INFO - Epoch [18][300/2814]	lr: 1.000e-04, eta: 1:49:56, time: 0.337, data_time: 0.005, memory: 3159, loss_cls: 0.2210, loss_bbox: 0.2876, num_pos: 4.0000, pos_recall: 94.0000, loss: 0.5086, grad_norm: 4.6950
+2022-05-02 15:29:47,465 - mmdet - INFO - Epoch [18][350/2814]	lr: 1.000e-04, eta: 1:49:39, time: 0.337, data_time: 0.005, memory: 3159, loss_cls: 0.2069, loss_bbox: 0.2166, num_pos: 4.3800, pos_recall: 95.1111, loss: 0.4235, grad_norm: 3.7013
+2022-05-02 15:30:04,295 - mmdet - INFO - Epoch [18][400/2814]	lr: 1.000e-04, eta: 1:49:22, time: 0.337, data_time: 0.005, memory: 3159, loss_cls: 0.1844, loss_bbox: 0.2299, num_pos: 4.0500, pos_recall: 97.3333, loss: 0.4142, grad_norm: 4.5923
+2022-05-02 15:30:21,170 - mmdet - INFO - Epoch [18][450/2814]	lr: 1.000e-04, eta: 1:49:05, time: 0.337, data_time: 0.005, memory: 3159, loss_cls: 0.2313, loss_bbox: 0.2313, num_pos: 4.5600, pos_recall: 95.5000, loss: 0.4626, grad_norm: 4.2365
+2022-05-02 15:30:37,997 - mmdet - INFO - Epoch [18][500/2814]	lr: 1.000e-04, eta: 1:48:48, time: 0.337, data_time: 0.005, memory: 3159, loss_cls: 0.2005, loss_bbox: 0.2102, num_pos: 3.8700, pos_recall: 84.3333, loss: 0.4106, grad_norm: 3.4410
+2022-05-02 15:30:54,833 - mmdet - INFO - Epoch [18][550/2814]	lr: 1.000e-04, eta: 1:48:31, time: 0.337, data_time: 0.005, memory: 3159, loss_cls: 0.2071, loss_bbox: 0.2446, num_pos: 4.3300, pos_recall: 98.0000, loss: 0.4517, grad_norm: 4.7200
+2022-05-02 15:31:11,620 - mmdet - INFO - Epoch [18][600/2814]	lr: 1.000e-04, eta: 1:48:14, time: 0.336, data_time: 0.005, memory: 3159, loss_cls: 0.2332, loss_bbox: 0.2700, num_pos: 3.9100, pos_recall: 98.0000, loss: 0.5032, grad_norm: 4.6923
+2022-05-02 15:31:28,427 - mmdet - INFO - Epoch [18][650/2814]	lr: 1.000e-04, eta: 1:47:56, time: 0.336, data_time: 0.005, memory: 3159, loss_cls: 0.2261, loss_bbox: 0.2279, num_pos: 4.1600, pos_recall: 95.6667, loss: 0.4540, grad_norm: 4.1036
+2022-05-02 15:31:45,289 - mmdet - INFO - Epoch [18][700/2814]	lr: 1.000e-04, eta: 1:47:39, time: 0.337, data_time: 0.005, memory: 3159, loss_cls: 0.2285, loss_bbox: 0.2534, num_pos: 4.2600, pos_recall: 98.0000, loss: 0.4818, grad_norm: 4.5254
+2022-05-02 15:32:02,144 - mmdet - INFO - Epoch [18][750/2814]	lr: 1.000e-04, eta: 1:47:22, time: 0.337, data_time: 0.005, memory: 3159, loss_cls: 0.1993, loss_bbox: 0.2231, num_pos: 4.7400, pos_recall: 94.6404, loss: 0.4224, grad_norm: 3.8523
+2022-05-02 15:32:18,979 - mmdet - INFO - Epoch [18][800/2814]	lr: 1.000e-04, eta: 1:47:05, time: 0.337, data_time: 0.005, memory: 3159, loss_cls: 0.1709, loss_bbox: 0.2152, num_pos: 4.1600, pos_recall: 93.2000, loss: 0.3861, grad_norm: 3.6919
+2022-05-02 15:32:35,783 - mmdet - INFO - Epoch [18][850/2814]	lr: 1.000e-04, eta: 1:46:48, time: 0.336, data_time: 0.005, memory: 3159, loss_cls: 0.2001, loss_bbox: 0.2335, num_pos: 4.1900, pos_recall: 98.0000, loss: 0.4336, grad_norm: 4.3301
+2022-05-02 15:32:52,592 - mmdet - INFO - Epoch [18][900/2814]	lr: 1.000e-04, eta: 1:46:31, time: 0.336, data_time: 0.005, memory: 3159, loss_cls: 0.2049, loss_bbox: 0.2391, num_pos: 4.4000, pos_recall: 92.0000, loss: 0.4440, grad_norm: 3.9721
+2022-05-02 15:33:09,398 - mmdet - INFO - Epoch [18][950/2814]	lr: 1.000e-04, eta: 1:46:14, time: 0.336, data_time: 0.005, memory: 3159, loss_cls: 0.2135, loss_bbox: 0.2562, num_pos: 4.3800, pos_recall: 97.0000, loss: 0.4697, grad_norm: 4.8051
+2022-05-02 15:33:26,214 - mmdet - INFO - Epoch [18][1000/2814]	lr: 1.000e-04, eta: 1:45:57, time: 0.336, data_time: 0.005, memory: 3159, loss_cls: 0.1586, loss_bbox: 0.2116, num_pos: 4.1800, pos_recall: 93.4286, loss: 0.3701, grad_norm: 3.9818
+2022-05-02 15:33:43,027 - mmdet - INFO - Epoch [18][1050/2814]	lr: 1.000e-04, eta: 1:45:40, time: 0.336, data_time: 0.005, memory: 3159, loss_cls: 0.1954, loss_bbox: 0.2506, num_pos: 4.0400, pos_recall: 98.0000, loss: 0.4460, grad_norm: 4.7658
+2022-05-02 15:34:00,469 - mmdet - INFO - Epoch [18][1100/2814]	lr: 1.000e-04, eta: 1:45:23, time: 0.349, data_time: 0.005, memory: 3159, loss_cls: 0.2270, loss_bbox: 0.2380, num_pos: 4.1100, pos_recall: 97.4000, loss: 0.4650, grad_norm: 4.4111
+2022-05-02 15:34:17,846 - mmdet - INFO - Epoch [18][1150/2814]	lr: 1.000e-04, eta: 1:45:06, time: 0.348, data_time: 0.007, memory: 3159, loss_cls: 0.2007, loss_bbox: 0.2656, num_pos: 4.0100, pos_recall: 91.0000, loss: 0.4662, grad_norm: 4.1092
+2022-05-02 15:34:35,159 - mmdet - INFO - Epoch [18][1200/2814]	lr: 1.000e-04, eta: 1:44:49, time: 0.346, data_time: 0.005, memory: 3159, loss_cls: 0.2157, loss_bbox: 0.2429, num_pos: 4.1500, pos_recall: 94.6111, loss: 0.4586, grad_norm: 4.4275
+2022-05-02 15:34:52,439 - mmdet - INFO - Epoch [18][1250/2814]	lr: 1.000e-04, eta: 1:44:32, time: 0.346, data_time: 0.005, memory: 3159, loss_cls: 0.2209, loss_bbox: 0.2663, num_pos: 4.5400, pos_recall: 98.0000, loss: 0.4872, grad_norm: 4.0186
+2022-05-02 15:35:09,648 - mmdet - INFO - Epoch [18][1300/2814]	lr: 1.000e-04, eta: 1:44:16, time: 0.344, data_time: 0.005, memory: 3159, loss_cls: 0.2323, loss_bbox: 0.2377, num_pos: 3.9800, pos_recall: 91.2000, loss: 0.4701, grad_norm: 4.2415
+2022-05-02 15:35:26,784 - mmdet - INFO - Epoch [18][1350/2814]	lr: 1.000e-04, eta: 1:43:59, time: 0.343, data_time: 0.005, memory: 3159, loss_cls: 0.2295, loss_bbox: 0.2471, num_pos: 4.6800, pos_recall: 96.0000, loss: 0.4766, grad_norm: 4.4393
+2022-05-02 15:35:43,588 - mmdet - INFO - Epoch [18][1400/2814]	lr: 1.000e-04, eta: 1:43:41, time: 0.336, data_time: 0.005, memory: 3159, loss_cls: 0.1599, loss_bbox: 0.2178, num_pos: 4.0000, pos_recall: 89.0000, loss: 0.3776, grad_norm: 3.8858
+2022-05-02 15:36:00,409 - mmdet - INFO - Epoch [18][1450/2814]	lr: 1.000e-04, eta: 1:43:24, time: 0.336, data_time: 0.005, memory: 3159, loss_cls: 0.2531, loss_bbox: 0.2405, num_pos: 4.3700, pos_recall: 100.0000, loss: 0.4936, grad_norm: 4.8079
+2022-05-02 15:36:17,210 - mmdet - INFO - Epoch [18][1500/2814]	lr: 1.000e-04, eta: 1:43:07, time: 0.336, data_time: 0.005, memory: 3159, loss_cls: 0.2020, loss_bbox: 0.2390, num_pos: 3.7200, pos_recall: 87.2727, loss: 0.4410, grad_norm: 4.1658
+2022-05-02 15:36:34,158 - mmdet - INFO - Epoch [18][1550/2814]	lr: 1.000e-04, eta: 1:42:50, time: 0.339, data_time: 0.005, memory: 3159, loss_cls: 0.2311, loss_bbox: 0.2649, num_pos: 4.2000, pos_recall: 94.0000, loss: 0.4960, grad_norm: 4.2522
+2022-05-02 15:36:51,103 - mmdet - INFO - Epoch [18][1600/2814]	lr: 1.000e-04, eta: 1:42:33, time: 0.339, data_time: 0.005, memory: 3159, loss_cls: 0.1966, loss_bbox: 0.2358, num_pos: 4.3000, pos_recall: 94.0000, loss: 0.4324, grad_norm: 3.8921
+2022-05-02 15:37:07,958 - mmdet - INFO - Epoch [18][1650/2814]	lr: 1.000e-04, eta: 1:42:16, time: 0.337, data_time: 0.005, memory: 3159, loss_cls: 0.2207, loss_bbox: 0.2396, num_pos: 4.1800, pos_recall: 94.0000, loss: 0.4603, grad_norm: 3.9369
