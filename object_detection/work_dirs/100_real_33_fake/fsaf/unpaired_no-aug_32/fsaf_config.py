@@ -99,9 +99,9 @@ data = dict(
     train=dict(
         type='CocoDataset',
         ann_file=
-        '../dataset/xray/composed/4482_real_1918_fake/helper/annotation/unpaired_combined_focal_tversky_900.json',
+        '../dataset/xray/composed/100_real_33_fake/helper/annotation/unpaired_no-aug_32.json',
         img_prefix=
-        '../dataset/xray/composed/4482_real_1918_fake/unpaired_combined_focal_tversky_900/',
+        '../dataset/xray/composed/100_real_33_fake/unpaired_no-aug_32/',
         pipeline=[
             dict(type='LoadImageFromFile'),
             dict(type='LoadAnnotations', with_bbox=True),
@@ -188,6 +188,6 @@ workflow = [('train', 1)]
 opencv_num_threads = 0
 mp_start_method = 'fork'
 classes = ('FIREARM', 'KNIFE')
-work_dir = 'work_dirs/4482_real_1918_fake/fsaf/unpaired_combined_focal_tversky_900/'
+work_dir = 'work_dirs/100_real_33_fake/fsaf/unpaired_no-aug_32/'
 auto_resume = False
 gpu_ids = [0]
