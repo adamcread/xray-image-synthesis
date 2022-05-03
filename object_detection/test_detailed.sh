@@ -22,21 +22,38 @@ source ../venv/bin/activate
 # $2 -> objdet architecture 
 # $3 -> dataset type
 
+# $1 composite
+# $2 detector
+# $3 dataset test
 
+if [ $2 = "crcnn" ]
+then 
+    model_name="cascade-rcnn"
+else
+    model_name="fsaf"
+fi
+
+
+if [ $1 = "dbf3" ]
+then
+    model_path="./work_dirs/dbf3/$2/best.pth"
+else
+    model_path="./work_dirs/$3/$2/$1/best.pth"
+fi
 
 python3 tools/test_detailed.py \
-    --model_name "cascade_rcnn" \
-    "./configs/custom/crcnn_config.py" \
-    "./work_dirs/dbf3/crcnn/best.pth" \
+    --model_name ${model_name} \
+    "./configs/custom/$2_config.py" \
+    ${model_path} \
     --db "../dataset/" \
     --format-only \
-    --eval-options "jsonfile_prefix=./statistics/test" \
+    --eval-options "jsonfile_prefix=./statistics/$1_$3_$2" \
     --dbpath "../dataset/xray/unpaired/resized_128x128/composed_images/" \
     --testimg "../dataset/xray/unpaired/resized_128x128/composed_images/" \
     --testgt "../dataset/xray/unpaired/helper/annotation/dbf3_test_resized.json" \
-    --outfile "./statistics/test.png" \
-    --predfile "./statistics/test.bbox.json" \
-    --outcsv "./statistics/test.csv" \
+    --outfile "./statistics/$1_$3_$2.png" \
+    --predfile "./statistics/$1_$3_$2.bbox.json" \
+    --outcsv "./statistics/$1_$3_$2.csv" \
  
 
 

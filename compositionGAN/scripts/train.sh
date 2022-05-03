@@ -47,7 +47,7 @@ then
 fi
 
 
-batch_size=16 # size of each training batch
+batch_size=1 # size of each training batch
 loadSizeY=128 # size to scale images to
 fineSizeY=128 # size image is
 loadSizeX=128 # size to scale images to
@@ -69,9 +69,9 @@ which_epoch_completion=0
 which_epoch_STN=0
 
 display_port=8775
-display_freq=1000
+display_freq=1
 print_freq=30
-update_html_freq=1000
+update_html_freq=1
 save_epoch_freq=50
 CUDA_ID=0
 

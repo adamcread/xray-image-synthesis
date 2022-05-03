@@ -19,6 +19,7 @@ from torchvision.utils import save_image
 import matplotlib.pyplot as plt
 from torchvision import transforms
 from . import losses
+import random
 
 
 class objComposeUnsuperviseModel(BaseModel):
@@ -31,6 +32,8 @@ class objComposeUnsuperviseModel(BaseModel):
         self.y_x = int(float(opt.fineSizeY)/opt.fineSizeX)
         self.device = opt.device
         self.Tensor = torch.cuda.FloatTensor if self.device.type == 'cuda' else torch.FloatTensor
+
+        self.i = 0
         
         # -------------------------------
         # Define Networks
@@ -525,8 +528,8 @@ class objComposeUnsuperviseModel(BaseModel):
     def backward_STN(self):
         '''backward pass for training STN networks only'''
 
-        self.loss_STN = 5*(self.criterionFocalTversky(self.stn_B2_T, self.real_B2_T))
-        self.loss_STN += 5*(self.criterionFocalTversky(self.stn_B2, self.real_B2))
+        self.loss_STN = 50*(self.criterionL1(self.stn_B2_T, self.real_B2_T))
+        self.loss_STN += 50*(self.criterionL1(self.stn_B2, self.real_B2))
 
         self.loss_STN.backward()
        

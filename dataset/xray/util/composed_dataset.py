@@ -55,8 +55,8 @@ def get_bbox(img_path):
     return img_h, img_w, x, y, w, h
 
  
-def create_coco(root, composed_images, out_file):
-    images = open(composed_images, 'r').readlines()
+def create_coco(root, images, out_file):
+    # images = open(composed_images, 'r').readlines()
     for id, image in enumerate(images):
         print(f'making dataset: {id+1} out of {len(images)}')
         image = image.rstrip()
@@ -86,12 +86,12 @@ def create_coco(root, composed_images, out_file):
         json.dump(coco_dataset, fp, indent=4)
 
 
-def move_images(root, composed_images, dest):
+def move_images(root, images, dest):
     if os.path.isdir(dest):
         shutil.rmtree(dest)
     os.mkdir(dest)
 
-    images = open(composed_images, 'r').readlines()
+    # images = open(composed_images, 'r').readlines()
     for id, image in enumerate(images):
         print(f'moving images: {id+1} out of {len(images)}')
         image = image.rstrip()
@@ -112,15 +112,16 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     root = f'../../../compositionGAN/results/test_{args.test}/test_{args.file}/images/'
+    images = os.listdir(root)
 
     create_coco(
         root = root,
-        composed_images = '../../../compositionGAN/scripts/paths_test.txt',
+        images = images,
         out_file = f'../composed/0_real_20000_fake/helper/annotation/{args.test}.json'
     )
 
     move_images(
         root = root,
-        composed_images = '../../../compositionGAN/scripts/paths_test.txt',
+        images = images,
         dest = f'../composed/0_real_20000_fake/{args.test}/'
     )
