@@ -1,0 +1,19 @@
+|====classification summary====|
+class,precision,recall,f1-score
+FIREARM,0.94,0.89,0.91
+KNIFE,0.88,0.74,0.8
+accuracy,0.82,
+
+|====coco evaluation summary====|
+|**summary: all**|
+IoU,FIREARM,KNIFE,mAP
+IoU=0.50:0.95, 0.696, 0.195, 0.445
+IoU=0.50, 0.966, 0.405, 0.686
+IoU=0.75, 0.840, 0.171, 0.505
+
+|**summary: object area**|
+Obj_area,FIREARM,KNIFE,mAP_0.5
+tiny, 0.962, 0.415, 0.689
+small, 0.967, 0.407, 0.687
+medium, -1.000 -1.000 -1.000
+large, -1.000 -1.000 -1.000
