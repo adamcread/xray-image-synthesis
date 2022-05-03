@@ -47,13 +47,13 @@ python3 tools/test_detailed.py \
     ${model_path} \
     --db "../dataset/" \
     --format-only \
-    --eval-options "jsonfile_prefix=./statistics/$1_$3_$2" \
+    --eval-options "jsonfile_prefix=./statistics/bbox/$1_$3_$2" \
     --dbpath "../dataset/xray/unpaired/resized_128x128/composed_images/" \
     --testimg "../dataset/xray/unpaired/resized_128x128/composed_images/" \
     --testgt "../dataset/xray/unpaired/helper/annotation/dbf3_test_resized.json" \
-    --outfile "./statistics/$1_$3_$2.png" \
-    --predfile "./statistics/$1_$3_$2.bbox.json" \
-    --outcsv "./statistics/$1_$3_$2.csv" \
+    --outfile "./statistics/png/$1_$3_$2.png" \
+    --predfile "./statistics/bbox/$1_$3_$2.bbox.json" \
+    --outcsv "./statistics/csv/$1_$3_$2.csv" \
  
 
 
