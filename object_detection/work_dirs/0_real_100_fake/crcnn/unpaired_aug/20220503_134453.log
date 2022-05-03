@@ -2074,3 +2074,7 @@ after_run:
 2022-05-03 16:01:43,083 - mmdet - INFO - Epoch [12][2150/2216]	lr: 2.000e-04, eta: 0:00:17, time: 0.264, data_time: 0.004, memory: 4026, loss_rpn_cls: nan, loss_rpn_bbox: nan, s0.loss_cls: nan, s0.acc: 51.0000, s0.loss_bbox: nan, s1.loss_cls: nan, s1.acc: 51.0000, s1.loss_bbox: nan, s2.loss_cls: nan, s2.acc: 51.0000, s2.loss_bbox: nan, loss: nan
 2022-05-03 16:01:56,165 - mmdet - INFO - Epoch [12][2200/2216]	lr: 2.000e-04, eta: 0:00:04, time: 0.262, data_time: 0.004, memory: 4026, loss_rpn_cls: nan, loss_rpn_bbox: nan, s0.loss_cls: nan, s0.acc: 52.0000, s0.loss_bbox: nan, s1.loss_cls: nan, s1.acc: 52.0000, s1.loss_bbox: nan, s2.loss_cls: nan, s2.acc: 52.0000, s2.loss_bbox: nan, loss: nan
 2022-05-03 16:02:00,500 - mmdet - INFO - Saving checkpoint at 12 epochs
+2022-05-03 16:03:34,726 - mmdet - INFO - Evaluating bbox...
+2022-05-03 16:03:34,727 - mmdet - ERROR - The testing results of the whole dataset is empty.
+2022-05-03 16:03:34,728 - mmdet - INFO - Exp name: crcnn_config.py
+2022-05-03 16:03:34,728 - mmdet - INFO - Epoch(val) [12][1912]	
