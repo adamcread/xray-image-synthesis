@@ -15,7 +15,7 @@ class BaseOptions():
         self.initialized = False
 
     def initialize(self):
-        self.parser.add_argument('--datalist', required=True, help='path to a txt file with each line: path_A, path_B, azimuth')
+        self.parser.add_argument('--datalist', required=False, help='path to a txt file with each line: path_A, path_B, azimuth')
         self.parser.add_argument('--datalist_test', required=True, help='path to a txt file with each line: path_A, path_B, azimuth')
         self.parser.add_argument('--test_path_azi', type=str, default='dataset/chair_table/test_random_azi.pkl', help='where is the pickle file including fixed random azimuth angles for test?')
         self.parser.add_argument('--num_az', type=int, default=36, help='number of azimuth angles in the viewpoint transformation')
@@ -29,7 +29,7 @@ class BaseOptions():
         self.parser.add_argument('--ngf', type=int, default=64, help='# of gen filters in first conv layer')
         self.parser.add_argument('--ndf', type=int, default=64, help='# of discrim filters in first conv layer')
         self.parser.add_argument('--G1_completion', type=int, default=1, help='completion on obj1')
-        self.parser.add_argument('--G2_completion', type=int, default=1, help='completion on obj2')
+        self.parser.add_argument('--G2_completion', type=int, default=0, help='completion on obj2')
         self.parser.add_argument('--Thresh1', type=float, default=0.9, help='masking threshold for obj1')
         self.parser.add_argument('--Thresh2', type=float, default=0.9, help='masking threshold for obj2')
         self.parser.add_argument('--which_epoch_completion', type=str, default='0', help='which epoch to load G_completion model? set to latest to use latest cached model')
@@ -38,11 +38,11 @@ class BaseOptions():
         self.parser.add_argument('--which_model_netD', type=str, default='n_layers', help='selects model to use for netD')
         self.parser.add_argument('--which_model_netG', type=str, default='resnetUp_6blocks', help='selects model to use for netG')
         self.parser.add_argument('--which_model_AFN', type=str, default='DOAFNCompose', help='which model   to use for AFN model? fc or fullyconv?')
-        self.parser.add_argument('--STN_model', type=str, default='', help='which model to use for STN model? deep or vae or ?')
+        self.parser.add_argument('--STN_model', type=str, default='deep', help='which model to use for STN model? deep or vae or ?')
         self.parser.add_argument('--n_layers_D', type=int, default=3, help='only used if which_model_netD==n_layers')
         self.parser.add_argument('--gpu_ids', type=str, default='0', help='gpu ids: e.g. 0  0,1,2, 0,2. use -1 for CPU')
         self.parser.add_argument('--name', type=str, default='experiment_name', help='name of the experiment. It decides where to store samples and models')
-        self.parser.add_argument('--dataset_mode', type=str, default='unaligned', help='chooses how datasets are loaded. [comp_decomp | comp_decomp_aligned | compose | decompose]')
+        self.parser.add_argument('--dataset_mode', type=str, default='comp_decomp_unaligned', help='chooses how datasets are loaded. [comp_decomp | comp_decomp_aligned | compose | decompose]')
         self.parser.add_argument('--model', type=str, default='objCompose', help='chooses which model to use. cycle_gan, pix2pix, test')
         self.parser.add_argument('--nThreads', default=2, type=int, help='# threads for loading data')
         self.parser.add_argument('--checkpoints_dir', type=str, default='./checkpoints', help='models are saved here')

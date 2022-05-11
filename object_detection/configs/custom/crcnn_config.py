@@ -73,9 +73,9 @@ data = dict(
         classes=classes,
         ann_file='../dataset/xray/unpaired/helper/annotation/dbf3_test_resized.json'),
     test=dict(
-        img_prefix='../dataset/xray/unpaired/resized_128x128/composed_images/',
+        img_prefix='../compositionGAN/results/test_demo/test_best/images/',
         classes=classes,
-        ann_file='../dataset/xray/unpaired/helper/annotation/dbf3_test_resized.json')
+        ann_file='../dataset/xray/demo/annotation/demo.json')
 )
 
 runner = dict(type='EpochBasedRunner', max_epochs=12)

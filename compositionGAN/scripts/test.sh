@@ -19,17 +19,17 @@ source ../venv/bin/activate
 mode=test
 name="test"
 
-datalist_test="./scripts/paths_test.txt"
+datalist_test="./scripts/test_demo.txt"
 
-if [ $1 = "paired" ]
-then
-	dataset_mode="comp_decomp_aligned"
-	datalist="./scripts/paths_train_paired.txt"
-elif [ $1 = "unpaired" ]
-then
-	dataset_mode="comp_decomp_unaligned" # dataset type to choose model type
-	datalist="./scripts/paths_train_unpaired.txt"
-fi
+# if [ $1 = "paired" ]
+# then
+# 	dataset_mode="comp_decomp_aligned"
+# 	datalist="./scripts/paths_train_paired.txt"
+# elif [ $1 = "unpaired" ]
+# then
+# 	dataset_mode="comp_decomp_unaligned" # dataset type to choose model type
+# 	datalist="./scripts/paths_train_unpaired.txt"
+# fi
 
 exp_train="train_"$1"_"$2
 name="test_"$1"_"$2
@@ -58,8 +58,6 @@ print_freq=20
 update_html_freq=5
 n_latest=1
 xray=true
-
-
 
 if [ ! -d "./checkpoints/${name}" ]; then
 	mkdir "./checkpoints/${name}"

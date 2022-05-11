@@ -1,0 +1,2 @@
+../dataset/xray/demo/firearm_2.jpg
+../dataset/xray/demo/firearm_385.jpg
