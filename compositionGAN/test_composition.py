@@ -30,6 +30,11 @@ data_loader = CreateDataLoader(opt)
 dataset_test = data_loader.load_data()
 dataset_size = len(data_loader)
 
+opt.no_flip = True
+opt.conditional =True
+opt.erosion =True
+opt.img_completion =True
+
 model_G = opt.which_model_netG
 print('#training images = %d' % dataset_size)
 opt.device = torch.device('cuda:0' if torch.cuda.is_available() else "cpu")

@@ -21,6 +21,27 @@
             "width": 128,
             "height": 128,
             "id": 1
+        },
+        {
+            "license": 0,
+            "file_name": "firearm_103_fake_B.jpg",
+            "width": 128,
+            "height": 128,
+            "id": 1
+        },
+        {
+            "license": 0,
+            "file_name": "knife_9591_fake_B.jpg",
+            "width": 128,
+            "height": 128,
+            "id": 1
+        },
+        {
+            "license": 0,
+            "file_name": "knife_9975_fake_B.jpg",
+            "width": 128,
+            "height": 128,
+            "id": 1
         }
     ],
     "annotations": [],
