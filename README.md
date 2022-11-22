@@ -11,15 +11,13 @@ deep-learning-based x-ray image composition with a robust and rigorous investiga
 
 ## Solution
 This is the implementation of [Compositional GAN](https://github.com/azadis/CompositionalGAN) adapted for X-ray image synthesis as well as base dectection models Cascade R-CNN and FSAF using models provided by [MMDetection](https://github.com/open-mmlab/mmdetection). All models are built using PyTorch.
-<figure align="center">
-    <img width="500px" src="./resources/object_detection.png">
-    <figcaption>Object detection on images generated using our thing</figcaption>
+<figure width="100%" align="center">
+    <img src="./resources/object_detection.png">
 </figure>
 
 The composition model takes as input a baggage-threat pair and generates a composed image where baggage contains the threat item with ycle losses are applied during the transformation and composition stages of the network. The full architecture is shown below.
 <figure width="100%" align="center">
     <img src="./resources/composition_architecture.png">
-    <figurecaption>This is the caption for this one</figurecaption>
 </figure>
 
 For further details, the full report can be found [here](./resources/report.pdf).
